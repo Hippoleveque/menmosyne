@@ -1,5 +1,5 @@
 import express from "express";
-import { body, check } from "express-validator";
+import { check } from "express-validator";
 import User from "../models/user.js";
 
 import { signup } from "../controllers/auth.js";
