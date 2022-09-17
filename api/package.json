@@ -1,0 +1,25 @@
+{
+  "name": "api",
+  "version": "1.0.0",
+  "description": "The REST API that will be used in the mnemosyne project",
+  "main": "app.js",
+  "scripts": {
+    "start": "nodemon app.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "run-prod": "node app.js"
+  },
+  "author": "Hippolyte Lévêque",
+  "license": "ISC",
+  "type": "module",
+  "devDependencies": {
+    "eslint": "^8.23.1",
+    "express": "^4.18.1",
+    "nodemon": "^2.0.19"
+  },
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.20.0",
+    "express-validator": "^6.14.2",
+    "mongoose": "^6.6.1"
+  }
+}
