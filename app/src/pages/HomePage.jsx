@@ -1,12 +1,12 @@
 import React from "react";
 
 import HomeContent from "../components/Home/HomeContent";
-import AppLayout from "../components/AppLayout/AppLayout";
+import SideMenuLayout from "../components/Layouts/SideMenuLayout";
 
 export default function HomePage() {
   return (
-    <AppLayout>
+    <SideMenuLayout>
       <HomeContent />
-    </AppLayout>
+    </SideMenuLayout>
   );
 }
