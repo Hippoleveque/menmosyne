@@ -1,29 +1,29 @@
-import CssBaseline from "@mui/material/CssBaseline";
 import Grid from "@mui/material/Grid";
-import Box from "@mui/material/Box";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
-
-const theme = createTheme();
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemText from "@mui/material/ListItemText";
+import ListItemButton from "@mui/material/ListItemButton";
 
 export default function SideMenuLayout(props) {
   return (
-    <ThemeProvider theme={theme}>
-      <Box sx={{ flexGrow: 1 }}>
-        <CssBaseline />
-        <Grid
-          container
-          spacing={2}
-          sx={{ height: "100vh", width: "100%" }}
-          component="main"
-        >
-          <Grid item xs={6} md={4} sx={{ backgroundColor: "#042040" }}>
-            Bonjour
-          </Grid>
-          <Grid item xs={6} md={8}>
-            {props.children}
-          </Grid>
-        </Grid>
-      </Box>
-    </ThemeProvider>
+    <Grid container sx={{ width: "100%", height: "100vh" }} component="main">
+      <Grid item xs={6} md={2} sx={{ backgroundColor: "#042040" }}>
+        <List>
+          {["Home"].map((text, index) => (
+            <ListItem key={text} disablePadding>
+              <ListItemButton>
+                <ListItemText
+                  primary={text}
+                  sx={{ color: "white", textAlign: "center" }}
+                />
+              </ListItemButton>
+            </ListItem>
+          ))}
+        </List>
+      </Grid>
+      <Grid item xs={6} md={10}>
+        {props.children}
+      </Grid>
+    </Grid>
   );
 }
