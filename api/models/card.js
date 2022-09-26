@@ -3,10 +3,10 @@ const { Schema, model } = mongoose;
 
 const cardSchema = new Schema(
   {
-    owner: {
+    collection: {
       type: Schema.Types.ObjectId,
       required: true,
-      ref: "User",
+      ref: "Collection",
     },
     rectoContent: {
       type: String,
@@ -19,6 +19,11 @@ const cardSchema = new Schema(
     title: {
       type: String,
       required: false,
+    },
+    priority: {
+      type: Number,
+      required: false,
+      default: 1,
     },
   },
   { timestamps: true }
