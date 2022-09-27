@@ -2,12 +2,15 @@ import express from "express";
 import path from "path";
 import bodyParser from "body-parser";
 import authRoutes from "./routes/auth.js";
+import cardCollectionRoutes from "./routes/cardCollection.js";
 import mongoose from "mongoose";
 
 const app = express();
 app.use(bodyParser.json());
 
 app.use("/auth", authRoutes);
+
+app.use("/memo", cardCollectionRoutes);
 
 app.use((req, res) => {
   return res.send("Hello the world");

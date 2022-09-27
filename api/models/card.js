@@ -3,10 +3,10 @@ const { Schema, model } = mongoose;
 
 const cardSchema = new Schema(
   {
-    collection: {
+    cardCollection: {
       type: Schema.Types.ObjectId,
       required: true,
-      ref: "Collection",
+      ref: "CardCollection",
     },
     rectoContent: {
       type: String,
