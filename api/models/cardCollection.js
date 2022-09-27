@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 const { Schema, model } = mongoose;
 
-const collectionSchema = new Schema(
+const cardCollectionSchema = new Schema(
   {
     owner: {
       type: Schema.Types.ObjectId,
@@ -15,10 +15,10 @@ const collectionSchema = new Schema(
     numCard: {
       type: Number,
       required: true,
-      default: 0,
+        default: 0,
     },
   },
   { timestamps: true }
 );
 
-export default model("Collection", collectionSchema);
+export default model("CardCollection", cardCollectionSchema);
