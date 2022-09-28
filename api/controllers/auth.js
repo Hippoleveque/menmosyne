@@ -46,9 +46,12 @@ export const login = async (req, res, next) => {
         userId: user._id.toString(),
       },
       process.env.JWT_SECRET,
-      { expiresIn: "1h" }
+      { expiresIn: "6h" }
     );
-    res.status(200).json({ token, userId: user._id.toString() });
+    const expirationDate = new Date(Date.now() + 3600 * 6 * 1000);
+    res
+      .status(200)
+      .json({ token, userId: user._id.toString(), expirationDate });
   } catch (err) {
     if (!err.statusCode) {
       err.statusCode = 500;
