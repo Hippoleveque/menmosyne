@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
@@ -7,11 +8,16 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
+import { AuthContext } from "../../store/auth-context";
+
 const theme = createTheme();
 
 export default function LoginContent() {
+  const navigate = useNavigate();
+  const { onLogin } = useContext(AuthContext);
   const [enteredEmail, setEnteredEmail] = useState("");
   const [enteredPassword, setEnteredPassword] = useState("");
+  const [loginFailed, setLoginFailed] = useState(false);
 
   const handleEmailChange = (e) => {
     setEnteredEmail(e.target.value);
@@ -21,10 +27,29 @@ export default function LoginContent() {
     setEnteredPassword(e.target.value);
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    console.log(enteredEmail);
-    console.log(enteredPassword);
+    try {
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
+        body: JSON.stringify({
+          email: enteredEmail,
+          password: enteredPassword,
+        }),
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+      });
+      if (!response.ok) {
+        throw new Error("Request failed!");
+      }
+      const data = await response.json();
+      onLogin(data.token, data.expirationDate);
+      navigate("/");
+    } catch (err) {
+      setLoginFailed(true);
+    }
   };
 
   return (
@@ -74,6 +99,15 @@ export default function LoginContent() {
               onChange={handlePasswordChange}
               autoComplete="current-password"
             />
+            {loginFailed && (
+              <Typography
+                component="h5"
+                variant="h10"
+                sx={{ color: "red", textAlign: "center" }}
+              >
+                Identifiants incorrects
+              </Typography>
+            )}
             <Button
               type="submit"
               fullWidth
