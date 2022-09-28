@@ -1,8 +1,5 @@
 import Card from "../models/card.js";
-import User from "../models/user.js";
 import CardCollection from "../models/cardCollection.js";
-import path from "path";
-import fs from "fs";
 import { validationResult } from "express-validator";
 
 const ITEMS_PER_PAGE = 2;
