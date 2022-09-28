@@ -7,18 +7,24 @@ import {
   getCollections,
   createCollection,
 } from "../controllers/cardCollection.js";
-// import { isAuth } from "../middlewares/isAuth.js";
+import { isAuth } from "../middlewares/isAuth.js";
 
 const router = express.Router();
 
-router.get("/cards", getCards);
-router.get("/cardCollections", getCollections);
+router.get("/cards", isAuth, getCards);
+router.get("/cardCollections", isAuth, getCollections);
 
-router.post("/cards", [body("title").trim().isLength({ min: 3 })], createCard);
+router.post(
+  "/cards",
+  [body("title").trim().isLength({ min: 3 })],
+  isAuth,
+  createCard
+);
 
 router.post(
   "/cardCollections",
   [body("name").trim().isLength({ min: 3 })],
+  isAuth,
   createCollection
 );
 

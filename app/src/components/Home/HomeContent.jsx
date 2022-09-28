@@ -1,12 +1,23 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import Button from '@mui/material/Button';
+import Button from "@mui/material/Button";
 
 let collectionData = require("../../data/dummyCollection.json");
 
 export default function HomeContent() {
+  const [collections, setCollections] = useState([]);
+
+  useEffect(() => {
+    const fetchCollections = async () => {
+      const response = await fetch("/api/memo/cardCollections");
+      const res = await response.json();
+      setCollections(res.cardCollections);
+    };
+    fetchCollections();
+  }, []);
+
   return (
     <Grid
       container
@@ -51,7 +62,9 @@ export default function HomeContent() {
       </Grid>
       <Grid item xs={6} md={3}>
         <Typography component="h3" variant="h10">
-          <Button variant="contained" size="small">Ajouter</Button>
+          <Button variant="contained" size="small">
+            Ajouter
+          </Button>
         </Typography>
       </Grid>
       <div
@@ -76,7 +89,9 @@ export default function HomeContent() {
           </Grid>
           <Grid item xs={6} md={3}>
             <Typography component="h3" variant="h10">
-              <Button variant="contained" size="small">Réviser</Button>
+              <Button variant="contained" size="small">
+                Réviser
+              </Button>
             </Typography>
           </Grid>
         </Fragment>
