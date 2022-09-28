@@ -24,7 +24,8 @@ export const AuthContextProvider = (props) => {
 
   useEffect(() => {
     if (expirationDate) {
-      const remainingTime = Date.now() - expirationDate;
+      const remainingTime = expirationDate - Date.now();
+      console.log(remainingTime);
       logoutTimer = setTimeout(logoutHandler, remainingTime);
     }
   }, [expirationDate, logoutHandler]);

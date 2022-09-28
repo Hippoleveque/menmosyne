@@ -45,7 +45,7 @@ export default function LoginContent() {
         throw new Error("Request failed!");
       }
       const data = await response.json();
-      onLogin(data.token, data.expirationDate);
+      onLogin(data.token, new Date(data.expirationDate));
       navigate("/");
     } catch (err) {
       setLoginFailed(true);
