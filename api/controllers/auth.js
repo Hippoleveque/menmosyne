@@ -1,6 +1,6 @@
 import User from "../models/user.js";
 import bcrypt from "bcryptjs";
-// import jwt from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 import { validationResult } from "express-validator";
 
 export const signup = async (req, res, next) => {
@@ -26,33 +26,33 @@ export const signup = async (req, res, next) => {
   }
 };
 
-// export const login = async (req, res, next) => {
-//   const { email, password } = req.body;
-//   try {
-//     const user = await User.findOne({ email }).exec();
-//     if (!user) {
-//       const err = new Error("No user with this email address");
-//       err.statusCode = 401;
-//       throw err;
-//     }
-//     if (!(await bcrypt.compare(password, user.password))) {
-//       const err = new Error("Invalid password");
-//       err.statusCode = 401;
-//       throw err;
-//     }
-//     const token = jwt.sign(
-//       {
-//         email: user.email,
-//         userId: user._id.toString(),
-//       },
-//       process.env.JWT_SECRET,
-//       { expiresIn: "1h" }
-//     );
-//     res.status(200).json({ token, userId: user._id.toString() });
-//   } catch (err) {
-//     if (!err.statusCode) {
-//       err.statusCode = 500;
-//     }
-//     next(err);
-//   }
-// };
+export const login = async (req, res, next) => {
+  const { email, password } = req.body;
+  try {
+    const user = await User.findOne({ email }).exec();
+    if (!user) {
+      const err = new Error("No user with this email address");
+      err.statusCode = 401;
+      throw err;
+    }
+    if (!(await bcrypt.compare(password, user.password))) {
+      const err = new Error("Invalid password");
+      err.statusCode = 401;
+      throw err;
+    }
+    const token = jwt.sign(
+      {
+        email: user.email,
+        userId: user._id.toString(),
+      },
+      process.env.JWT_SECRET,
+      { expiresIn: "1h" }
+    );
+    res.status(200).json({ token, userId: user._id.toString() });
+  } catch (err) {
+    if (!err.statusCode) {
+      err.statusCode = 500;
+    }
+    next(err);
+  }
+};
