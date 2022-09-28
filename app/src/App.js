@@ -1,5 +1,6 @@
-import { useContext } from "react";
+// import { useContext } from "react";
 import { Routes, Route } from "react-router-dom";
+
 
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
@@ -7,7 +8,7 @@ import RevisionPage from "./pages/RevisionPage"
 // import { AuthContext } from "./store/auth-context";
 
 function App() {
-  // const { loginToken } = useContext(AuthContext);
+  // const { loginToken, isLoggedIn } = useContext(AuthContext);
 
   return (
     <Routes>
