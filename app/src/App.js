@@ -1,20 +1,28 @@
-// import { useContext } from "react";
-import { Routes, Route } from "react-router-dom";
-
+import { Fragment, useContext } from "react";
+import { Routes, Route, Navigate } from "react-router-dom";
 
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
-import RevisionPage from "./pages/RevisionPage"
-// import { AuthContext } from "./store/auth-context";
+import RevisionPage from "./pages/RevisionPage";
+import { AuthContext } from "./store/auth-context";
 
 function App() {
-  // const { loginToken, isLoggedIn } = useContext(AuthContext);
+  const { isLoggedIn } = useContext(AuthContext);
 
   return (
     <Routes>
-      <Route path="/login" exact element={<LoginPage />} />
-      <Route path="/" exact element={<HomePage />} />
-      <Route path="/revision" exact element={<RevisionPage />} />
+      {isLoggedIn && (
+        <Fragment>
+          <Route path="/" exact element={<HomePage />} />
+          <Route path="/revision" exact element={<RevisionPage />} />{" "}
+        </Fragment>
+      )}
+      {!isLoggedIn && (
+        <Fragment>
+          <Route path="/login" exact element={<LoginPage />} />
+          <Route path="/" element={<Navigate to="/login" />} />
+        </Fragment>
+      )}
     </Routes>
   );
 }
