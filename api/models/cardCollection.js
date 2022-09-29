@@ -12,7 +12,7 @@ const cardCollectionSchema = new Schema(
       type: String,
       required: true,
     },
-    numCard: {
+    numCards: {
       type: Number,
       required: true,
         default: 0,

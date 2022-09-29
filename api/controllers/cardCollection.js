@@ -1,8 +1,5 @@
 import Card from "../models/card.js";
-import User from "../models/user.js";
 import CardCollection from "../models/cardCollection.js";
-import path from "path";
-import fs from "fs";
 import { validationResult } from "express-validator";
 
 const ITEMS_PER_PAGE = 2;
@@ -41,6 +38,14 @@ export const createCard = async (req, res, next) => {
       err.statusCode = statusCode;
       throw err;
     }
+    let collection = await CardCollection.findById(cardCollectionId).exec();
+    if (!collection) {
+      const statusCode = 400;
+      const message = "Bad Collection Id";
+      const err = new Error(message);
+      err.statusCode = statusCode;
+      throw err;
+    }
     let card = {
       rectoContent,
       versoContent,
@@ -48,7 +53,8 @@ export const createCard = async (req, res, next) => {
       cardCollection: cardCollectionId,
     };
     card = new Card(card);
-    await card.save();
+    collection.numCards += 1;
+    await Promise.all([card.save(), collection.save()]);
     return res.status(201).json({ card });
   } catch (err) {
     if (!err.statusCode) {
@@ -60,7 +66,7 @@ export const createCard = async (req, res, next) => {
 
 export const getCollections = async (req, res, next) => {
   const page = +req.query.page || 1;
-  const { userId } = req.body;
+  const { userId } = req;
   try {
     const totalCollections = await CardCollection.find({
       owner: userId,
@@ -82,8 +88,8 @@ export const getCollections = async (req, res, next) => {
 };
 
 export const createCollection = async (req, res, next) => {
-  console.log("bonjour");
-  const { name, userId } = req.body;
+  const { name } = req.body;
+  const { userId } = req;
   const errors = validationResult(req);
   try {
     if (!errors.isEmpty()) {

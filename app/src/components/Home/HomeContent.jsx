@@ -1,22 +1,29 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState, useContext } from "react";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
-
-let collectionData = require("../../data/dummyCollection.json");
+import { AuthContext } from "../../store/auth-context";
 
 export default function HomeContent() {
+  const { loginToken } = useContext(AuthContext);
   const [collections, setCollections] = useState([]);
 
   useEffect(() => {
     const fetchCollections = async () => {
-      const response = await fetch("/api/memo/cardCollections");
+      const response = await fetch("/api/memo/cardCollections", {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + loginToken,
+        },
+      });
       const res = await response.json();
       setCollections(res.cardCollections);
     };
     fetchCollections();
-  }, []);
+  }, [loginToken]);
 
   return (
     <Grid
@@ -36,7 +43,7 @@ export default function HomeContent() {
           }}
         >
           <Typography component="h1" variant="h5">
-            {"Bon retour {userName} !"}
+            {"Bon retour !"}
           </Typography>
         </Box>
       </Grid>
@@ -70,8 +77,8 @@ export default function HomeContent() {
       <div
         style={{ backgroundColor: "grey", height: "2px", width: "100%" }}
       ></div>
-      {collectionData.data.map((collection) => (
-        <Fragment>
+      {collections.map((collection) => (
+        <Fragment key={collection._id}>
           <Grid item xs={6} md={3}>
             <Typography component="h3" variant="h10">
               {collection.name}
@@ -84,7 +91,7 @@ export default function HomeContent() {
           </Grid>
           <Grid item xs={6} md={3}>
             <Typography component="h3" variant="h10">
-              {collection.creationDate}
+              {collection.createdAt}
             </Typography>
           </Grid>
           <Grid item xs={6} md={3}>
