@@ -3,6 +3,14 @@ import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
+import Paper from "@mui/material/Paper";
+
 import { AuthContext } from "../../store/auth-context";
 
 export default function HomeContent() {
@@ -52,57 +60,41 @@ export default function HomeContent() {
           {"Mes collections"}
         </Typography>
       </Grid>
-      <Grid item xs={6} md={3}>
-        <Typography component="h3" variant="h10">
-          {"Nom"}
-        </Typography>
-      </Grid>
-      <Grid item xs={6} md={3}>
-        <Typography component="h3" variant="h10">
-          {"N. Cartes"}
-        </Typography>
-      </Grid>
-      <Grid item xs={6} md={3}>
-        <Typography component="h3" variant="h10">
-          {"Création"}
-        </Typography>
-      </Grid>
-      <Grid item xs={6} md={3}>
-        <Typography component="h3" variant="h10">
-          <Button variant="contained" size="small">
-            Ajouter
-          </Button>
-        </Typography>
-      </Grid>
-      <div
-        style={{ backgroundColor: "grey", height: "2px", width: "100%" }}
-      ></div>
-      {collections.map((collection) => (
-        <Fragment key={collection._id}>
-          <Grid item xs={6} md={3}>
-            <Typography component="h3" variant="h10">
-              {collection.name}
-            </Typography>
-          </Grid>
-          <Grid item xs={6} md={3}>
-            <Typography component="h3" variant="h10">
-              {collection.numCards}
-            </Typography>
-          </Grid>
-          <Grid item xs={6} md={3}>
-            <Typography component="h3" variant="h10">
-              {collection.createdAt}
-            </Typography>
-          </Grid>
-          <Grid item xs={6} md={3}>
-            <Typography component="h3" variant="h10">
-              <Button variant="contained" size="small">
-                Réviser
-              </Button>
-            </Typography>
-          </Grid>
-        </Fragment>
-      ))}
+      <TableContainer component={Paper}>
+        <Table sx={{ minWidth: 650 }} aria-label="simple table">
+          <TableHead>
+            <TableRow>
+              <TableCell>Nom</TableCell>
+              <TableCell align="right">N. Cartes</TableCell>
+              <TableCell align="right">Création</TableCell>
+              <TableCell align="right">
+                <Button variant="contained" size="small">
+                  Ajouter
+                </Button>
+              </TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {collections.map((row) => (
+              <TableRow
+                key={row._id.toString()}
+                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+              >
+                <TableCell component="th" scope="row">
+                  {row.name}
+                </TableCell>
+                <TableCell align="right">{row.numCards}</TableCell>
+                <TableCell align="right">{row.createdAt}</TableCell>
+                <TableCell align="right">
+                <Button variant="contained" size="small">
+                  Réviser
+                </Button>
+              </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </Grid>
   );
 }
