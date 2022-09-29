@@ -5,8 +5,6 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import { AuthContext } from "../../store/auth-context";
 
-let collectionData = require("../../data/dummyCollection.json");
-
 export default function HomeContent() {
   const { loginToken } = useContext(AuthContext);
   const [collections, setCollections] = useState([]);
@@ -45,7 +43,7 @@ export default function HomeContent() {
           }}
         >
           <Typography component="h1" variant="h5">
-            {"Bon retour {userName} !"}
+            {"Bon retour !"}
           </Typography>
         </Box>
       </Grid>
