@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Card from "@mui/material/Card";
@@ -9,8 +10,16 @@ import Container from "@mui/material/Container";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import Divider from "@mui/material/Divider";
 
+import { AuthContext } from "../../store/auth-context";
+
 export default function RevisionContent() {
+  const { loginToken } = useContext(AuthContext);
+  const { collectionId } = useParams();
+  const navigate = useNavigate();
+
   const [isVersoShown, setIsVersoShown] = useState(false);
+  const [cardsRevised, setCardsRevised] = useState(0);
+  const [currentCard, setCurrentCard] = useState({});
 
   let boxCss = {
     height: isVersoShown ? "100vh" : "50vh",
@@ -23,13 +32,40 @@ export default function RevisionContent() {
     setIsVersoShown(true);
   };
 
+  useEffect(() => {
+    const fetchCards = async () => {
+      const url = `/api/memo/cards?offset=${cardsRevised}&limit=1&cardCollectionId=${collectionId}`;
+      const response = await fetch(url, {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + loginToken,
+        },
+      });
+      const res = await response.json();
+      if (res.cards.length === 0) {
+        navigate("/");
+      }
+      setCurrentCard(res.cards[0]);
+    };
+    fetchCards();
+  }, [cardsRevised, loginToken, collectionId, navigate]);
+
+  const finishCardReviewHandler = (e) => {
+    setIsVersoShown(false);
+    setCardsRevised((oldNum) => oldNum + 1);
+  };
+
   const rectoCard = (
     <Card variant="outlined">
       <CardContent>
-        <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-          Card Title if exists
-        </Typography>
-        <Typography variant="body2">Lorem Ipsum (card content)</Typography>
+        {currentCard.title && (
+          <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+            {currentCard.title}
+          </Typography>
+        )}
+        <Typography variant="body2">{currentCard.rectoContent}</Typography>
       </CardContent>
       <CardActions
         sx={{
@@ -64,9 +100,11 @@ export default function RevisionContent() {
           flexDirection: "column",
         }}
       >
-        <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-          Card Title if exists
-        </Typography>
+        {currentCard.title && (
+          <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+            {currentCard.title}
+          </Typography>
+        )}
         <Box
           sx={{
             display: "flex",
@@ -76,11 +114,11 @@ export default function RevisionContent() {
           }}
         >
           <Box sx={{ width: "100%", flexGrow: 1 }}>
-            <Typography variant="body2">Lorem Ipsum (card content)</Typography>
+            <Typography variant="body2">{currentCard.rectoContent}</Typography>
           </Box>
           <Divider ligth style={{ width: "100%" }} />
           <Box sx={{ width: "100%", flexGrow: 1 }}>
-            <Typography variant="body2">Lorem Ipsum (card content)</Typography>
+            <Typography variant="body2">{currentCard.versoContent}</Typography>
           </Box>
         </Box>
       </CardContent>
@@ -97,9 +135,15 @@ export default function RevisionContent() {
             flexGrow: 1,
           }}
         >
-          <Button size="small">A revoir</Button>
-          <Button size="small">Correct</Button>
-          <Button size="small">Facile</Button>
+          <Button size="small" onClick={finishCardReviewHandler}>
+            A revoir
+          </Button>
+          <Button size="small" onClick={finishCardReviewHandler}>
+            Correct
+          </Button>
+          <Button size="small" onClick={finishCardReviewHandler}>
+            Facile
+          </Button>
         </ButtonGroup>
       </CardActions>
     </Card>

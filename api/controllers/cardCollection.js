@@ -2,11 +2,10 @@ import Card from "../models/card.js";
 import CardCollection from "../models/cardCollection.js";
 import { validationResult } from "express-validator";
 
-const ITEMS_PER_PAGE = 2;
+const DEFAULT_PAGE_SIZE = 10;
 
 export const getCards = async (req, res, next) => {
-  const page = +req.query.page || 1;
-  const { cardCollectionId } = req.body;
+  const { offset, limit, cardCollectionId } = req.query;
   try {
     const totalCards = await Card.find({
       cardCollection: cardCollectionId,
@@ -14,9 +13,9 @@ export const getCards = async (req, res, next) => {
     const cards = await Card.find({
       cardCollection: cardCollectionId,
     })
-      .populate("cardCollection")
-      .skip((page - 1) * ITEMS_PER_PAGE)
-      .limit(ITEMS_PER_PAGE)
+      .sort({ priority: "asc" })
+      .skip(offset || 0)
+      .limit(limit || DEFAULT_PAGE_SIZE)
       .exec();
     return res.status(200).json({ cards: cards, totalCards: totalCards });
   } catch (err) {
@@ -65,7 +64,7 @@ export const createCard = async (req, res, next) => {
 };
 
 export const getCollections = async (req, res, next) => {
-  const page = +req.query.page || 1;
+  const { offset, limit } = req.query;
   const { userId } = req;
   try {
     const totalCollections = await CardCollection.find({
@@ -75,8 +74,8 @@ export const getCollections = async (req, res, next) => {
       owner: userId,
     })
       .populate("owner")
-      .skip((page - 1) * ITEMS_PER_PAGE)
-      .limit(ITEMS_PER_PAGE)
+      .skip(offset || 0)
+      .limit(limit || DEFAULT_PAGE_SIZE)
       .exec();
     return res.status(200).json({ cardCollections, totalCollections });
   } catch (err) {

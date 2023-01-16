@@ -12,8 +12,10 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 
 import { AuthContext } from "../../store/auth-context";
+import { useNavigate } from "react-router-dom";
 
 export default function HomeContent() {
+  const navigate = useNavigate();
   const { loginToken } = useContext(AuthContext);
   const [collections, setCollections] = useState([]);
 
@@ -86,10 +88,14 @@ export default function HomeContent() {
                 <TableCell align="right">{row.numCards}</TableCell>
                 <TableCell align="right">{row.createdAt}</TableCell>
                 <TableCell align="right">
-                <Button variant="contained" size="small">
-                  Réviser
-                </Button>
-              </TableCell>
+                  <Button
+                    variant="contained"
+                    size="small"
+                    onClick={() => navigate(`/revision/${row._id.toString()}`)}
+                  >
+                    Réviser
+                  </Button>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
