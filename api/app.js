@@ -11,10 +11,6 @@ app.use("/auth", authRoutes);
 
 app.use("/memo", cardCollectionRoutes);
 
-app.use((req, res) => {
-  return res.send("Hello the world");
-});
-
 app.use((err, req, res) => {
   const { message } = err;
   const statusCode = err.statusCode || 500;
