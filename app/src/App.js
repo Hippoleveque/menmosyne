@@ -14,7 +14,7 @@ function App() {
       {isLoggedIn && (
         <Fragment>
           <Route path="/" exact element={<HomePage />} />
-          <Route path="/revision" exact element={<RevisionPage />} />{" "}
+          <Route path="/revision" exact element={<RevisionPage />} />
         </Fragment>
       )}
       {!isLoggedIn && (
