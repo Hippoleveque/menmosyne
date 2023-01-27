@@ -11,7 +11,7 @@ import { isAuth } from "../middlewares/isAuth.js";
 
 const router = express.Router();
 
-router.get("/cards", isAuth, getCards);
+router.get("/cards/:collectionId", isAuth, getCards);
 router.get("/cardCollections", isAuth, getCollections);
 
 router.post(
