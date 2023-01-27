@@ -5,16 +5,15 @@ import { validationResult } from "express-validator";
 const ITEMS_PER_PAGE = 2;
 
 export const getCards = async (req, res, next) => {
+  const { collectionId } = req.params;
   const page = +req.query.page || 1;
-  const { cardCollectionId } = req.body;
   try {
     const totalCards = await Card.find({
-      cardCollection: cardCollectionId,
+      cardCollection: collectionId,
     }).countDocuments();
     const cards = await Card.find({
-      cardCollection: cardCollectionId,
+      cardCollection: collectionId,
     })
-      .populate("cardCollection")
       .skip((page - 1) * ITEMS_PER_PAGE)
       .limit(ITEMS_PER_PAGE)
       .exec();
