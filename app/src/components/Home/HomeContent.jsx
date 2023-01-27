@@ -1,4 +1,5 @@
 import React, { Fragment, useEffect, useState, useContext } from "react";
+import { useNavigate } from "react-router-dom";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
@@ -14,6 +15,7 @@ import Paper from "@mui/material/Paper";
 import { AuthContext } from "../../store/auth-context";
 
 export default function HomeContent() {
+  const navigate = useNavigate();
   const { loginToken } = useContext(AuthContext);
   const [collections, setCollections] = useState([]);
 
@@ -33,6 +35,9 @@ export default function HomeContent() {
     fetchCollections();
   }, [loginToken]);
 
+  const handleReviewClick = (collectionId) => {
+    navigate(`/revision/${collectionId}`);
+  };
   return (
     <Grid
       container
@@ -86,10 +91,14 @@ export default function HomeContent() {
                 <TableCell align="right">{row.numCards}</TableCell>
                 <TableCell align="right">{row.createdAt}</TableCell>
                 <TableCell align="right">
-                <Button variant="contained" size="small">
-                  Réviser
-                </Button>
-              </TableCell>
+                  <Button
+                    variant="contained"
+                    size="small"
+                    onClick={() => handleReviewClick(row._id.toString())}
+                  >
+                    Réviser
+                  </Button>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>
