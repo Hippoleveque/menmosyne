@@ -15,6 +15,7 @@ function App() {
         <Fragment>
           <Route path="/" exact element={<HomePage />} />
           <Route path="/revision/:collectionId" element={<RevisionPage />} />
+          <Route path="/login" element={<Navigate to="/" />} />
         </Fragment>
       )}
       {!isLoggedIn && (
