@@ -68,15 +68,16 @@ export const getCollections = async (req, res, next) => {
   const page = +req.query.page || 1;
   const { userId } = req;
   try {
-    const totalCollections = await CardCollection.find({
+    const totalCollections = await CardCollection.count({
       owner: userId,
-    }).countDocuments();
-    const cardCollections = await CardCollection.find({
-      owner: userId,
-    })
-      .skip((page - 1) * ITEMS_PER_PAGE)
-      .limit(ITEMS_PER_PAGE)
-      .exec();
+    });
+    const cardCollections = await CardCollection.getCollectionsFromPage(
+      {
+        owner: userId,
+      },
+      page,
+      ITEMS_PER_PAGE
+    );
     return res.status(200).json({ cardCollections, totalCollections });
   } catch (err) {
     if (!err.statusCode) {
