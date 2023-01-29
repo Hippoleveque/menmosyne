@@ -8,6 +8,7 @@ import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import ButtonGroup from "@mui/material/ButtonGroup";
 import Divider from "@mui/material/Divider";
+import classes from "./RevisionCard.module.css";
 
 export default function RevisionCard({ card, handleActionClick }) {
   const [isVersoShown, setIsVersoShown] = useState(false);
@@ -49,13 +50,14 @@ export default function RevisionCard({ card, handleActionClick }) {
   const versoCard = (
     <Card
       variant="outlined"
-      sx={{
-        minHeight: "300px",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "space-between",
-        height: "100%",
-      }}
+      //   sx={{
+      //     minHeight: "300px",
+      //     display: "flex",
+      //     flexDirection: "column",
+      //     justifyContent: "space-between",
+      //     height: "100%",
+      //   }}
+      className={classes.versoCard}
     >
       <CardContent
         sx={{
