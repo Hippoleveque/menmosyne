@@ -29,4 +29,21 @@ const cardSchema = new Schema(
   { timestamps: true }
 );
 
+cardSchema.statics.count = async function (query) {
+  const count = await this.find(query).countDocuments();
+  return count;
+};
+
+cardSchema.statics.getCardsFromPage = async function (
+  query,
+  pageNumber,
+  pageSize
+) {
+  const cards = await this.find(query)
+    .skip((pageNumber - 1) * pageSize)
+    .limit(pageSize)
+    .exec();
+  return cards;
+};
+
 export default model("Card", cardSchema);

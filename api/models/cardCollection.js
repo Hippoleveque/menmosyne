@@ -21,4 +21,17 @@ const cardCollectionSchema = new Schema(
   { timestamps: true }
 );
 
+cardCollectionSchema.statics.count = async function (query) {
+  const count = await this.find(query).countDocuments();
+  return count;
+};
+
+cardCollectionSchema.statics.getCollectionsFromPage = async function (query, pageNumber, pageSize) {
+  const collections = await this.find(query)
+    .skip((pageNumber - 1) * pageSize)
+    .limit(pageSize)
+    .exec();
+  return collections;
+}
+
 export default model("CardCollection", cardCollectionSchema);
