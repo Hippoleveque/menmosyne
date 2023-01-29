@@ -74,7 +74,6 @@ export const getCollections = async (req, res, next) => {
     const cardCollections = await CardCollection.find({
       owner: userId,
     })
-      .populate("owner")
       .skip((page - 1) * ITEMS_PER_PAGE)
       .limit(ITEMS_PER_PAGE)
       .exec();
