@@ -1,0 +1,13 @@
+.gridContainer {
+  width: 100%;
+  height: 100vh;
+}
+
+.grid {
+  background-color: #042040;
+}
+
+.sideMenuItem {
+  color: white;
+  text-align: center;
+}

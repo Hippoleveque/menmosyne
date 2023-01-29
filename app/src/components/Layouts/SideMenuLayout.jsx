@@ -4,18 +4,17 @@ import ListItem from "@mui/material/ListItem";
 import ListItemText from "@mui/material/ListItemText";
 import ListItemButton from "@mui/material/ListItemButton";
 
+import classes from "./SideMenuLayout.module.css";
+
 export default function SideMenuLayout(props) {
   return (
-    <Grid container sx={{ width: "100%", height: "100vh" }} component="main">
-      <Grid item xs={6} md={2} sx={{ backgroundColor: "#042040" }}>
+    <Grid container className={classes.gridContainer} component="main">
+      <Grid item xs={6} md={2} className={classes.grid}>
         <List>
           {["Home"].map((text, index) => (
             <ListItem key={text} disablePadding>
               <ListItemButton>
-                <ListItemText
-                  primary={text}
-                  sx={{ color: "white", textAlign: "center" }}
-                />
+                <ListItemText primary={text} className={classes.sideMenuItem} />
               </ListItemButton>
             </ListItem>
           ))}
