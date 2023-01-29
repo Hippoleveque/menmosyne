@@ -1,9 +1,9 @@
 import React, { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../store/auth-context";
-import RevisionCard from "./RevisionCard";
+import RevisionCard from "./RevisionCard/RevisionCard";
 
-export default function RevisionManager({ collectionId }) {
+export default function RevisionContent({ collectionId }) {
   const { loginToken } = useContext(AuthContext);
   const navigate = useNavigate();
   const [cards, setCards] = useState([]);
@@ -32,11 +32,6 @@ export default function RevisionManager({ collectionId }) {
     if (currentCardIndex && currentCardIndex >= cards.length) {
       navigate("/");
     }
-    console.log(
-      "Use Effect for navigation has been called",
-      currentCardIndex,
-      cards.length
-    );
   }, [currentCardIndex, cards, navigate]);
 
   const handleActionClick = (e) => {
