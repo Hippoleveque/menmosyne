@@ -9,6 +9,7 @@ import Container from "@mui/material/Container";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 import { AuthContext } from "../../store/auth-context";
+import classes from "./LoginContent.module.css";
 
 const theme = createTheme();
 
@@ -54,17 +55,13 @@ export default function LoginContent() {
 
   return (
     <ThemeProvider theme={theme}>
-      <Container component="main" maxWidth="xs" sx={{ heigth: "100vh" }}>
+      <Container
+        component="main"
+        maxWidth="xs"
+        className={classes.loginContainer}
+      >
         <CssBaseline />
-        <Box
-          sx={{
-            marginTop: 8,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
+        <Box className={classes.loginBox}>
           <Typography component="h1" variant="h5">
             Bienvenue sur Mnemosyne
           </Typography>
@@ -103,7 +100,7 @@ export default function LoginContent() {
               <Typography
                 component="h5"
                 variant="h10"
-                sx={{ color: "red", textAlign: "center" }}
+                className={classes.loginErrorMessage}
               >
                 Identifiants incorrects
               </Typography>

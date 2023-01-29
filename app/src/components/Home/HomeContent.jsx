@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState, useContext } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
@@ -13,6 +13,7 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 
 import { AuthContext } from "../../store/auth-context";
+import classes from "./HomeContent.module.css";
 
 export default function HomeContent() {
   const navigate = useNavigate();
@@ -39,12 +40,7 @@ export default function HomeContent() {
     navigate(`/revision/${collectionId}`);
   };
   return (
-    <Grid
-      container
-      sx={{ paddingLeft: 7, paddingRight: 7 }}
-      component="main"
-      spacing={2}
-    >
+    <Grid container component="main" spacing={2} className={classes.homeGrid}>
       <Grid item xs={6} md={12}>
         <Box
           sx={{
@@ -60,7 +56,7 @@ export default function HomeContent() {
           </Typography>
         </Box>
       </Grid>
-      <Grid item xs={6} md={12} sx={{ textAlign: "left" }}>
+      <Grid item xs={6} md={12} className="leftAligned">
         <Typography component="h3" variant="h10">
           {"Mes collections"}
         </Typography>
@@ -81,10 +77,7 @@ export default function HomeContent() {
           </TableHead>
           <TableBody>
             {collections.map((row) => (
-              <TableRow
-                key={row._id.toString()}
-                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
-              >
+              <TableRow key={row._id.toString()}>
                 <TableCell component="th" scope="row">
                   {row.name}
                 </TableCell>
