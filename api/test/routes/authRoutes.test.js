@@ -1,8 +1,8 @@
 import { expect } from "chai";
 import sinon from "sinon";
 import request from "supertest";
-import User from "../models/user.js";
-import app from "../server.js";
+import User from "../../models/user.js";
+import app from "../../server.js";
 import bcrypt from "bcryptjs";
 
 describe("Test the authentication endpoints of the API.", () => {
