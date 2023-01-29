@@ -8,15 +8,16 @@ export const getCards = async (req, res, next) => {
   const { collectionId } = req.params;
   const page = +req.query.page || 1;
   try {
-    const totalCards = await Card.find({
+    const totalCards = await Card.count({
       cardCollection: collectionId,
-    }).countDocuments();
-    const cards = await Card.find({
-      cardCollection: collectionId,
-    })
-      .skip((page - 1) * ITEMS_PER_PAGE)
-      .limit(ITEMS_PER_PAGE)
-      .exec();
+    });
+    const cards = await Card.getCardsFromPage(
+      {
+        cardCollection: collectionId,
+      },
+      page,
+      ITEMS_PER_PAGE
+    );
     return res.status(200).json({ cards: cards, totalCards: totalCards });
   } catch (err) {
     if (!err.statusCode) {
