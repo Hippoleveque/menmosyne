@@ -4,6 +4,7 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 import RevisionPage from "./pages/RevisionPage";
+import CreateCollectionPage from "./pages/CreateCollectionPage";
 import { AuthContext } from "./store/auth-context";
 
 function App() {
@@ -13,9 +14,13 @@ function App() {
     <Routes>
       {isLoggedIn && (
         <Fragment>
-          <Route path="/" exact element={<HomePage />} />
           <Route path="/revision/:collectionId" element={<RevisionPage />} />
+          <Route
+            path="/nouvelle-collection"
+            element={<CreateCollectionPage />}
+          />
           <Route path="/login" element={<Navigate to="/" />} />
+          <Route path="/" exact element={<HomePage />} />
         </Fragment>
       )}
       {!isLoggedIn && (

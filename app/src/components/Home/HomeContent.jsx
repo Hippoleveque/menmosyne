@@ -39,6 +39,11 @@ export default function HomeContent() {
   const handleReviewClick = (collectionId) => {
     navigate(`/revision/${collectionId}`);
   };
+
+  const handleAddCollectionClick = () => {
+    navigate("/nouvelle-collection");
+  };
+
   return (
     <Grid container component="main" spacing={2} className={classes.homeGrid}>
       <Grid item xs={6} md={12}>
@@ -69,7 +74,11 @@ export default function HomeContent() {
               <TableCell align="right">N. Cartes</TableCell>
               <TableCell align="right">Création</TableCell>
               <TableCell align="right">
-                <Button variant="contained" size="small">
+                <Button
+                  variant="contained"
+                  size="small"
+                  onClick={handleAddCollectionClick}
+                >
                   Ajouter
                 </Button>
               </TableCell>
