@@ -22,9 +22,9 @@ export default function CollectionDetailContent({ collectionId }) {
   const navigate = useNavigate();
   const { loginToken } = useContext(AuthContext);
   const [cards, setCards] = useState([]);
+  const [collection, setCollection] = useState(null);
   const [totalCards, setTotalCards] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
-
 
   const fetchCards = useCallback(
     async (page) => {
@@ -54,6 +54,22 @@ export default function CollectionDetailContent({ collectionId }) {
     fetchSetCards();
   }, [currentPage, fetchCards]);
 
+  useEffect(() => {
+    const fetchCollection = async () => {
+      const response = await fetch(`/api/memo/collections/${collectionId}`, {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + loginToken,
+        },
+      });
+      const data = await response.json();
+      setCollection(data.collection);
+    };
+    fetchCollection();
+  }, [loginToken, collectionId]);
+
   const handleAddCardClick = () => {
     navigate("/nouvelle-carte");
   };
@@ -78,7 +94,7 @@ export default function CollectionDetailContent({ collectionId }) {
           }}
         >
           <Typography component="h1" variant="h5">
-            {"Collection " + collectionId}
+            {collection && "Collection " + collection.name}
           </Typography>
         </Box>
       </Grid>
