@@ -34,15 +34,8 @@ cardSchema.statics.count = async function (query) {
   return count;
 };
 
-cardSchema.statics.getCardsFromPage = async function (
-  query,
-  pageNumber,
-  pageSize
-) {
-  const cards = await this.find(query)
-    .skip((pageNumber - 1) * pageSize)
-    .limit(pageSize)
-    .exec();
+cardSchema.statics.getCards = async function (query, offset = 0, limit = 10) {
+  const cards = await this.find(query).skip(offset).limit(limit).exec();
   return cards;
 };
 

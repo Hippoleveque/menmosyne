@@ -26,13 +26,10 @@ cardCollectionSchema.statics.count = async function (query) {
   return count;
 };
 
-cardCollectionSchema.statics.getCollectionsFromPage = async function (query, pageNumber, pageSize) {
-  const collections = await this.find(query)
-    .skip((pageNumber - 1) * pageSize)
-    .limit(pageSize)
-    .exec();
+cardCollectionSchema.statics.getCollections = async function (query, offset = 0, limit = 10) {
+  const collections = await this.find(query).skip(offset).limit(limit).exec();
   return collections;
-}
+};
 
 cardCollectionSchema.statics.getCollection = async function (query) {
   const collection = await this.findOne(query).exec();

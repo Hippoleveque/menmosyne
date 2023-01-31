@@ -2,21 +2,20 @@ import Card from "../models/card.js";
 import CardCollection from "../models/cardCollection.js";
 import { validationResult } from "express-validator";
 
-const ITEMS_PER_PAGE = 7;
-
 export const getCards = async (req, res, next) => {
   const { collectionId } = req.params;
-  const page = +req.query.page || 1;
+  const offset = +req.query.page || 0;
+  const limit = +req.query.limit || 10;
   try {
     const totalCards = await Card.count({
       cardCollection: collectionId,
     });
-    const cards = await Card.getCardsFromPage(
+    const cards = await Card.getCards(
       {
         cardCollection: collectionId,
       },
-      page,
-      ITEMS_PER_PAGE
+      offset,
+      limit
     );
     return res.status(200).json({ cards: cards, totalCards: totalCards });
   } catch (err) {
@@ -65,18 +64,19 @@ export const createCard = async (req, res, next) => {
 };
 
 export const getCollections = async (req, res, next) => {
-  const page = +req.query.page || 1;
+  const offset = +req.query.page || 0;
+  const limit = +req.query.limit || 10;
   const { userId } = req;
   try {
     const totalCollections = await CardCollection.count({
       owner: userId,
     });
-    const cardCollections = await CardCollection.getCollectionsFromPage(
+    const cardCollections = await CardCollection.getCollections(
       {
         owner: userId,
       },
-      page,
-      ITEMS_PER_PAGE
+      offset,
+      limit
     );
     return res.status(200).json({ cardCollections, totalCollections });
   } catch (err) {
@@ -101,7 +101,7 @@ export const getCollection = async (req, res, next) => {
       const err = new Error(message);
       err.statusCode = statusCode;
       throw err;
-    } 
+    }
     return res.status(200).json({ collection });
   } catch (err) {
     if (!err.statusCode) {
