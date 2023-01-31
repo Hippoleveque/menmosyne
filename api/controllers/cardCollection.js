@@ -2,7 +2,7 @@ import Card from "../models/card.js";
 import CardCollection from "../models/cardCollection.js";
 import { validationResult } from "express-validator";
 
-const ITEMS_PER_PAGE = 2;
+const ITEMS_PER_PAGE = 7;
 
 export const getCards = async (req, res, next) => {
   const { collectionId } = req.params;
