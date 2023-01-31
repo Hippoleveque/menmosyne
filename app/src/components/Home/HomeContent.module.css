@@ -10,3 +10,10 @@
   align-items: center;
   justify-content: center;
 }
+
+.homeTablePagination {
+  width: 100%;
+  padding: 10px 0px;
+  display: flex;
+  justify-content: end;
+}

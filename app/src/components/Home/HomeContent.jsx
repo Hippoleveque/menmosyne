@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState, useContext, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
@@ -11,18 +11,23 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
+import Pagination from "@mui/material/Pagination";
 
 import { AuthContext } from "../../store/auth-context";
 import classes from "./HomeContent.module.css";
+
+const NUM_ITEMS_PER_PAGE = 2;
 
 export default function HomeContent() {
   const navigate = useNavigate();
   const { loginToken } = useContext(AuthContext);
   const [collections, setCollections] = useState([]);
+  const [totalCollections, setTotalCollections] = useState(0);
+  const [currentPage, setCurrentPage] = useState(1);
 
-  useEffect(() => {
-    const fetchCollections = async () => {
-      const response = await fetch("/api/memo/cardCollections", {
+  const fetchCollections = useCallback(
+    async (page) => {
+      let response = await fetch("/api/memo/cardCollections?page=" + page, {
         method: "GET",
         headers: {
           Accept: "application/json",
@@ -30,11 +35,20 @@ export default function HomeContent() {
           Authorization: "Bearer " + loginToken,
         },
       });
-      const res = await response.json();
+      response = await response.json();
+      return response;
+    },
+    [loginToken]
+  );
+
+  useEffect(() => {
+    const fetchSetCollections = async () => {
+      const res = await fetchCollections(currentPage);
       setCollections(res.cardCollections);
+      setTotalCollections(res.totalCollections);
     };
-    fetchCollections();
-  }, [loginToken]);
+    fetchSetCollections();
+  }, [currentPage, fetchCollections]);
 
   const handleReviewClick = (collectionId) => {
     navigate(`/revision/${collectionId}`);
@@ -43,6 +57,8 @@ export default function HomeContent() {
   const handleAddCollectionClick = () => {
     navigate("/nouvelle-collection");
   };
+
+  let numPages = Math.ceil(totalCollections / NUM_ITEMS_PER_PAGE);
 
   return (
     <Grid container component="main" spacing={2} className={classes.homeGrid}>
@@ -106,6 +122,13 @@ export default function HomeContent() {
           </TableBody>
         </Table>
       </TableContainer>
+      {numPages > 0 && (
+        <Pagination
+          count={numPages}
+          className={classes.homeTablePagination}
+          onChange={(event, value) => setCurrentPage(value)}
+        />
+      )}
     </Grid>
   );
 }
