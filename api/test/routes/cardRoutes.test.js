@@ -16,7 +16,7 @@ describe("Test the cards endpoints of the API.", () => {
     ];
     sinon.mock(jwt).expects("verify").returns({ userId: "id" });
     sinon.mock(Card).expects("count").resolves(10);
-    sinon.mock(Card).expects("getCardsFromPage").resolves(mockedCards);
+    sinon.mock(Card).expects("getCards").resolves(mockedCards);
     const response = await request(app)
       .get("/memo/cards/1")
       .set("Accept", "application/json")
@@ -26,7 +26,7 @@ describe("Test the cards endpoints of the API.", () => {
     expect(response.body).to.have.property("totalCards", 10);
   });
 
-  it("Tests GET /cards/:collectionId with page params", async () => {
+  it("Tests GET /cards/:collectionId with params", async () => {
     process.env.JWT_SECRET = "test";
     const mockedCards = [
       { _id: "id1", recto: "front", verso: "back" },
@@ -34,9 +34,9 @@ describe("Test the cards endpoints of the API.", () => {
     ];
     sinon.mock(jwt).expects("verify").returns({ userId: "id" });
     sinon.mock(Card).expects("count").resolves(10);
-    sinon.mock(Card).expects("getCardsFromPage").resolves(mockedCards);
+    sinon.mock(Card).expects("getCards").resolves(mockedCards);
     const response = await request(app)
-      .get("/memo/cards/1?page=2")
+      .get("/memo/cards/1?offset=2&limit=5")
       .set("Accept", "application/json")
       .set("Authorization", "Bearer token")
       .expect(200);
@@ -51,7 +51,7 @@ describe("Test the cards endpoints of the API.", () => {
     sinon.mock(CardCollection).expects("count").resolves(10);
     sinon
       .mock(CardCollection)
-      .expects("getCollectionsFromPage")
+      .expects("getCollections")
       .resolves(mockedCollections);
     const response = await request(app)
       .get("/memo/cardCollections")
@@ -72,10 +72,10 @@ describe("Test the cards endpoints of the API.", () => {
     sinon.mock(CardCollection).expects("count").resolves(10);
     sinon
       .mock(CardCollection)
-      .expects("getCollectionsFromPage")
+      .expects("getCollections")
       .resolves(mockedCollections);
     const response = await request(app)
-      .get("/memo/cardCollections?page=2")
+      .get("/memo/cardCollections?offset=2&limit=5")
       .set("Accept", "application/json")
       .set("Authorization", "Bearer token")
       .expect(200);
