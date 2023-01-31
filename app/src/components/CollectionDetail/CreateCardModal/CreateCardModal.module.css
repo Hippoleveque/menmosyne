@@ -1,0 +1,14 @@
+.createCardContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+  }
+  
+  .createCardErrorMessage {
+    color: red;
+    text-align: center;
+  }
+  
