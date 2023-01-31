@@ -15,7 +15,7 @@ const cardCollectionSchema = new Schema(
     numCards: {
       type: Number,
       required: true,
-        default: 0,
+      default: 0,
     },
   },
   { timestamps: true }
@@ -26,7 +26,11 @@ cardCollectionSchema.statics.count = async function (query) {
   return count;
 };
 
-cardCollectionSchema.statics.getCollections = async function (query, offset = 0, limit = 10) {
+cardCollectionSchema.statics.getCollections = async function (
+  query,
+  offset = 0,
+  limit = 10
+) {
   const collections = await this.find(query).skip(offset).limit(limit).exec();
   return collections;
 };

@@ -4,7 +4,7 @@ import { validationResult } from "express-validator";
 
 export const getCards = async (req, res, next) => {
   const { collectionId } = req.params;
-  const offset = +req.query.page || 0;
+  const offset = +req.query.offset || 0;
   const limit = +req.query.limit || 10;
   try {
     const totalCards = await Card.count({
@@ -64,7 +64,7 @@ export const createCard = async (req, res, next) => {
 };
 
 export const getCollections = async (req, res, next) => {
-  const offset = +req.query.page || 0;
+  const offset = +req.query.offset || 0;
   const limit = +req.query.limit || 10;
   const { userId } = req;
   try {
