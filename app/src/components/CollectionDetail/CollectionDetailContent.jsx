@@ -28,8 +28,10 @@ export default function CollectionDetailContent({ collectionId }) {
 
   const fetchCards = useCallback(
     async (page) => {
+      const offset = (page - 1) * ITEMS_PER_PAGE;
+      const limit = ITEMS_PER_PAGE;
       let response = await fetch(
-        `/api/memo/cards/${collectionId}?page=` + page,
+        `/api/memo/cards/${collectionId}?offset=${offset}&limit=${limit}`,
         {
           method: "GET",
           headers: {
