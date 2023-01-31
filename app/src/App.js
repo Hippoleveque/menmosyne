@@ -15,10 +15,7 @@ function App() {
     <Routes>
       {isLoggedIn && (
         <Fragment>
-          <Route
-            path="/collections/:collectionId"
-            element={<CollectionDetailPage />}
-          />
+          <Route path="/collections/:collectionId" element={<CollectionDetailPage />} />
           <Route path="/revision/:collectionId" element={<RevisionPage />} />
           <Route
             path="/nouvelle-collection"
