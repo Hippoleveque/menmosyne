@@ -11,3 +11,9 @@
   color: white;
   text-align: center;
 }
+
+.sideMenuItems {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
