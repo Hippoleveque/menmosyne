@@ -5,6 +5,7 @@ import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 import RevisionPage from "./pages/RevisionPage";
 import CreateCollectionPage from "./pages/CreateCollectionPage";
+import CollectionDetailPage from "./pages/CollectionDetailPage";
 import { AuthContext } from "./store/auth-context";
 
 function App() {
@@ -14,6 +15,7 @@ function App() {
     <Routes>
       {isLoggedIn && (
         <Fragment>
+          <Route path="/collections/:collectionId" element={<CollectionDetailPage />} />
           <Route path="/revision/:collectionId" element={<RevisionPage />} />
           <Route
             path="/nouvelle-collection"

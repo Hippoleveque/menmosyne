@@ -1,0 +1,19 @@
+.collectionGrid {
+  padding-left: 7em;
+  padding-right: 7em;
+}
+
+.collectionBox {
+  margin: 12px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.collectionTablePagination {
+  width: 100%;
+  padding: 10px 0px;
+  display: flex;
+  justify-content: end;
+}

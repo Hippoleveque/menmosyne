@@ -6,6 +6,7 @@ import {
   createCard,
   getCollections,
   createCollection,
+  getCollection
 } from "../controllers/cardCollection.js";
 import { isAuth } from "../middlewares/isAuth.js";
 
@@ -13,6 +14,7 @@ const router = express.Router();
 
 router.get("/cards/:collectionId", isAuth, getCards);
 router.get("/cardCollections", isAuth, getCollections);
+router.get("/collections/:collectionId", isAuth, getCollection)
 
 router.post(
   "/cards",
