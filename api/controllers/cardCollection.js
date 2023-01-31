@@ -87,6 +87,30 @@ export const getCollections = async (req, res, next) => {
   }
 };
 
+export const getCollection = async (req, res, next) => {
+  const { collectionId } = req.params;
+  const { userId } = req;
+  try {
+    const collection = await CardCollection.getCollection({
+      _id: collectionId,
+      owner: userId,
+    });
+    if (!collection) {
+      const statusCode = 400;
+      const message = "Bad Collection Id";
+      const err = new Error(message);
+      err.statusCode = statusCode;
+      throw err;
+    } 
+    return res.status(200).json({ collection });
+  } catch (err) {
+    if (!err.statusCode) {
+      err.statusCode = 500;
+    }
+    next(err);
+  }
+};
+
 export const createCollection = async (req, res, next) => {
   const { name } = req.body;
   const { userId } = req;

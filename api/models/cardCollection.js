@@ -34,4 +34,9 @@ cardCollectionSchema.statics.getCollectionsFromPage = async function (query, pag
   return collections;
 }
 
+cardCollectionSchema.statics.getCollection = async function (query) {
+  const collection = await this.findOne(query).exec();
+  return collection;
+};
+
 export default model("CardCollection", cardCollectionSchema);
