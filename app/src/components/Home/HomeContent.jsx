@@ -16,7 +16,7 @@ import Pagination from "@mui/material/Pagination";
 import { AuthContext } from "../../store/auth-context";
 import classes from "./HomeContent.module.css";
 
-const NUM_ITEMS_PER_PAGE = 2;
+const ITEMS_PER_PAGE = 7;
 
 export default function HomeContent() {
   const navigate = useNavigate();
@@ -58,7 +58,7 @@ export default function HomeContent() {
     navigate("/nouvelle-collection");
   };
 
-  let numPages = Math.ceil(totalCollections / NUM_ITEMS_PER_PAGE);
+  let numPages = Math.ceil(totalCollections / ITEMS_PER_PAGE);
 
   return (
     <Grid container component="main" spacing={2} className={classes.homeGrid}>

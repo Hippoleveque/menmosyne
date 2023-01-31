@@ -16,7 +16,7 @@ import Pagination from "@mui/material/Pagination";
 import { AuthContext } from "../../store/auth-context";
 import classes from "./CollectionDetailContent.module.css";
 
-const NUM_ITEMS_PER_PAGE = 2;
+const ITEMS_PER_PAGE = 7;
 
 export default function CollectionDetailContent({ collectionId }) {
   const navigate = useNavigate();
@@ -74,7 +74,7 @@ export default function CollectionDetailContent({ collectionId }) {
     navigate("/nouvelle-carte");
   };
 
-  let numPages = Math.ceil(totalCards / NUM_ITEMS_PER_PAGE);
+  let numPages = Math.ceil(totalCards / ITEMS_PER_PAGE);
 
   return (
     <Grid
