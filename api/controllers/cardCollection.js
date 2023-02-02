@@ -1,18 +1,22 @@
+import mongoose from "mongoose";
+
 import Card from "../models/card.js";
 import CardCollection from "../models/cardCollection.js";
 import { validationResult } from "express-validator";
+
+const ObjectId = mongoose.Types.ObjectId;
 
 export const getCards = async (req, res, next) => {
   const { collectionId } = req.params;
   const offset = +req.query.offset || 0;
   const limit = +req.query.limit || 10;
   try {
-    const totalCards = await Card.count({
-      cardCollection: collectionId,
+    const totalCards = await Card.countDocs({
+      cardCollection: new ObjectId(collectionId),
     });
     const cards = await Card.getCards(
       {
-        cardCollection: collectionId,
+        cardCollection: new ObjectId(collectionId),
       },
       offset,
       limit
@@ -68,12 +72,12 @@ export const getCollections = async (req, res, next) => {
   const limit = +req.query.limit || 10;
   const { userId } = req;
   try {
-    const totalCollections = await CardCollection.count({
-      owner: userId,
+    const totalCollections = await CardCollection.countDocs({
+      owner: new ObjectId(userId),
     });
     const cardCollections = await CardCollection.getCollections(
       {
-        owner: userId,
+        owner: new ObjectId(userId),
       },
       offset,
       limit
