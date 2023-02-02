@@ -15,24 +15,25 @@ const cardCollectionSchema = new Schema(
     numCards: {
       type: Number,
       required: true,
-        default: 0,
+      default: 0,
     },
   },
   { timestamps: true }
 );
 
-cardCollectionSchema.statics.count = async function (query) {
+cardCollectionSchema.statics.countDocs = async function (query) {
   const count = await this.find(query).countDocuments();
   return count;
 };
 
-cardCollectionSchema.statics.getCollectionsFromPage = async function (query, pageNumber, pageSize) {
-  const collections = await this.find(query)
-    .skip((pageNumber - 1) * pageSize)
-    .limit(pageSize)
-    .exec();
+cardCollectionSchema.statics.getCollections = async function (
+  query,
+  offset = 0,
+  limit = 10
+) {
+  const collections = await this.find(query).skip(offset).limit(limit).exec();
   return collections;
-}
+};
 
 cardCollectionSchema.statics.getCollection = async function (query) {
   const collection = await this.findOne(query).exec();

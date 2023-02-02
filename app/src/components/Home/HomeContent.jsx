@@ -27,14 +27,19 @@ export default function HomeContent() {
 
   const fetchCollections = useCallback(
     async (page) => {
-      let response = await fetch("/api/memo/cardCollections?page=" + page, {
-        method: "GET",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + loginToken,
-        },
-      });
+      const offset = (page - 1) * ITEMS_PER_PAGE;
+      const limit = ITEMS_PER_PAGE;
+      let response = await fetch(
+        `/api/memo/cardCollections?offset=${offset}&limit=${limit}`,
+        {
+          method: "GET",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + loginToken,
+          },
+        }
+      );
       response = await response.json();
       return response;
     },
