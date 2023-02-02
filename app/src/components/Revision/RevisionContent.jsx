@@ -1,21 +1,22 @@
-import React, { useEffect, useState, useContext, useCallback } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../store/auth-context";
 import RevisionCard from "./RevisionCard/RevisionCard";
 
-const ITEMS_IN_MEMORY = 10;
+const FETCH_SIZE = 10;
 
 export default function RevisionContent({ collectionId }) {
   const { loginToken } = useContext(AuthContext);
   const navigate = useNavigate();
-  const [cards, setCards] = useState([]);
+  const [cards, setCards] = useState(null);
   const [currentOffset, setCurrentOffset] = useState(0);
-  const [currentCardIndex, setCurrentCardIndex] = useState(null);
+  const [numCards, setNumCards] = useState(0);
+  const [currentCardIndex, setCurrentCardIndex] = useState(0);
 
   useEffect(() => {
     const fetchCards = async () => {
       const response = await fetch(
-        `/api/memo/cards/${collectionId}?offset=${currentOffset}&limit=${ITEMS_IN_MEMORY}`,
+        `/api/memo/cards/${collectionId}?offset=${currentOffset}&limit=${FETCH_SIZE}`,
         {
           method: "GET",
           headers: {
@@ -26,29 +27,33 @@ export default function RevisionContent({ collectionId }) {
         }
       );
       const res = await response.json();
-      setCards(res.cards);
-      setCurrentCardIndex(0);
-      setCurrentOffset((currOffset) => currOffset + ITEMS_IN_MEMORY);
+      setCards((currCards) =>
+        currCards ? currCards.concat(res.cards) : res.cards
+      );
+      setNumCards(res.totalCards);
     };
     fetchCards();
   }, [loginToken, collectionId, currentOffset]);
 
   useEffect(() => {
-    if (currentCardIndex && currentCardIndex >= cards.length) {
+    if (cards && currentCardIndex === cards.length) {
+      setCurrentOffset((currVal) => currVal + FETCH_SIZE);
+    }
+    if (currentCardIndex && currentCardIndex >= numCards) {
       navigate("/");
     }
-  }, [currentCardIndex, cards, navigate]);
+  }, [currentCardIndex, cards, navigate, numCards]);
 
   const handleActionClick = (e) => {
     setCurrentCardIndex((currVal) => currVal + 1);
   };
 
-  return currentCardIndex < cards.length ? (
+  return cards && currentCardIndex < cards.length ? (
     <RevisionCard
       card={cards[currentCardIndex]}
       handleActionClick={handleActionClick}
     />
   ) : (
-    <p>Il n'y a pas de cartes dans cette collection</p>
+    <h1> Loading... </h1>
   );
 }
