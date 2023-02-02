@@ -22,6 +22,9 @@ const cardCollectionSchema = new Schema(
 );
 
 cardCollectionSchema.statics.count = async function (query) {
+  // Sanitize the query
+  delete query.limit;
+  delete query.offset;
   const count = await this.find(query).countDocuments();
   return count;
 };

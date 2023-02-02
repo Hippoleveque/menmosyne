@@ -30,7 +30,10 @@ const cardSchema = new Schema(
 );
 
 cardSchema.statics.count = async function (query) {
-  const count = await this.find(query).countDocuments();
+  // Sanitize the query
+  delete query.limit;
+  delete query.offset;
+  const count = await this.find({query }).countDocuments();
   return count;
 };
 
