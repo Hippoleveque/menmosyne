@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Card from "@mui/material/Card";
@@ -12,6 +12,10 @@ import classes from "./RevisionCard.module.css";
 
 export default function RevisionCard({ card, handleActionClick }) {
   const [isVersoShown, setIsVersoShown] = useState(false);
+
+  useEffect(() => {
+    setIsVersoShown(false);
+  }, [card])
 
   const handleShowVersoClick = (e) => {
     setIsVersoShown(true);
@@ -80,7 +84,7 @@ export default function RevisionCard({ card, handleActionClick }) {
           <Box sx={{ width: "100%", flexGrow: 1 }}>
             <Typography variant="body2">{card.rectoContent}</Typography>
           </Box>
-          <Divider ligth style={{ width: "100%" }} />
+          <Divider light style={{ width: "100%" }} />
           <Box sx={{ width: "100%", flexGrow: 1 }}>
             <Typography variant="body2">{card.versoContent}</Typography>
           </Box>
