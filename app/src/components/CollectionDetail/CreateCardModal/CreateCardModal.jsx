@@ -1,5 +1,4 @@
 import { useContext, useState, useReducer } from "react";
-import { useNavigate } from "react-router-dom";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
@@ -40,7 +39,6 @@ const reducer = (state, action) => {
 };
 
 export default function CreateCardModal({ open, onClose, collectionId }) {
-  const navigate = useNavigate();
   const { loginToken } = useContext(AuthContext);
   const [state, dispatch] = useReducer(reducer, initialState);
   const [submitFailed, setSubmitFailed] = useState(false);
