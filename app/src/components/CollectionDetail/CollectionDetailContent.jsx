@@ -13,6 +13,7 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import Pagination from "@mui/material/Pagination";
 
+import CreateCardModal from "./CreateCardModal/CreateCardModal";
 import { AuthContext } from "../../store/auth-context";
 import classes from "./CollectionDetailContent.module.css";
 
@@ -22,6 +23,7 @@ export default function CollectionDetailContent({ collectionId }) {
   const navigate = useNavigate();
   const { loginToken } = useContext(AuthContext);
   const [cards, setCards] = useState([]);
+  const [modalOpen, setModalOpen] = useState(false);
   const [collection, setCollection] = useState(null);
   const [totalCards, setTotalCards] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
@@ -42,18 +44,14 @@ export default function CollectionDetailContent({ collectionId }) {
         }
       );
       response = await response.json();
-      return response;
+      setCards(response.cards);
+      setTotalCards(response.totalCards);
     },
     [loginToken, collectionId]
   );
 
   useEffect(() => {
-    const fetchSetCards = async () => {
-      const res = await fetchCards(currentPage);
-      setCards(res.cards);
-      setTotalCards(res.totalCards);
-    };
-    fetchSetCards();
+    fetchCards(currentPage);
   }, [currentPage, fetchCards]);
 
   useEffect(() => {
@@ -72,8 +70,14 @@ export default function CollectionDetailContent({ collectionId }) {
     fetchCollection();
   }, [loginToken, collectionId]);
 
-  const handleAddCardClick = () => {
-    navigate("/nouvelle-carte");
+  const handleModalOpen = () => {
+    setModalOpen(true);
+  };
+
+  const handleModalClose = () => {
+    setModalOpen(false);
+    setCurrentPage(1);
+    fetchCards(1);
   };
 
   let numPages = Math.ceil(totalCards / ITEMS_PER_PAGE);
@@ -85,6 +89,11 @@ export default function CollectionDetailContent({ collectionId }) {
       spacing={2}
       className={classes.collectionGrid}
     >
+      <CreateCardModal
+        open={modalOpen}
+        onClose={handleModalClose}
+        collectionId={collectionId}
+      />
       <Grid item xs={6} md={12}>
         <Box
           sx={{
@@ -116,7 +125,7 @@ export default function CollectionDetailContent({ collectionId }) {
                 <Button
                   variant="contained"
                   size="small"
-                  onClick={handleAddCardClick}
+                  onClick={handleModalOpen}
                 >
                   Ajouter
                 </Button>
