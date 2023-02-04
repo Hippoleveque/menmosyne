@@ -4,7 +4,6 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 import RevisionPage from "./pages/RevisionPage";
-import CreateCollectionPage from "./pages/CreateCollectionPage";
 import CollectionDetailPage from "./pages/CollectionDetailPage";
 import { AuthContext } from "./store/auth-context";
 
@@ -20,10 +19,6 @@ function App() {
             element={<CollectionDetailPage />}
           />
           <Route path="/revision/:collectionId" element={<RevisionPage />} />
-          <Route
-            path="/nouvelle-collection"
-            element={<CreateCollectionPage />}
-          />
           <Route path="/login" element={<Navigate to="/" />} />
           <Route path="/" exact element={<HomePage />} />
         </Fragment>
