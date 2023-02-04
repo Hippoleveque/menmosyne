@@ -1,5 +1,4 @@
-import { useContext, useState, useReducer } from "react";
-import { useNavigate } from "react-router-dom";
+import { useContext, useState, useReducer, useEffect } from "react";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
@@ -34,13 +33,14 @@ const reducer = (state, action) => {
       return { ...state, newCardVerso: action.value };
     case "cardCollectionId":
       return { ...state, cardCollectionId: action.value };
+    case "reset":
+      return initialState;
     default:
       throw new Error("Invalid action type");
   }
 };
 
 export default function CreateCardModal({ open, onClose, collectionId }) {
-  const navigate = useNavigate();
   const { loginToken } = useContext(AuthContext);
   const [state, dispatch] = useReducer(reducer, initialState);
   const [submitFailed, setSubmitFailed] = useState(false);
@@ -65,6 +65,7 @@ export default function CreateCardModal({ open, onClose, collectionId }) {
       if (!response.ok) {
         throw new Error("Request failed!");
       }
+      dispatch({ type: "reset" });
       onClose();
     } catch (err) {
       setSubmitFailed(true);

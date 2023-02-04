@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useContext, useCallback } from "react";
-import { useNavigate } from "react-router-dom";
 import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
@@ -20,7 +19,6 @@ import classes from "./CollectionDetailContent.module.css";
 const ITEMS_PER_PAGE = 7;
 
 export default function CollectionDetailContent({ collectionId }) {
-  const navigate = useNavigate();
   const { loginToken } = useContext(AuthContext);
   const [cards, setCards] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
