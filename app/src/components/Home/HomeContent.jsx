@@ -15,6 +15,7 @@ import Pagination from "@mui/material/Pagination";
 
 import { AuthContext } from "../../store/auth-context";
 import classes from "./HomeContent.module.css";
+import CreateCollectionModal from "./CreateCollectionModal/CreateCollectionModal";
 
 const ITEMS_PER_PAGE = 7;
 
@@ -22,6 +23,7 @@ export default function HomeContent() {
   const navigate = useNavigate();
   const { loginToken } = useContext(AuthContext);
   const [collections, setCollections] = useState([]);
+  const [modalOpen, setModalOpen] = useState(false);
   const [totalCollections, setTotalCollections] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -59,14 +61,19 @@ export default function HomeContent() {
     navigate(`/revision/${collectionId}`);
   };
 
-  const handleAddCollectionClick = () => {
-    navigate("/nouvelle-collection");
+  const handleModalOpen = () => {
+    setModalOpen(true);
+  };
+
+  const handleModalClose = () => {
+    setModalOpen(false);
   };
 
   let numPages = Math.ceil(totalCollections / ITEMS_PER_PAGE);
 
   return (
     <Grid container component="main" spacing={2} className={classes.homeGrid}>
+      <CreateCollectionModal open={modalOpen} onClose={handleModalClose} />
       <Grid item xs={6} md={12}>
         <Box
           sx={{
@@ -98,7 +105,7 @@ export default function HomeContent() {
                 <Button
                   variant="contained"
                   size="small"
-                  onClick={handleAddCollectionClick}
+                  onClick={handleModalOpen}
                 >
                   Ajouter
                 </Button>
