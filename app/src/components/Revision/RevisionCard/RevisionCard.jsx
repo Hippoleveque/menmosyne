@@ -54,13 +54,6 @@ export default function RevisionCard({ card, handleActionClick }) {
   const versoCard = (
     <Card
       variant="outlined"
-      //   sx={{
-      //     minHeight: "300px",
-      //     display: "flex",
-      //     flexDirection: "column",
-      //     justifyContent: "space-between",
-      //     height: "100%",
-      //   }}
       className={classes.versoCard}
     >
       <CardContent
