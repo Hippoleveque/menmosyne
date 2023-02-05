@@ -141,3 +141,33 @@ export const createCollection = async (req, res, next) => {
     next(err);
   }
 };
+
+export const deleteCollection = async (req, res, next) => {
+  const { collectionId } = req.params;
+  const { userId } = req;
+  try {
+    const collection = await CardCollection.deleteCollection({
+      _id: collectionId,
+      owner: userId,
+    });
+    if (!collection) {
+      const statusCode = 400;
+      const message = "Bad Collection Id";
+      const err = new Error(message);
+      err.statusCode = statusCode;
+      throw err;
+    }
+    await Promise.all([
+      CardCollection.deleteCollection(collectionId),
+      Card.deleteCards({ cardCollection: collectionId }),
+    ]);
+    return res
+      .status(200)
+      .json({ message: "Collection deleted and associated cards deleted" });
+  } catch (err) {
+    if (!err.statusCode) {
+      err.statusCode = 500;
+    }
+    next(err);
+  }
+};
