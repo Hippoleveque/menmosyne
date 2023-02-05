@@ -127,7 +127,7 @@ export default function HomeContent() {
             <TableRow>
               <TableCell>Nom</TableCell>
               <TableCell align="right"># Cartes</TableCell>
-              <TableCell align="right">Création</TableCell>
+              <TableCell align="right">Description</TableCell>
               <TableCell align="right">
                 <Button
                   variant="contained"
@@ -148,7 +148,7 @@ export default function HomeContent() {
                   </Link>
                 </TableCell>
                 <TableCell align="right">{row.numCards}</TableCell>
-                <TableCell align="right">{row.createdAt}</TableCell>
+                <TableCell align="right">{row.description && row.description.slice(0, 20)}</TableCell>
                 <TableCell
                   align="right"
                   sx={{ display: "flex", alignItems: "center" }}
