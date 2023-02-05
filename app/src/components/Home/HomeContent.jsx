@@ -17,6 +17,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { AuthContext } from "../../store/auth-context";
 import classes from "./HomeContent.module.css";
 import CreateCollectionModal from "./CreateCollectionModal/CreateCollectionModal";
+import ConfirmCollectionDeletionModal from "./ConfirmCollectionDeletionModal/ConfirmCollectionDeletionModal";
 
 const ITEMS_PER_PAGE = 7;
 
@@ -24,7 +25,9 @@ export default function HomeContent() {
   const navigate = useNavigate();
   const { loginToken } = useContext(AuthContext);
   const [collections, setCollections] = useState([]);
-  const [modalOpen, setModalOpen] = useState(false);
+  const [createModalOpen, setCreateModalOpen] = useState(false);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [deletingCollectionId, setDeletingCollectionId] = useState(null);
   const [totalCollections, setTotalCollections] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -62,19 +65,30 @@ export default function HomeContent() {
     navigate(`/revision/${collectionId}`);
   };
 
-  const handleModalOpen = () => {
-    setModalOpen(true);
+  const handleCreateModalOpen = () => {
+    setCreateModalOpen(true);
   };
 
-  const handleModalClose = () => {
-    setModalOpen(false);
+  const handleCreateModalClose = () => {
+    setCreateModalOpen(false);
+  };
+
+  const handleDeleteModalOpen = (collectionId) => {
+    setDeleteModalOpen(true);
+    setDeletingCollectionId(collectionId);
+  };
+
+  const handleDeleteModalClose = () => {
+    setDeleteModalOpen(false);
+    setDeletingCollectionId(null);
   };
 
   let numPages = Math.ceil(totalCollections / ITEMS_PER_PAGE);
 
   return (
     <Grid container component="main" spacing={2} className={classes.homeGrid}>
-      <CreateCollectionModal open={modalOpen} onClose={handleModalClose} />
+      <CreateCollectionModal open={createModalOpen} onClose={handleCreateModalClose} />
+      <ConfirmCollectionDeletionModal open={deleteModalOpen} onClose={handleDeleteModalClose} />
       <Grid item xs={6} md={12}>
         <Box
           sx={{
@@ -106,7 +120,7 @@ export default function HomeContent() {
                 <Button
                   variant="contained"
                   size="small"
-                  onClick={handleModalOpen}
+                  onClick={handleCreateModalOpen}
                 >
                   Ajouter
                 </Button>
@@ -122,7 +136,7 @@ export default function HomeContent() {
                 <TableCell align="right">{row.numCards}</TableCell>
                 <TableCell align="right">{row.createdAt}</TableCell>
                 <TableCell align="right" sx={{display: "flex", alignItems: "center"}}>
-                  <DeleteIcon  color="primary"/>
+                  <DeleteIcon  color="primary" onClick={() => handleDeleteModalOpen(row._id.toString())}/>
                   <Button
                     variant="contained"
                     size="small"
