@@ -1,5 +1,4 @@
 import { useContext, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
@@ -15,7 +14,6 @@ import classes from "./CreateCollectionModal.module.css";
 const theme = createTheme();
 
 export default function CreateCollectionModal({ open, onClose }) {
-  const navigate = useNavigate();
   const { loginToken } = useContext(AuthContext);
   const [newCollectionName, setNewCollectionName] = useState("");
   const [submitFailed, setSubmitFailed] = useState(false);
