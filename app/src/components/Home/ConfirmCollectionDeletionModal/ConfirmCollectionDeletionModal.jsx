@@ -1,7 +1,6 @@
 import { useContext, useState } from "react";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
-import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
@@ -9,33 +8,32 @@ import Modal from "@mui/material/Modal";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 import { AuthContext } from "../../../store/auth-context";
-import classes from "./CreateCollectionModal.module.css";
+import classes from "./ConfirmCollectionDeletionModal.module.css";
 
 const theme = createTheme();
 
-export default function CreateCollectionModal({ open, onClose }) {
+export default function ConfirmCollectionDeletionModal({
+  open,
+  onClose,
+  collectionId,
+}) {
   const { loginToken } = useContext(AuthContext);
-  const [newCollectionName, setNewCollectionName] = useState("");
   const [submitFailed, setSubmitFailed] = useState(false);
-
-  const handleNewCollectionNameChange = (e) => {
-    setNewCollectionName(e.target.value);
-  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const response = await fetch("/api/memo/cardCollections", {
-        method: "POST",
-        body: JSON.stringify({
-          name: newCollectionName,
-        }),
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + loginToken,
-        },
-      });
+      const response = await fetch(
+        `/api/memo/cardCollections/${collectionId}`,
+        {
+          method: "DELETE",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + loginToken,
+          },
+        }
+      );
       if (!response.ok) {
         throw new Error("Request failed!");
       }
@@ -43,6 +41,7 @@ export default function CreateCollectionModal({ open, onClose }) {
     } catch (err) {
       setSubmitFailed(true);
     }
+    onClose();
   };
 
   return (
@@ -50,9 +49,8 @@ export default function CreateCollectionModal({ open, onClose }) {
       <Modal open={open} onClose={onClose}>
         <Container
           component="main"
-          className={classes.createCollectionContainer}
+          className={classes.deleteCollectionContainer}
         >
-          <CssBaseline />
           <Box
             sx={{
               backgroundColor: "white",
@@ -61,45 +59,45 @@ export default function CreateCollectionModal({ open, onClose }) {
               width: "30rem",
             }}
           >
+            <CssBaseline />
             <Typography component="h1" variant="h5">
-              Créer une nouvelle Collection
+              Êtes-vous sûr de vouloir supprimer cette collection ?
             </Typography>
             <Box
               component="form"
               onSubmit={handleSubmit}
               noValidate
-              sx={{ mt: 1 }}
+              sx={{
+                mt: 1,
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "right",
+              }}
             >
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                id="name"
-                label="Name"
-                name="name"
-                type="text"
-                autoComplete="email"
-                value={newCollectionName}
-                onChange={handleNewCollectionNameChange}
-                autoFocus
-              />
+              <Button
+                onClick={onClose}
+                variant="contained"
+                sx={{ mt: 3, mb: 2, mr: 1.5, ml: 1.5 }}
+              >
+                Annuler
+              </Button>
+              <Button
+                type="submit"
+                variant="contained"
+                color="error"
+                sx={{ mt: 3, mb: 2, mr: 1.5, ml: 1.5 }}
+              >
+                Supprimer
+              </Button>
               {submitFailed && (
                 <Typography
                   component="h5"
                   variant="h10"
-                  className={classes.createCollectionErrorMessage}
+                  className={classes.deleteCollectionErrorMessage}
                 >
-                  Nom de collection incorrect
+                  Impossible de supprimer la collection.
                 </Typography>
               )}
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                sx={{ mt: 3, mb: 2 }}
-              >
-                Créer la collection
-              </Button>
             </Box>
           </Box>
         </Container>
