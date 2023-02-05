@@ -116,14 +116,14 @@ export default function HomeContent() {
           </Typography>
         </Box>
       </Grid>
-      <Grid item xs={6} md={12} className="leftAligned">
-        <Typography component="h3" variant="h10">
-          {"Mes collections"}
-        </Typography>
-      </Grid>
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
+            <TableRow>
+              <TableCell colSpan={4}>
+                <Typography component="h2">Mes collections</Typography>
+              </TableCell>
+            </TableRow>
             <TableRow>
               <TableCell>Nom</TableCell>
               <TableCell align="right">N. Cartes</TableCell>
