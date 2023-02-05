@@ -84,7 +84,7 @@ export default function HomeContent() {
     setDeletingCollectionId(null);
     const newCollections = await fetchCollections(currentPage);
     setCollections(newCollections.cardCollections);
-    setTotalCollections(newCollections.totalCollections.totalCollections)
+    setTotalCollections(newCollections.totalCollections);
   };
 
   let numPages = Math.ceil(totalCollections / ITEMS_PER_PAGE);
