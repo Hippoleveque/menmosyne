@@ -22,6 +22,25 @@ export default function ConfirmCollectionDeletionModal({
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    try {
+      const response = await fetch(
+        `/api/memo/cardCollections/${collectionId}`,
+        {
+          method: "DELETE",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + loginToken,
+          },
+        }
+      );
+      if (!response.ok) {
+        throw new Error("Request failed!");
+      }
+      onClose();
+    } catch (err) {
+      setSubmitFailed(true);
+    }
     onClose();
   };
 
@@ -70,6 +89,15 @@ export default function ConfirmCollectionDeletionModal({
               >
                 Supprimer
               </Button>
+              {submitFailed && (
+                <Typography
+                  component="h5"
+                  variant="h10"
+                  className={classes.deleteCollectionErrorMessage}
+                >
+                  Impossible de supprimer la collection.
+                </Typography>
+              )}
             </Box>
           </Box>
         </Container>

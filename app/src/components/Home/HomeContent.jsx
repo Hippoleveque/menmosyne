@@ -71,24 +71,35 @@ export default function HomeContent() {
 
   const handleCreateModalClose = () => {
     setCreateModalOpen(false);
+    fetchCollections(1);
   };
 
   const handleDeleteModalOpen = (collectionId) => {
-    setDeleteModalOpen(true);
     setDeletingCollectionId(collectionId);
+    setDeleteModalOpen(true);
   };
 
-  const handleDeleteModalClose = () => {
+  const handleDeleteModalClose = async () => {
     setDeleteModalOpen(false);
     setDeletingCollectionId(null);
+    const newCollections = await fetchCollections(currentPage);
+    setCollections(newCollections.cardCollections);
+    setTotalCollections(newCollections.totalCollections.totalCollections)
   };
 
   let numPages = Math.ceil(totalCollections / ITEMS_PER_PAGE);
 
   return (
     <Grid container component="main" spacing={2} className={classes.homeGrid}>
-      <CreateCollectionModal open={createModalOpen} onClose={handleCreateModalClose} />
-      <ConfirmCollectionDeletionModal open={deleteModalOpen} onClose={handleDeleteModalClose} />
+      <CreateCollectionModal
+        open={createModalOpen}
+        onClose={handleCreateModalClose}
+      />
+      <ConfirmCollectionDeletionModal
+        collectionId={deletingCollectionId}
+        open={deleteModalOpen}
+        onClose={handleDeleteModalClose}
+      />
       <Grid item xs={6} md={12}>
         <Box
           sx={{
@@ -135,8 +146,14 @@ export default function HomeContent() {
                 </TableCell>
                 <TableCell align="right">{row.numCards}</TableCell>
                 <TableCell align="right">{row.createdAt}</TableCell>
-                <TableCell align="right" sx={{display: "flex", alignItems: "center"}}>
-                  <DeleteIcon  color="primary" onClick={() => handleDeleteModalOpen(row._id.toString())}/>
+                <TableCell
+                  align="right"
+                  sx={{ display: "flex", alignItems: "center" }}
+                >
+                  <DeleteIcon
+                    color="primary"
+                    onClick={() => handleDeleteModalOpen(row._id.toString())}
+                  />
                   <Button
                     variant="contained"
                     size="small"
