@@ -67,6 +67,32 @@ export const createCard = async (req, res, next) => {
   }
 };
 
+export const deleteCard = async (req, res, next) => {
+  const { cardId } = req.params;
+  const { userId } = req;
+  try {
+    let card = await Card.getCard({
+      _id: new ObjectId(cardId),
+    });
+    if (!card || card.cardCollection.owner.toString() !== userId.toString()) {
+      const statusCode = 400;
+      const message = "Bad Collection Id";
+      const err = new Error(message);
+      err.statusCode = statusCode;
+      throw err;
+    }
+    card = await Card.deleteCard(cardId);
+    return res
+      .status(200)
+      .json({ message: "The card has been successfully deleted" });
+  } catch (err) {
+    if (!err.statusCode) {
+      err.statusCode = 500;
+    }
+    next(err);
+  }
+};
+
 export const getCollections = async (req, res, next) => {
   const offset = +req.query.offset || 0;
   const limit = +req.query.limit || 10;

@@ -34,9 +34,24 @@ cardSchema.statics.countDocs = async function (query) {
   return count;
 };
 
+cardSchema.statics.getCard = async function (query) {
+  const card = await this.findOne(query).populate("cardCollection").exec();
+  return card;
+};
+
 cardSchema.statics.getCards = async function (query, offset = 0, limit = 10) {
   const cards = await this.find(query).skip(offset).limit(limit).exec();
   return cards;
+};
+
+cardSchema.statics.deleteCard = async function (cardId) {
+  const card = await this.findByIdAndDelete(cardId)
+    .populate("cardCollection")
+    .exec();
+  const collection = card.cardCollection;
+  collection.numCards -= 1;
+  await collection.save();
+  return card;
 };
 
 cardSchema.statics.deleteCards = async function (query) {

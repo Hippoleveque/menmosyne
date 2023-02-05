@@ -8,6 +8,7 @@ import {
   createCollection,
   getCollection,
   deleteCollection,
+  deleteCard,
 } from "../controllers/cardCollection.js";
 import { isAuth } from "../middlewares/isAuth.js";
 
@@ -32,5 +33,6 @@ router.post(
 );
 
 router.delete("/cardCollections/:collectionId", isAuth, deleteCollection);
+router.delete("/cards/:cardId", isAuth, deleteCard);
 
 export default router;
