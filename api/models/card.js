@@ -39,4 +39,9 @@ cardSchema.statics.getCards = async function (query, offset = 0, limit = 10) {
   return cards;
 };
 
+cardSchema.statics.deleteCards = async function (query) {
+  const cards = await this.deleteMany(query).exec();
+  return cards;
+};
+
 export default model("Card", cardSchema);

@@ -40,4 +40,9 @@ cardCollectionSchema.statics.getCollection = async function (query) {
   return collection;
 };
 
+cardCollectionSchema.statics.deleteCollection = async function (collectionId) {
+  const collection = await this.findByIdAndDelete(collectionId).exec();
+  return collection;
+}
+
 export default model("CardCollection", cardCollectionSchema);
