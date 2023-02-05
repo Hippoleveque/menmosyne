@@ -6,7 +6,8 @@ import {
   createCard,
   getCollections,
   createCollection,
-  getCollection
+  getCollection,
+  deleteCollection,
 } from "../controllers/cardCollection.js";
 import { isAuth } from "../middlewares/isAuth.js";
 
@@ -14,7 +15,7 @@ const router = express.Router();
 
 router.get("/cards/:collectionId", isAuth, getCards);
 router.get("/cardCollections", isAuth, getCollections);
-router.get("/collections/:collectionId", isAuth, getCollection)
+router.get("/collections/:collectionId", isAuth, getCollection);
 
 router.post(
   "/cards",
@@ -29,5 +30,7 @@ router.post(
   isAuth,
   createCollection
 );
+
+router.delete("/cardCollections/:collectionId", isAuth, deleteCollection);
 
 export default router;
