@@ -11,6 +11,7 @@ import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
+import Link from "@mui/material/Link";
 import Pagination from "@mui/material/Pagination";
 import DeleteIcon from "@mui/icons-material/Delete";
 
@@ -142,7 +143,9 @@ export default function HomeContent() {
             {collections.map((row) => (
               <TableRow key={row._id.toString()}>
                 <TableCell component="th" scope="row">
-                  {row.name}
+                  <Link href={`/collections/${row._id.toString()}`}>
+                    {row.name}
+                  </Link>
                 </TableCell>
                 <TableCell align="right">{row.numCards}</TableCell>
                 <TableCell align="right">{row.createdAt}</TableCell>
