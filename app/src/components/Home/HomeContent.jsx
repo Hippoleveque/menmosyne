@@ -126,7 +126,7 @@ export default function HomeContent() {
             </TableRow>
             <TableRow>
               <TableCell>Nom</TableCell>
-              <TableCell align="right">N. Cartes</TableCell>
+              <TableCell align="right"># Cartes</TableCell>
               <TableCell align="right">Création</TableCell>
               <TableCell align="right">
                 <Button
