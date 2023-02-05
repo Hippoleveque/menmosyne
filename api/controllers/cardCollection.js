@@ -142,7 +142,7 @@ export const getCollection = async (req, res, next) => {
 };
 
 export const createCollection = async (req, res, next) => {
-  const { name } = req.body;
+  const { name, description } = req.body;
   const { userId } = req;
   const errors = validationResult(req);
   try {
@@ -156,6 +156,7 @@ export const createCollection = async (req, res, next) => {
     let cardCollection = {
       owner: userId,
       name: name,
+      description: description,
     };
     cardCollection = new CardCollection(cardCollection);
     await cardCollection.save();

@@ -17,6 +17,10 @@ const cardCollectionSchema = new Schema(
       required: true,
       default: 0,
     },
+    description: {
+      type: String,
+      required: false,
+    },
   },
   { timestamps: true }
 );
@@ -43,6 +47,6 @@ cardCollectionSchema.statics.getCollection = async function (query) {
 cardCollectionSchema.statics.deleteCollection = async function (collectionId) {
   const collection = await this.findByIdAndDelete(collectionId).exec();
   return collection;
-}
+};
 
 export default model("CardCollection", cardCollectionSchema);

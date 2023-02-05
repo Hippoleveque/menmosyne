@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useState, useReducer } from "react";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
@@ -13,14 +13,28 @@ import classes from "./CreateCollectionModal.module.css";
 
 const theme = createTheme();
 
+const initialState = {
+  newCollectionName: "",
+  newCollectionDescription: "",
+};
+
+const reducer = (state, action) => {
+  switch (action.type) {
+    case "newCollectionName":
+      return { ...state, newCollectionName: action.value };
+    case "newCollectionDescription":
+      return { ...state, newCollectionDescription: action.value };
+    case "reset":
+      return initialState;
+    default:
+      throw new Error("Invalid action type");
+  }
+};
+
 export default function CreateCollectionModal({ open, onClose }) {
   const { loginToken } = useContext(AuthContext);
-  const [newCollectionName, setNewCollectionName] = useState("");
+  const [state, dispatch] = useReducer(reducer, initialState);
   const [submitFailed, setSubmitFailed] = useState(false);
-
-  const handleNewCollectionNameChange = (e) => {
-    setNewCollectionName(e.target.value);
-  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -28,7 +42,8 @@ export default function CreateCollectionModal({ open, onClose }) {
       const response = await fetch("/api/memo/cardCollections", {
         method: "POST",
         body: JSON.stringify({
-          name: newCollectionName,
+          name: state.newCollectionName,
+          description: state.newCollectionDescription,
         }),
         headers: {
           Accept: "application/json",
@@ -39,6 +54,7 @@ export default function CreateCollectionModal({ open, onClose }) {
       if (!response.ok) {
         throw new Error("Request failed!");
       }
+      dispatch({ type: "reset" });
       onClose();
     } catch (err) {
       setSubmitFailed(true);
@@ -79,9 +95,27 @@ export default function CreateCollectionModal({ open, onClose }) {
                 name="name"
                 type="text"
                 autoComplete="email"
-                value={newCollectionName}
-                onChange={handleNewCollectionNameChange}
+                value={state.newCollectionName}
+                onChange={(e) =>
+                  dispatch({ type: "newCollectionName", value: e.target.value })
+                }
                 autoFocus
+              />
+              <TextField
+                margin="normal"
+                fullWidth
+                id="description"
+                label="Description"
+                name="description"
+                type="text"
+                autoComplete="email"
+                value={state.newCollectionDescription}
+                onChange={(e) =>
+                  dispatch({
+                    type: "newCollectionDescription",
+                    value: e.target.value,
+                  })
+                }
               />
               {submitFailed && (
                 <Typography

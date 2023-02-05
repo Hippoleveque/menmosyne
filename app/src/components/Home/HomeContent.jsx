@@ -116,18 +116,18 @@ export default function HomeContent() {
           </Typography>
         </Box>
       </Grid>
-      <Grid item xs={6} md={12} className="leftAligned">
-        <Typography component="h3" variant="h10">
-          {"Mes collections"}
-        </Typography>
-      </Grid>
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
             <TableRow>
+              <TableCell colSpan={4}>
+                <Typography component="h2">Mes collections</Typography>
+              </TableCell>
+            </TableRow>
+            <TableRow>
               <TableCell>Nom</TableCell>
-              <TableCell align="right">N. Cartes</TableCell>
-              <TableCell align="right">Création</TableCell>
+              <TableCell align="right"># Cartes</TableCell>
+              <TableCell align="right">Description</TableCell>
               <TableCell align="right">
                 <Button
                   variant="contained"
@@ -148,7 +148,7 @@ export default function HomeContent() {
                   </Link>
                 </TableCell>
                 <TableCell align="right">{row.numCards}</TableCell>
-                <TableCell align="right">{row.createdAt}</TableCell>
+                <TableCell align="right">{row.description && row.description.slice(0, 20)}</TableCell>
                 <TableCell
                   align="right"
                   sx={{ display: "flex", alignItems: "center" }}
