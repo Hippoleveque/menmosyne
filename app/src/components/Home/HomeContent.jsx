@@ -12,6 +12,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import Pagination from "@mui/material/Pagination";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 import { AuthContext } from "../../store/auth-context";
 import classes from "./HomeContent.module.css";
@@ -120,7 +121,8 @@ export default function HomeContent() {
                 </TableCell>
                 <TableCell align="right">{row.numCards}</TableCell>
                 <TableCell align="right">{row.createdAt}</TableCell>
-                <TableCell align="right">
+                <TableCell align="right" sx={{display: "flex", alignItems: "center"}}>
+                  <DeleteIcon  color="primary"/>
                   <Button
                     variant="contained"
                     size="small"
