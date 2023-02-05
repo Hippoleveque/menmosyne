@@ -32,7 +32,6 @@ export default function ConfirmCollectionDeletionModal({
           component="main"
           className={classes.deleteCollectionContainer}
         >
-          <CssBaseline />
           <Box
             sx={{
               backgroundColor: "white",
@@ -41,6 +40,7 @@ export default function ConfirmCollectionDeletionModal({
               width: "30rem",
             }}
           >
+            <CssBaseline />
             <Typography component="h1" variant="h5">
               Êtes-vous sûr de vouloir supprimer cette collection ?
             </Typography>
