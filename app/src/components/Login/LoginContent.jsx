@@ -6,6 +6,7 @@ import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
+import Link from "@mui/material/Link";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 import { AuthContext } from "../../store/auth-context";
@@ -113,6 +114,15 @@ export default function LoginContent() {
             >
               Se connecter
             </Button>
+            <Typography
+              component="h5"
+              variant="h10"
+              sx={{ textAlign: "center" }}
+            >
+              <Link href={"/signup"} underline="hover">
+                Créer un compte
+              </Link>
+            </Typography>
           </Box>
         </Box>
       </Container>
