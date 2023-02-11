@@ -7,8 +7,8 @@ import Card from "../../models/card.js";
 import CardCollection from "../../models/cardCollection.js";
 import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
-import { Query } from "mongoose";
 
+const Query = mongoose.Query;
 const ObjectId = mongoose.Types.ObjectId;
 
 describe("Test the cards endpoints of the API.", () => {
@@ -107,8 +107,16 @@ describe("Test the cards endpoints of the API.", () => {
       .expects("verify")
       .returns({ userId: new ObjectId().toString() });
     const collectionId = new ObjectId().toString();
-    sinon.mock(Query.prototype).expects("exec").resolves({_id: collectionId ,save: () => {return {message: "ok"}}})
-    sinon.mock(Card.prototype).expects("save").resolves({message: "ok"});
+    sinon
+      .mock(Query.prototype)
+      .expects("exec")
+      .resolves({
+        _id: collectionId,
+        save: () => {
+          return { message: "ok" };
+        },
+      });
+    sinon.mock(Card.prototype).expects("save").resolves({ message: "ok" });
     const body = {
       rectoContent: "exampleRecto",
       versoContent: "exampleVerso",
