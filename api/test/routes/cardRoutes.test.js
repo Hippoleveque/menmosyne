@@ -132,6 +132,31 @@ describe("Test the cards endpoints of the API.", () => {
     expect(response.body).to.have.property("card");
   });
 
+  it("Tests DELETE /cards/:cardId", async () => {
+    process.env.JWT_SECRET = "test";
+    const cardId = new ObjectId().toString();
+    const userId = new ObjectId().toString();
+    const mockedCollection = {
+      _id: new ObjectId().toString(),
+      owner: userId,
+    };
+    const mockedCard = {
+      _id: cardId,
+      rectoContent: "testRecto",
+      versoContent: "testVerso",
+      title: "testTitle",
+      cardCollection: mockedCollection,
+    };
+    sinon.mock(jwt).expects("verify").returns({ userId: userId });
+    sinon.mock(Card).expects("getCard").resolves(mockedCard);
+    sinon.mock(Card).expects("deleteCard").resolves(mockedCard);
+    await request(app)
+      .delete("/memo/cards/" + cardId)
+      .set("Accept", "application/json")
+      .set("Authorization", "Bearer token")
+      .expect(200);
+  });
+
   afterEach(() => {
     sinon.restore();
   });
