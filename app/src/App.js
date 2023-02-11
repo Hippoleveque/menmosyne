@@ -5,6 +5,7 @@ import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 import RevisionPage from "./pages/RevisionPage";
 import CollectionDetailPage from "./pages/CollectionDetailPage";
+import SignupPage from "./pages/SignupPage";
 import { AuthContext } from "./store/auth-context";
 
 function App() {
@@ -25,6 +26,7 @@ function App() {
       )}
       {!isLoggedIn && (
         <Fragment>
+          <Route path="/signup" exact element={<SignupPage />} />
           <Route path="/login" exact element={<LoginPage />} />
           <Route path="/" element={<Navigate to="/login" />} />
         </Fragment>

@@ -6,20 +6,17 @@ import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
-import Link from "@mui/material/Link";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
-import { AuthContext } from "../../store/auth-context";
-import classes from "./LoginContent.module.css";
+import classes from "./SignupContent.module.css";
 
 const theme = createTheme();
 
-export default function LoginContent() {
+export default function SignupContent() {
   const navigate = useNavigate();
-  const { onLogin } = useContext(AuthContext);
   const [enteredEmail, setEnteredEmail] = useState("");
   const [enteredPassword, setEnteredPassword] = useState("");
-  const [loginFailed, setLoginFailed] = useState(false);
+  const [signupFailed, setSignupFailed] = useState(false);
 
   const handleEmailChange = (e) => {
     setEnteredEmail(e.target.value);
@@ -32,7 +29,7 @@ export default function LoginContent() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const response = await fetch("/api/auth/login", {
+      const response = await fetch("/api/auth/signup", {
         method: "POST",
         body: JSON.stringify({
           email: enteredEmail,
@@ -47,10 +44,9 @@ export default function LoginContent() {
         throw new Error("Request failed!");
       }
       const data = await response.json();
-      onLogin(data.token, new Date(data.expirationDate));
-      navigate("/");
+      navigate("/login");
     } catch (err) {
-      setLoginFailed(true);
+      setSignupFailed(true);
     }
   };
 
@@ -59,10 +55,10 @@ export default function LoginContent() {
       <Container
         component="main"
         maxWidth="xs"
-        className={classes.loginContainer}
+        className={classes.signupContainer}
       >
         <CssBaseline />
-        <Box className={classes.loginBox}>
+        <Box className={classes.signupBox}>
           <Typography component="h1" variant="h5">
             Bienvenue sur Mnemosyne
           </Typography>
@@ -97,11 +93,11 @@ export default function LoginContent() {
               onChange={handlePasswordChange}
               autoComplete="current-password"
             />
-            {loginFailed && (
+            {signupFailed && (
               <Typography
                 component="h5"
                 variant="h10"
-                className={classes.loginErrorMessage}
+                className={classes.signupErrorMessage}
               >
                 Identifiants incorrects
               </Typography>
@@ -110,19 +106,11 @@ export default function LoginContent() {
               type="submit"
               fullWidth
               variant="contained"
+              color="secondary"
               sx={{ mt: 3, mb: 2 }}
             >
-              Se connecter
+              Créer un compte
             </Button>
-            <Typography
-              component="h5"
-              variant="h10"
-              sx={{ textAlign: "center" }}
-            >
-              <Link href={"/signup"} underline="hover">
-                Créer un compte
-              </Link>
-            </Typography>
           </Box>
         </Box>
       </Container>
