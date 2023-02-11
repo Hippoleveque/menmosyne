@@ -7,6 +7,7 @@ import Card from "../../models/card.js";
 import CardCollection from "../../models/cardCollection.js";
 import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
+import { Query } from "mongoose";
 
 const ObjectId = mongoose.Types.ObjectId;
 
@@ -49,8 +50,13 @@ describe("Test the cards endpoints of the API.", () => {
 
   it("Tests GET /cardCollections", async () => {
     process.env.JWT_SECRET = "test";
-    const mockedCollections = [{ _id: new ObjectId().toString(), name: "collection1" }];
-    sinon.mock(jwt).expects("verify").returns({ userId: new ObjectId().toString() });
+    const mockedCollections = [
+      { _id: new ObjectId().toString(), name: "collection1" },
+    ];
+    sinon
+      .mock(jwt)
+      .expects("verify")
+      .returns({ userId: new ObjectId().toString() });
     sinon.mock(CardCollection).expects("countDocs").resolves(10);
     sinon
       .mock(CardCollection)
@@ -70,8 +76,13 @@ describe("Test the cards endpoints of the API.", () => {
 
   it("Tests GET /cardCollections with page param", async () => {
     process.env.JWT_SECRET = "test";
-    const mockedCollections = [{ _id: new ObjectId().toString(), name: "collection1" }];
-    sinon.mock(jwt).expects("verify").returns({ userId: new ObjectId().toString() });
+    const mockedCollections = [
+      { _id: new ObjectId().toString(), name: "collection1" },
+    ];
+    sinon
+      .mock(jwt)
+      .expects("verify")
+      .returns({ userId: new ObjectId().toString() });
     sinon.mock(CardCollection).expects("countDocs").resolves(10);
     sinon
       .mock(CardCollection)
@@ -87,6 +98,30 @@ describe("Test the cards endpoints of the API.", () => {
       mockedCollections
     );
     expect(response.body).to.have.property("totalCollections", 10);
+  });
+
+  it("Tests POST /cards", async () => {
+    process.env.JWT_SECRET = "test";
+    sinon
+      .mock(jwt)
+      .expects("verify")
+      .returns({ userId: new ObjectId().toString() });
+    const collectionId = new ObjectId().toString();
+    sinon.mock(Query.prototype).expects("exec").resolves({_id: collectionId ,save: () => {return {message: "ok"}}})
+    sinon.mock(Card.prototype).expects("save").resolves({message: "ok"});
+    const body = {
+      rectoContent: "exampleRecto",
+      versoContent: "exampleVerso",
+      collectionId: collectionId,
+      title: "exampleTitle",
+    };
+    const response = await request(app)
+      .post("/memo/cards")
+      .set("Accept", "application/json")
+      .set("Authorization", "Bearer token")
+      .send(body)
+      .expect(201);
+    expect(response.body).to.have.property("card");
   });
 
   afterEach(() => {
