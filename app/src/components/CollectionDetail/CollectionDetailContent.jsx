@@ -156,13 +156,13 @@ export default function CollectionDetailContent({ collectionId }) {
             {cards.map((row) => (
               <TableRow key={row._id.toString()}>
                 <TableCell component="th" scope="row">
-                  {row.title.slice(0, 20)}
+                  {row.title && row.title.slice(0, 20)}
                 </TableCell>
                 <TableCell align="right">
-                  {row.rectoContent.slice(0, 20)}
+                  {row.rectoContent && row.rectoContent.slice(0, 20)}
                 </TableCell>
                 <TableCell align="right">
-                  {row.versoContent.slice(0, 20)}
+                  {row.versoContent && row.versoContent.slice(0, 20)}
                 </TableCell>
                 <TableCell
                   align="right"
