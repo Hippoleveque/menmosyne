@@ -11,6 +11,7 @@ import MenuItem from "@mui/material/MenuItem";
 import Drawer from "@mui/material/Drawer";
 import Box from "@mui/material/Box";
 import HomeIcon from "@mui/icons-material/Home";
+import PublishIcon from "@mui/icons-material/Publish";
 import Divider from "@mui/material/Divider";
 import { SvgIcon } from "@mui/material";
 import Logo from "../Common/MnemosyneLogo";
@@ -46,9 +47,27 @@ export default function SideMenuLayout(props) {
       case "Home":
         navigate("/");
         break;
+      case "Import":
+        navigate("/import");
+        break;
       default:
         break;
     }
+  };
+
+  const generateIcon = (text) => {
+    let icon = null;
+    switch (text) {
+      case "Home":
+        icon = <HomeIcon sx={{ color: "white", size: 0.5 }} />;
+        break;
+      case "Import":
+        icon = <PublishIcon sx={{ color: "white", size: 0.5 }} />;
+        break;
+      default:
+        break;
+    }
+    return icon;
   };
 
   return (
@@ -106,12 +125,10 @@ export default function SideMenuLayout(props) {
             <Divider
               sx={{ bgcolor: "white", width: "100%", marginTop: "1rem" }}
             />
-            {["Home"].map((text, index) => (
+            {["Home", "Import"].map((text, index) => (
               <ListItem key={text}>
                 <ListItemButton onClick={() => handleNavMenuClick(text)}>
-                  <ListItemIcon>
-                    <HomeIcon sx={{ color: "white", size: 0.5 }} />
-                  </ListItemIcon>
+                  <ListItemIcon>{generateIcon(text)}</ListItemIcon>
                   <ListItemText
                     primary={text}
                     className={classes.sideMenuItem}
