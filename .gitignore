@@ -105,3 +105,6 @@ dist
 
 # Mongo db data
 *data
+
+# Test files
+*ankiImport*
