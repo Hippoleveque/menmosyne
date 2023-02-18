@@ -6,6 +6,7 @@ import LoginPage from "./pages/LoginPage";
 import RevisionPage from "./pages/RevisionPage";
 import CollectionDetailPage from "./pages/CollectionDetailPage";
 import SignupPage from "./pages/SignupPage";
+import ImportPage from "./pages/ImportPage";
 import { AuthContext } from "./store/auth-context";
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
           />
           <Route path="/revision/:collectionId" element={<RevisionPage />} />
           <Route path="/login" element={<Navigate to="/" />} />
+          <Route path="/import" element={<ImportPage />} />
           <Route path="/" exact element={<HomePage />} />
         </Fragment>
       )}
