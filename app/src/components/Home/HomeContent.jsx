@@ -19,6 +19,7 @@ import { AuthContext } from "../../store/auth-context";
 import classes from "./HomeContent.module.css";
 import CreateCollectionModal from "./CreateCollectionModal/CreateCollectionModal";
 import ConfirmCollectionDeletionModal from "./ConfirmCollectionDeletionModal/ConfirmCollectionDeletionModal";
+import TableExtendableTextCell from "../Common/TableExtendableTextCell";
 
 const ITEMS_PER_PAGE = 7;
 
@@ -126,9 +127,9 @@ export default function HomeContent() {
             </TableRow>
             <TableRow>
               <TableCell>Nom</TableCell>
-              <TableCell align="right"># Cartes</TableCell>
-              <TableCell align="right">Description</TableCell>
-              <TableCell align="right">
+              <TableCell align="center"># Cartes</TableCell>
+              <TableCell align="center">Description</TableCell>
+              <TableCell align="center">
                 <Button
                   variant="contained"
                   size="small"
@@ -147,11 +148,14 @@ export default function HomeContent() {
                     {row.name}
                   </Link>
                 </TableCell>
-                <TableCell align="right">{row.numCards}</TableCell>
-                <TableCell align="right">{row.description && row.description.slice(0, 20)}</TableCell>
+                <TableCell align="center">{row.numCards}</TableCell>
+                <TableExtendableTextCell
+                  cellProps={{ align: "center" }}
+                  text={row.description || ""}
+                />
                 <TableCell
-                  align="right"
-                  sx={{ display: "flex", alignItems: "center" }}
+                  align="center"
+                  // sx={{ display: "flex", alignItems: "center" }}
                 >
                   <DeleteIcon
                     color="primary"
