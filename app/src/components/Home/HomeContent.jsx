@@ -1,6 +1,11 @@
-import React, { useEffect, useState, useContext, useCallback } from "react";
+import React, {
+  useEffect,
+  useState,
+  useContext,
+  useCallback,
+  Fragment,
+} from "react";
 import { useNavigate } from "react-router-dom";
-import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
@@ -91,7 +96,7 @@ export default function HomeContent() {
   let numPages = Math.ceil(totalCollections / ITEMS_PER_PAGE);
 
   return (
-    <Grid container component="main" spacing={2} className={classes.homeGrid}>
+    <Box sx={{ height: "100%" }}>
       <CreateCollectionModal
         open={createModalOpen}
         onClose={handleCreateModalClose}
@@ -101,21 +106,20 @@ export default function HomeContent() {
         open={deleteModalOpen}
         onClose={handleDeleteModalClose}
       />
-      <Grid item xs={6} md={12}>
-        <Box
-          sx={{
-            margin: 12,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
+      <Box sx={{ p: "0 2" }}>
+        <Typography component="h1" variant="h5">
+          {"Bon retour !"}
+        </Typography>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={handleCreateModalOpen}
+          sx={{ fontSize: "0.7rem" }}
         >
-          <Typography component="h1" variant="h5">
-            {"Bon retour !"}
-          </Typography>
-        </Box>
-      </Grid>
+          Ajouter une collection
+        </Button>
+      </Box>
+
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
@@ -128,9 +132,7 @@ export default function HomeContent() {
               <TableCell align="center">Nom</TableCell>
               <TableCell align="center"># Cartes</TableCell>
               <TableCell align="center">Description</TableCell>
-              <TableCell align="center">
-                Actions
-              </TableCell>
+              <TableCell align="center">Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -151,7 +153,7 @@ export default function HomeContent() {
                     variant="contained"
                     color="error"
                     onClick={() => handleDeleteModalOpen(row._id.toString())}
-                    sx={{fontSize: "0.7rem"}}
+                    sx={{ fontSize: "0.7rem" }}
                   >
                     Supprimer
                   </Button>
@@ -168,6 +170,6 @@ export default function HomeContent() {
           onChange={(event, value) => setCurrentPage(value)}
         />
       )}
-    </Grid>
+    </Box>
   );
 }
