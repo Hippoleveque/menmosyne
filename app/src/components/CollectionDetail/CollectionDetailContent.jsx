@@ -145,15 +145,7 @@ export default function CollectionDetailContent({ collectionId }) {
               <TableCell align="center">Titre</TableCell>
               <TableCell align="center">Recto</TableCell>
               <TableCell align="center">Verso</TableCell>
-              <TableCell align="center">
-                <Button
-                  variant="contained"
-                  size="small"
-                  onClick={handleModalOpen}
-                >
-                  Ajouter
-                </Button>
-              </TableCell>
+              <TableCell align="center">Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -173,21 +165,14 @@ export default function CollectionDetailContent({ collectionId }) {
                   align="center"
                   text={row.versoContent || ""}
                 />
-                <TableCell
-                  align="center"
-                >
-                  <DeleteIcon
-                    color="primary"
-                    onClick={() => handleDeleteModalOpen(row._id.toString())}
-                  />
+                <TableCell align="center">
                   <Button
                     variant="contained"
-                    size="small"
-                    onClick={() => {
-                      return null;
-                    }}
+                    color="error"
+                    onClick={() => handleDeleteModalOpen(row._id.toString())}
+                    sx={{ fontSize: "0.7rem" }}
                   >
-                    Modifier
+                    Supprimer
                   </Button>
                 </TableCell>
               </TableRow>
