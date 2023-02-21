@@ -13,7 +13,6 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import Link from "@mui/material/Link";
 import Pagination from "@mui/material/Pagination";
-import DeleteIcon from "@mui/icons-material/Delete";
 
 import { AuthContext } from "../../store/auth-context";
 import classes from "./HomeContent.module.css";
@@ -129,14 +128,7 @@ export default function HomeContent() {
               <TableCell align="center">Nom</TableCell>
               <TableCell align="center"># Cartes</TableCell>
               <TableCell align="center">Description</TableCell>
-              <TableCell align="center" sx={{width: "25%"}}>
-                {/* <Button
-                  variant="contained"
-                  size="small"
-                  onClick={handleCreateModalOpen}
-                >
-                  Ajouter
-                </Button> */}
+              <TableCell align="center">
                 Actions
               </TableCell>
             </TableRow>
