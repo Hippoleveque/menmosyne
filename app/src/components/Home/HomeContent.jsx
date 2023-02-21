@@ -154,7 +154,7 @@ export default function HomeContent() {
                   align="center"
                   text={row.description || ""}
                 />
-                <TableCell align="center" sx={{display: "flex", justifyContent: "space-around"}}>
+                <TableCell align="center">
                   <Button
                     variant="contained"
                     color="error"
