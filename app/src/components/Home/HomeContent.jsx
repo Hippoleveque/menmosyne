@@ -129,21 +129,22 @@ export default function HomeContent() {
               <TableCell align="center">Nom</TableCell>
               <TableCell align="center"># Cartes</TableCell>
               <TableCell align="center">Description</TableCell>
-              <TableCell align="center">
-                <Button
+              <TableCell align="center" sx={{width: "25%"}}>
+                {/* <Button
                   variant="contained"
                   size="small"
                   onClick={handleCreateModalOpen}
                 >
                   Ajouter
-                </Button>
+                </Button> */}
+                Actions
               </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {collections.map((row) => (
               <TableRow key={row._id.toString()}>
-                <TableCell component="th" scope="row">
+                <TableCell align="center">
                   <Link href={`/collections/${row._id.toString()}`}>
                     {row.name}
                   </Link>
@@ -153,19 +154,14 @@ export default function HomeContent() {
                   align="center"
                   text={row.description || ""}
                 />
-                <TableCell
-                  align="center"
-                >
-                  <DeleteIcon
-                    color="primary"
-                    onClick={() => handleDeleteModalOpen(row._id.toString())}
-                  />
+                <TableCell align="center" sx={{display: "flex", justifyContent: "space-around"}}>
                   <Button
                     variant="contained"
-                    size="small"
-                    onClick={() => handleReviewClick(row._id.toString())}
+                    color="error"
+                    onClick={() => handleDeleteModalOpen(row._id.toString())}
+                    sx={{fontSize: "0.7rem"}}
                   >
-                    Réviser
+                    Supprimer
                   </Button>
                 </TableCell>
               </TableRow>
