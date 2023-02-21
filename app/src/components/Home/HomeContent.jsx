@@ -150,12 +150,11 @@ export default function HomeContent() {
                 </TableCell>
                 <TableCell align="center">{row.numCards}</TableCell>
                 <TableExtendableTextCell
-                  cellProps={{ align: "center" }}
+                  align="center"
                   text={row.description || ""}
                 />
                 <TableCell
                   align="center"
-                  // sx={{ display: "flex", alignItems: "center" }}
                 >
                   <DeleteIcon
                     color="primary"

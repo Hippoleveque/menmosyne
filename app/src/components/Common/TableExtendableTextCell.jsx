@@ -1,7 +1,7 @@
 import React, { Fragment, useState } from "react";
 import TableCell from "@mui/material/TableCell";
 
-export default function TableExtendableTextCell({ text, cellProps }) {
+export default function TableExtendableTextCell({ text, ...cellProps }) {
   const [isTextExtended, setIsTextExtended] = useState(false);
 
   let textIsShort = text.length < 20;

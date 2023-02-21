@@ -17,6 +17,7 @@ import CreateCardModal from "./CreateCardModal/CreateCardModal";
 import { AuthContext } from "../../store/auth-context";
 import classes from "./CollectionDetailContent.module.css";
 import ConfirmCardDeletionModal from "./ConfirmCardDeletionModal/ConfirmCardDeletionModal";
+import TableExtendableTextCell from "../Common/TableExtendableTextCell";
 
 const ITEMS_PER_PAGE = 7;
 
@@ -130,7 +131,10 @@ export default function CollectionDetailContent({ collectionId }) {
         </Box>
       </Grid>
       <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 650 }} aria-label="simple table">
+        <Table
+          sx={{ minWidth: 650, tableLayout: "fixed" }}
+          aria-label="simple table"
+        >
           <TableHead>
             <TableRow>
               <TableCell colSpan={4}>
@@ -138,10 +142,10 @@ export default function CollectionDetailContent({ collectionId }) {
               </TableCell>
             </TableRow>
             <TableRow>
-              <TableCell>Titre</TableCell>
-              <TableCell align="right">Recto</TableCell>
-              <TableCell align="right">Verso</TableCell>
-              <TableCell align="right">
+              <TableCell align="center">Titre</TableCell>
+              <TableCell align="center">Recto</TableCell>
+              <TableCell align="center">Verso</TableCell>
+              <TableCell align="center">
                 <Button
                   variant="contained"
                   size="small"
@@ -155,18 +159,22 @@ export default function CollectionDetailContent({ collectionId }) {
           <TableBody>
             {cards.map((row) => (
               <TableRow key={row._id.toString()}>
-                <TableCell component="th" scope="row">
-                  {row.title && row.title.slice(0, 20)}
-                </TableCell>
-                <TableCell align="right">
-                  {row.rectoContent && row.rectoContent.slice(0, 20)}
-                </TableCell>
-                <TableCell align="right">
-                  {row.versoContent && row.versoContent.slice(0, 20)}
-                </TableCell>
+                <TableExtendableTextCell
+                  component="th"
+                  scope="row"
+                  align="center"
+                  text={row.title || ""}
+                />
+                <TableExtendableTextCell
+                  align="center"
+                  text={row.rectoContent || ""}
+                />
+                <TableExtendableTextCell
+                  align="center"
+                  text={row.versoContent || ""}
+                />
                 <TableCell
-                  align="right"
-                  sx={{ display: "flex", alignItems: "center" }}
+                  align="center"
                 >
                   <DeleteIcon
                     color="primary"
