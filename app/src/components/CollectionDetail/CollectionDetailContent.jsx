@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useContext, useCallback } from "react";
-import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
@@ -11,18 +10,20 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import Pagination from "@mui/material/Pagination";
-import DeleteIcon from "@mui/icons-material/Delete";
+import { useNavigate } from "react-router-dom";
 
 import CreateCardModal from "./CreateCardModal/CreateCardModal";
 import { AuthContext } from "../../store/auth-context";
 import classes from "./CollectionDetailContent.module.css";
 import ConfirmCardDeletionModal from "./ConfirmCardDeletionModal/ConfirmCardDeletionModal";
+import TableExtendableTextCell from "../Common/TableExtendableTextCell";
 
 const ITEMS_PER_PAGE = 7;
 
 export default function CollectionDetailContent({ collectionId }) {
   const { loginToken } = useContext(AuthContext);
   const [cards, setCards] = useState([]);
+  const navigate = useNavigate();
   const [modalOpen, setModalOpen] = useState(false);
   const [collection, setCollection] = useState(null);
   const [deletingCardId, setDeletingCardId] = useState(null);
@@ -72,6 +73,10 @@ export default function CollectionDetailContent({ collectionId }) {
     fetchCollection();
   }, [loginToken, collectionId]);
 
+  const handleReviewClick = () => {
+    navigate(`/revision/${collectionId}`);
+  };
+
   const handleModalOpen = () => {
     setModalOpen(true);
   };
@@ -98,12 +103,7 @@ export default function CollectionDetailContent({ collectionId }) {
   let numPages = Math.ceil(totalCards / ITEMS_PER_PAGE);
 
   return (
-    <Grid
-      container
-      component="main"
-      spacing={2}
-      className={classes.collectionGrid}
-    >
+    <Box sx={{ height: "100%" }}>
       <CreateCardModal
         open={modalOpen}
         onClose={handleModalClose}
@@ -114,72 +114,79 @@ export default function CollectionDetailContent({ collectionId }) {
         open={deleteModalOpen}
         onClose={handleDeleteModalClose}
       />
-      <Grid item xs={6} md={12}>
-        <Box
-          sx={{
-            margin: 12,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <Typography component="h1" variant="h5">
-            {collection && "Collection " + collection.name}
-          </Typography>
-        </Box>
-      </Grid>
+
+      <Box
+        sx={{
+          p: "10px 10px",
+        }}
+      >
+        <Typography component="h1" variant="h5">
+          {collection && collection.name}
+        </Typography>
+      </Box>
       <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 650 }} aria-label="simple table">
+        <Table
+          sx={{ minWidth: 650, tableLayout: "fixed" }}
+          aria-label="simple table"
+        >
           <TableHead>
             <TableRow>
-              <TableCell colSpan={4}>
+              <TableCell colSpan={2}>
                 <Typography component="h2">Mes cartes</Typography>
+              </TableCell>
+              <TableCell colSpan={2} align="right">
+                <Box>
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    onClick={handleReviewClick}
+                    sx={{ fontSize: "0.7rem", marginRight: "10px" }}
+                  >
+                    Réviser
+                  </Button>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={handleModalOpen}
+                    sx={{ fontSize: "0.7rem" }}
+                  >
+                    Ajouter une carte
+                  </Button>
+                </Box>
               </TableCell>
             </TableRow>
             <TableRow>
-              <TableCell>Titre</TableCell>
-              <TableCell align="right">Recto</TableCell>
-              <TableCell align="right">Verso</TableCell>
-              <TableCell align="right">
-                <Button
-                  variant="contained"
-                  size="small"
-                  onClick={handleModalOpen}
-                >
-                  Ajouter
-                </Button>
-              </TableCell>
+              <TableCell align="center">Titre</TableCell>
+              <TableCell align="center">Recto</TableCell>
+              <TableCell align="center">Verso</TableCell>
+              <TableCell align="center">Actions</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {cards.map((row) => (
               <TableRow key={row._id.toString()}>
-                <TableCell component="th" scope="row">
-                  {row.title && row.title.slice(0, 20)}
-                </TableCell>
-                <TableCell align="right">
-                  {row.rectoContent && row.rectoContent.slice(0, 20)}
-                </TableCell>
-                <TableCell align="right">
-                  {row.versoContent && row.versoContent.slice(0, 20)}
-                </TableCell>
-                <TableCell
-                  align="right"
-                  sx={{ display: "flex", alignItems: "center" }}
-                >
-                  <DeleteIcon
-                    color="primary"
-                    onClick={() => handleDeleteModalOpen(row._id.toString())}
-                  />
+                <TableExtendableTextCell
+                  component="th"
+                  scope="row"
+                  align="center"
+                  text={row.title || ""}
+                />
+                <TableExtendableTextCell
+                  align="center"
+                  text={row.rectoContent || ""}
+                />
+                <TableExtendableTextCell
+                  align="center"
+                  text={row.versoContent || ""}
+                />
+                <TableCell align="center">
                   <Button
                     variant="contained"
-                    size="small"
-                    onClick={() => {
-                      return null;
-                    }}
+                    color="error"
+                    onClick={() => handleDeleteModalOpen(row._id.toString())}
+                    sx={{ fontSize: "0.7rem" }}
                   >
-                    Modifier
+                    Supprimer
                   </Button>
                 </TableCell>
               </TableRow>
@@ -194,6 +201,6 @@ export default function CollectionDetailContent({ collectionId }) {
           onChange={(event, value) => setCurrentPage(value)}
         />
       )}
-    </Grid>
+    </Box>
   );
 }

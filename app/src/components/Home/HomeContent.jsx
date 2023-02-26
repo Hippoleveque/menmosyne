@@ -1,6 +1,10 @@
-import React, { useEffect, useState, useContext, useCallback } from "react";
+import React, {
+  useEffect,
+  useState,
+  useContext,
+  useCallback,
+} from "react";
 import { useNavigate } from "react-router-dom";
-import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
@@ -13,18 +17,18 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import Link from "@mui/material/Link";
 import Pagination from "@mui/material/Pagination";
-import DeleteIcon from "@mui/icons-material/Delete";
 
 import { AuthContext } from "../../store/auth-context";
 import classes from "./HomeContent.module.css";
 import CreateCollectionModal from "./CreateCollectionModal/CreateCollectionModal";
 import ConfirmCollectionDeletionModal from "./ConfirmCollectionDeletionModal/ConfirmCollectionDeletionModal";
+import TableExtendableTextCell from "../Common/TableExtendableTextCell";
 
 const ITEMS_PER_PAGE = 7;
 
 export default function HomeContent() {
-  const navigate = useNavigate();
   const { loginToken } = useContext(AuthContext);
+  const navigate = useNavigate();
   const [collections, setCollections] = useState([]);
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
@@ -91,7 +95,7 @@ export default function HomeContent() {
   let numPages = Math.ceil(totalCollections / ITEMS_PER_PAGE);
 
   return (
-    <Grid container component="main" spacing={2} className={classes.homeGrid}>
+    <Box sx={{ height: "100%" }}>
       <CreateCollectionModal
         open={createModalOpen}
         onClose={handleCreateModalClose}
@@ -101,68 +105,73 @@ export default function HomeContent() {
         open={deleteModalOpen}
         onClose={handleDeleteModalClose}
       />
-      <Grid item xs={6} md={12}>
-        <Box
-          sx={{
-            margin: 12,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <Typography component="h1" variant="h5">
-            {"Bon retour !"}
-          </Typography>
-        </Box>
-      </Grid>
+      <Box sx={{ p: "10px 10px" }}>
+        <Typography component="h1" variant="h5">
+          {"Bon retour !"}
+        </Typography>
+      </Box>
+
       <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 650 }} aria-label="simple table">
+        <Table sx={{ minWidth: 650 }} tableLayout="fixed">
           <TableHead>
             <TableRow>
-              <TableCell colSpan={4}>
+              <TableCell colSpan={3}>
                 <Typography component="h2">Mes collections</Typography>
+              </TableCell>
+              <TableCell colSpan={2} align="right">
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={handleCreateModalOpen}
+                  sx={{ fontSize: "0.7rem" }}
+                >
+                  Ajouter une collection
+                </Button>
               </TableCell>
             </TableRow>
             <TableRow>
-              <TableCell>Nom</TableCell>
-              <TableCell align="right"># Cartes</TableCell>
-              <TableCell align="right">Description</TableCell>
-              <TableCell align="right">
-                <Button
-                  variant="contained"
-                  size="small"
-                  onClick={handleCreateModalOpen}
-                >
-                  Ajouter
-                </Button>
-              </TableCell>
+              <TableCell align="center">Nom</TableCell>
+              <TableCell align="center"># Cartes</TableCell>
+              <TableCell align="center">Description</TableCell>
+              <TableCell align="center">Réviser</TableCell>
+              <TableCell align="center">Supprimer</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {collections.map((row) => (
               <TableRow key={row._id.toString()}>
-                <TableCell component="th" scope="row">
+                <TableCell align="center" width="20%">
                   <Link href={`/collections/${row._id.toString()}`}>
                     {row.name}
                   </Link>
                 </TableCell>
-                <TableCell align="right">{row.numCards}</TableCell>
-                <TableCell align="right">{row.description && row.description.slice(0, 20)}</TableCell>
-                <TableCell
-                  align="right"
-                  sx={{ display: "flex", alignItems: "center" }}
-                >
-                  <DeleteIcon
-                    color="primary"
-                    onClick={() => handleDeleteModalOpen(row._id.toString())}
-                  />
+                <TableCell align="center" width="20%">
+                  {row.numCards}
+                </TableCell>
+                <TableExtendableTextCell
+                  align="center"
+                  text={row.description || ""}
+                  width="25%"
+                />
+
+                <TableCell align="center" width="20%">
                   <Button
                     variant="contained"
-                    size="small"
+                    color="secondary"
                     onClick={() => handleReviewClick(row._id.toString())}
+                    sx={{ fontSize: "0.7rem" }}
                   >
                     Réviser
+                  </Button>
+                </TableCell>
+                <TableCell align="center" width="20%">
+                  <Button
+                    variant="contained"
+                    color="error"
+                    onClick={() => handleDeleteModalOpen(row._id.toString())}
+                    sx={{ fontSize: "0.7rem" }}
+                  >
+                    Supprimer
                   </Button>
                 </TableCell>
               </TableRow>
@@ -177,6 +186,6 @@ export default function HomeContent() {
           onChange={(event, value) => setCurrentPage(value)}
         />
       )}
-    </Grid>
+    </Box>
   );
 }
