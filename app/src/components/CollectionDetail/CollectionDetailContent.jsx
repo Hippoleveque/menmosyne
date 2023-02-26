@@ -10,6 +10,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import Pagination from "@mui/material/Pagination";
+import { useNavigate } from "react-router-dom";
 
 import CreateCardModal from "./CreateCardModal/CreateCardModal";
 import { AuthContext } from "../../store/auth-context";
@@ -22,6 +23,7 @@ const ITEMS_PER_PAGE = 7;
 export default function CollectionDetailContent({ collectionId }) {
   const { loginToken } = useContext(AuthContext);
   const [cards, setCards] = useState([]);
+  const navigate = useNavigate();
   const [modalOpen, setModalOpen] = useState(false);
   const [collection, setCollection] = useState(null);
   const [deletingCardId, setDeletingCardId] = useState(null);
@@ -70,6 +72,10 @@ export default function CollectionDetailContent({ collectionId }) {
     };
     fetchCollection();
   }, [loginToken, collectionId]);
+
+  const handleReviewClick = () => {
+    navigate(`/revision/${collectionId}`);
+  };
 
   const handleModalOpen = () => {
     setModalOpen(true);
@@ -125,18 +131,28 @@ export default function CollectionDetailContent({ collectionId }) {
         >
           <TableHead>
             <TableRow>
-              <TableCell colSpan={3}>
+              <TableCell colSpan={2}>
                 <Typography component="h2">Mes cartes</Typography>
               </TableCell>
-              <TableCell colSpan={1} align="right">
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={handleModalOpen}
-                  sx={{ fontSize: "0.7rem" }}
-                >
-                  Ajouter une carte
-                </Button>
+              <TableCell colSpan={2} align="right">
+                <Box>
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    onClick={handleReviewClick}
+                    sx={{ fontSize: "0.7rem", marginRight: "10px" }}
+                  >
+                    Réviser
+                  </Button>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={handleModalOpen}
+                    sx={{ fontSize: "0.7rem" }}
+                  >
+                    Ajouter une carte
+                  </Button>
+                </Box>
               </TableCell>
             </TableRow>
             <TableRow>
