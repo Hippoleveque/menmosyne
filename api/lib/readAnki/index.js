@@ -50,67 +50,19 @@ export default function ankiToJson(inputFile, outputDir, cb) {
         .replaceAll("\u001F", "\n")
         .replaceAll("<div>", "\n")
         .replaceAll("<br>", "\n")
-        .replace(/<(?:.|\n)*?>/gm, "");
+        .replace(/<(?:.|\n)*?>/, "");
+
       note.back = note.flds
         .replaceAll("\u001F", "\n")
         .replaceAll("<div>", "\n")
-        .replaceAll("<br>", "\n")
-        .replace(/<(?:.|\n)*?>/gm, "");
-      const openBracketIndexes = [];
-      const closedBracketIndexes = [];
-      // FRONT
-      for (let i = 0; i < note.front.length; i++) {
-        if (note.front[i] === "[") {
-          openBracketIndexes.push(i);
-        }
-        if (note.front[i] === "]") {
-          closedBracketIndexes.push(i);
-        }
-      }
-      while (openBracketIndexes.length) {
-        const start = openBracketIndexes.shift();
-        const end = closedBracketIndexes.shift();
-        const bracketString = note.front.slice(start + 1, end);
-        if (bracketString.includes(":")) {
-          note.media.push(bracketString.split(":")[1]);
-          note.front = note.front.slice(0, start) + note.front.slice(end + 1);
-        }
-      }
-      // BACK
-      for (let i = 0; i < note.back.length; i++) {
-        if (note.back[i] === "[") {
-          openBracketIndexes.push(i);
-        }
-        if (note.back[i] === "]") {
-          closedBracketIndexes.push(i);
-        }
-      }
-      while (openBracketIndexes.length) {
-        const start = openBracketIndexes.shift();
-        const end = closedBracketIndexes.shift();
-        const bracketString = note.back.slice(start + 1, end);
-        if (bracketString.includes(":")) {
-          note.media.push(bracketString.split(":")[1]);
-          note.back = note.back.slice(0, start) + note.back.slice(end + 1);
-        }
-      }
-      // TODO: images, items, sentences
-      // LASTLY ensure no dublicates, remove access words, if the word does not exist, remove entry
-      // <img src=\"
-      // IMAGES
-      // const images = indexesOf("<img", note.flds);
-      // images.forEach((imageIndex) => {
-      //   const imageStr = note.flds.slice(imageIndex);
-      //   const innerQuotes = imageStr.match(/"([^"]*)"/)[1];
-      //   note.media.push(innerQuotes);
-      // });
-      // note.media = [...new Set(note.media)];
+        .replaceAll("<br>", "\n");
+
+      note.back = note.back.split("\n")[1];
+      note.back = note.back.replace(/<(?:.|\n)*?>/, "");
       note.front = note.front.trim();
       note.back = note.back.trim();
       return note;
     });
-    // create
-    // fs.writeFileSync(dir + "/notes.json", JSON.stringify(notes, null, 2));
     cb(notes);
     // cleanup
     fs.unlinkSync(dir + "/collection.anki2");
@@ -118,20 +70,3 @@ export default function ankiToJson(inputFile, outputDir, cb) {
     db.close();
   });
 }
-
-// function indexesOf(searchStr, str, caseSensitive) {
-//   const searchStrLen = searchStr.length;
-//   if (searchStrLen === 0) return [];
-//   let startIndex = 0;
-//   let index;
-//   const indices = [];
-//   if (!caseSensitive) {
-//     str = str.toLowerCase();
-//     searchStr = searchStr.toLowerCase();
-//   }
-//   while ((index = str.indexOf(searchStr, startIndex)) > -1) {
-//     indices.push(index);
-//     startIndex = index + searchStrLen;
-//   }
-//   return indices;
-// }
