@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
@@ -15,6 +15,8 @@ import PublishIcon from "@mui/icons-material/Publish";
 import Divider from "@mui/material/Divider";
 import { SvgIcon } from "@mui/material";
 import Logo from "../Common/MnemosyneLogo";
+import { useSelector, useDispatch } from "react-redux";
+import { authActions } from "../../store/redux-auth/reduxAuth";
 
 import { AuthContext } from "../../store/auth-context";
 import classes from "./SideMenuLayout.module.css";
@@ -23,9 +25,28 @@ const drawerWidth = 240;
 
 export default function SideMenuLayout(props) {
   const { onLogout } = useContext(AuthContext);
+  const { loginToken } = useContext(AuthContext);
   const [anchorEl, setAnchorEl] = useState(null);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const open = Boolean(anchorEl);
+  const user = useSelector((state) => state.auth.user);
+
+  useEffect(() => {
+    const fetchCurrentUser = async () => {
+      const response = await fetch("/api/auth/currentUser", {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + loginToken,
+        },
+      });
+      const res = await response.json();
+      dispatch(authActions.login(res.user.email));
+    };
+    fetchCurrentUser();
+  }, [loginToken, dispatch]);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -108,7 +129,7 @@ export default function SideMenuLayout(props) {
                 sx={{ fontSize: "2.5rem" }}
               />
               <Avatar sx={{ textAlign: "center" }} onClick={handleClick}>
-                H
+                {user && user[0].toUpperCase()}
               </Avatar>
             </Box>
             <Menu

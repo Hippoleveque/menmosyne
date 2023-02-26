@@ -58,3 +58,23 @@ export const login = async (req, res, next) => {
     next(err);
   }
 };
+
+export const getCurrentUser = async (req, res, next) => {
+  const { userId } = req;
+  try {
+    const user = await User.getUser({ _id: userId });
+    if (!user) {
+      const err = new Error("No user with this email address");
+      err.statusCode = 401;
+      throw err;
+    }
+    return res
+      .status(200)
+      .json({ user: { email: user.email, _id: user._id.toString() } });
+  } catch (err) {
+    if (!err.statusCode) {
+      err.statusCode = 500;
+    }
+    next(err);
+  }
+};
