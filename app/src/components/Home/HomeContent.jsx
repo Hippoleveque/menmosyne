@@ -28,7 +28,6 @@ import TableExtendableTextCell from "../Common/TableExtendableTextCell";
 const ITEMS_PER_PAGE = 7;
 
 export default function HomeContent() {
-  const navigate = useNavigate();
   const { loginToken } = useContext(AuthContext);
   const [collections, setCollections] = useState([]);
   const [createModalOpen, setCreateModalOpen] = useState(false);
