@@ -15,7 +15,7 @@ export default function RevisionCard({ card, handleActionClick }) {
 
   useEffect(() => {
     setIsVersoShown(false);
-  }, [card])
+  }, [card]);
 
   const handleShowVersoClick = (e) => {
     setIsVersoShown(true);
@@ -31,9 +31,11 @@ export default function RevisionCard({ card, handleActionClick }) {
   const rectoCard = (
     <Card variant="outlined">
       <CardContent>
-        <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-          {card.title}
-        </Typography>
+        {card.title && (
+          <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+            {card.title}
+          </Typography>
+        )}
         <Typography variant="body2">{card.rectoContent}</Typography>
       </CardContent>
       <CardActions
@@ -52,10 +54,7 @@ export default function RevisionCard({ card, handleActionClick }) {
   );
 
   const versoCard = (
-    <Card
-      variant="outlined"
-      className={classes.versoCard}
-    >
+    <Card variant="outlined" className={classes.versoCard}>
       <CardContent
         sx={{
           flexGrow: 1,
@@ -63,9 +62,11 @@ export default function RevisionCard({ card, handleActionClick }) {
           flexDirection: "column",
         }}
       >
-        <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-          {card.title}
-        </Typography>
+        {card.title && (
+          <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+            {card.title}
+          </Typography>
+        )}
         <Box
           sx={{
             display: "flex",
@@ -74,11 +75,11 @@ export default function RevisionCard({ card, handleActionClick }) {
             flexGrow: 1,
           }}
         >
-          <Box sx={{ width: "100%", flexGrow: 1 }}>
+          <Box sx={{ width: "100%", flexGrow: 1, padding: "0px 10px" }}>
             <Typography variant="body2">{card.rectoContent}</Typography>
           </Box>
           <Divider light style={{ width: "100%" }} />
-          <Box sx={{ width: "100%", flexGrow: 1 }}>
+          <Box sx={{ width: "100%", flexGrow: 1, padding: "10px 10px" }}>
             <Typography variant="body2">{card.versoContent}</Typography>
           </Box>
         </Box>
