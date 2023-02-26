@@ -29,6 +29,7 @@ const ITEMS_PER_PAGE = 7;
 
 export default function HomeContent() {
   const { loginToken } = useContext(AuthContext);
+  const navigate = useNavigate();
   const [collections, setCollections] = useState([]);
   const [createModalOpen, setCreateModalOpen] = useState(false);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
@@ -65,6 +66,10 @@ export default function HomeContent() {
     };
     fetchSetCollections();
   }, [currentPage, fetchCollections]);
+
+  const handleReviewClick = (collectionId) => {
+    navigate(`/revision/${collectionId}`);
+  };
 
   const handleCreateModalOpen = () => {
     setCreateModalOpen(true);
@@ -108,13 +113,13 @@ export default function HomeContent() {
       </Box>
 
       <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 650 }} aria-label="simple table">
+        <Table sx={{ minWidth: 650 }} tableLayout="fixed">
           <TableHead>
             <TableRow>
               <TableCell colSpan={3}>
                 <Typography component="h2">Mes collections</Typography>
               </TableCell>
-              <TableCell colSpan={1} align="right">
+              <TableCell colSpan={2} align="right">
                 <Button
                   variant="contained"
                   color="primary"
@@ -129,23 +134,38 @@ export default function HomeContent() {
               <TableCell align="center">Nom</TableCell>
               <TableCell align="center"># Cartes</TableCell>
               <TableCell align="center">Description</TableCell>
-              <TableCell align="center">Actions</TableCell>
+              <TableCell align="center">Réviser</TableCell>
+              <TableCell align="center">Supprimer</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {collections.map((row) => (
               <TableRow key={row._id.toString()}>
-                <TableCell align="center">
+                <TableCell align="center" width="20%">
                   <Link href={`/collections/${row._id.toString()}`}>
                     {row.name}
                   </Link>
                 </TableCell>
-                <TableCell align="center">{row.numCards}</TableCell>
+                <TableCell align="center" width="20%">
+                  {row.numCards}
+                </TableCell>
                 <TableExtendableTextCell
                   align="center"
                   text={row.description || ""}
+                  width="25%"
                 />
-                <TableCell align="center">
+
+                <TableCell align="center" width="20%">
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    onClick={() => handleReviewClick(row._id.toString())}
+                    sx={{ fontSize: "0.7rem" }}
+                  >
+                    Réviser
+                  </Button>
+                </TableCell>
+                <TableCell align="center" width="20%">
                   <Button
                     variant="contained"
                     color="error"
