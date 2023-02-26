@@ -106,26 +106,28 @@ export default function HomeContent() {
         open={deleteModalOpen}
         onClose={handleDeleteModalClose}
       />
-      <Box sx={{ p: "0 2" }}>
+      <Box sx={{ p: "10px 10px" }}>
         <Typography component="h1" variant="h5">
           {"Bon retour !"}
         </Typography>
-        <Button
-          variant="contained"
-          color="primary"
-          onClick={handleCreateModalOpen}
-          sx={{ fontSize: "0.7rem" }}
-        >
-          Ajouter une collection
-        </Button>
       </Box>
 
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
             <TableRow>
-              <TableCell colSpan={4}>
+              <TableCell colSpan={3}>
                 <Typography component="h2">Mes collections</Typography>
+              </TableCell>
+              <TableCell colSpan={1} align="right">
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={handleCreateModalOpen}
+                  sx={{ fontSize: "0.7rem" }}
+                >
+                  Ajouter une collection
+                </Button>
               </TableCell>
             </TableRow>
             <TableRow>
