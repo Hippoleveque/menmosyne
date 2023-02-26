@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useContext, useCallback } from "react";
-import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
@@ -98,12 +97,7 @@ export default function CollectionDetailContent({ collectionId }) {
   let numPages = Math.ceil(totalCards / ITEMS_PER_PAGE);
 
   return (
-    <Grid
-      container
-      component="main"
-      spacing={2}
-      className={classes.collectionGrid}
-    >
+    <Box sx={{ height: "100%" }}>
       <CreateCardModal
         open={modalOpen}
         onClose={handleModalClose}
@@ -114,21 +108,16 @@ export default function CollectionDetailContent({ collectionId }) {
         open={deleteModalOpen}
         onClose={handleDeleteModalClose}
       />
-      <Grid item xs={6} md={12}>
-        <Box
-          sx={{
-            margin: 12,
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <Typography component="h1" variant="h5">
-            {collection && "Collection " + collection.name}
-          </Typography>
-        </Box>
-      </Grid>
+
+      <Box
+        sx={{
+          p: "10px 10px",
+        }}
+      >
+        <Typography component="h1" variant="h5">
+          {collection && collection.name}
+        </Typography>
+      </Box>
       <TableContainer component={Paper}>
         <Table
           sx={{ minWidth: 650, tableLayout: "fixed" }}
@@ -136,8 +125,18 @@ export default function CollectionDetailContent({ collectionId }) {
         >
           <TableHead>
             <TableRow>
-              <TableCell colSpan={4}>
+              <TableCell colSpan={3}>
                 <Typography component="h2">Mes cartes</Typography>
+              </TableCell>
+              <TableCell colSpan={1} align="right">
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={handleModalOpen}
+                  sx={{ fontSize: "0.7rem" }}
+                >
+                  Ajouter une carte
+                </Button>
               </TableCell>
             </TableRow>
             <TableRow>
@@ -186,6 +185,6 @@ export default function CollectionDetailContent({ collectionId }) {
           onChange={(event, value) => setCurrentPage(value)}
         />
       )}
-    </Grid>
+    </Box>
   );
 }
