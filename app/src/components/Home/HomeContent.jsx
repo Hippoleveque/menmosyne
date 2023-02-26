@@ -67,10 +67,6 @@ export default function HomeContent() {
     fetchSetCollections();
   }, [currentPage, fetchCollections]);
 
-  const handleReviewClick = (collectionId) => {
-    navigate(`/revision/${collectionId}`);
-  };
-
   const handleCreateModalOpen = () => {
     setCreateModalOpen(true);
   };
