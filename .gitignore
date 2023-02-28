@@ -108,3 +108,6 @@ dist
 
 # Test files
 *ankiImport*
+
+# built app
+nginx/build
