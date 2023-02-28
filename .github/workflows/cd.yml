@@ -18,12 +18,12 @@ on:
     branches:
       - main
 
-env:
-  GCP_PROJECT_ID: mnemosyne-376320
-  GCP_LOCATION: europe-west1
-  GCP_REPOSITORY: hello-repo
-  NODE_IMAGE: nodeserver
-  NGINX_IMAGE: nginx
+# env:
+#   GCP_PROJECT_ID: mnemosyne-376320
+#   GCP_LOCATION: europe-west1
+#   GCP_REPOSITORY: hello-repo
+#   NODE_IMAGE: nodeserver
+#   NGINX_IMAGE: nginx
 
 jobs:
   login-build-push:
