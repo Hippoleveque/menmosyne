@@ -34,12 +34,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: "Docker node container"
-      - run: |
-          docker build \
-            --tag "$GCP_LOCATION-docker.pkg.dev/$GCP_PROJECT_ID/$GCP_REPOSITORY/$NODE_IMAGE:$GITHUB_SHA" \
-            .
-        working-directory: "./api"
+      # - name: "Docker node container"
+      # - run: |
+      #     docker build \
+      #       --tag "$GCP_LOCATION-docker.pkg.dev/$GCP_PROJECT_ID/$GCP_REPOSITORY/$NODE_IMAGE:$GITHUB_SHA" \
+      #       .
+      #   working-directory: "./api"
 
       # - name: "Build the frontend app and build the nginx image"
       # - run: | 
