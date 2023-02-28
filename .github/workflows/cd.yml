@@ -15,59 +15,16 @@ name: Docker build and push to Artifact Registry
 
 on:
   push:
-    branches:
-      - main
-
-# env:
-#   GCP_PROJECT_ID: mnemosyne-376320
-#   GCP_LOCATION: europe-west1
-#   GCP_REPOSITORY: hello-repo
-#   NODE_IMAGE: nodeserver
-#   NGINX_IMAGE: nginx
+    branches: ["main"]
 
 jobs:
   login-build-push:
-    name: Docker login, build, and push
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout
         uses: actions/checkout@v3
-      
+
       - name: Test
         run: echo "it works!"
 
-      # - name: "Docker node container"
-      # - run: |
-      #     docker build \
-      #       --tag "$GCP_LOCATION-docker.pkg.dev/$GCP_PROJECT_ID/$GCP_REPOSITORY/$NODE_IMAGE:$GITHUB_SHA" \
-      #       .
-      #   working-directory: "./api"
-
-      # - name: "Build the frontend app and build the nginx image"
-      # - run: | 
-      #     cd app && npm build && cd ..
-      #     cd cp -rf app/build nginx/
-      #     docker build -f ./app/prod.Dockerfile \
-      #       --tag "$GCP_LOCATION-docker.pkg.dev/$GCP_PROJECT_ID/$GCP_REPOSITORY/$NGINX_IMAGE:$GITHUB_SHA" \
-      #       ./app
-
-
-      # - id: "auth"
-      #   name: "Authenticate to Google Cloud"
-      #   uses: "google-github-actions/auth@v1"
-      #   with:
-      #     credentials_json: "${{ secrets.GCLOUD_MNEMOSYNE_CREDENTIALS }}"
-      #     token_format: "access_token"
-
-      # - name: "Docker login"
-      #   uses: "docker/login-action@v1"
-      #   with:
-      #     registry: "${{ env.GCP_LOCATION }}-docker.pkg.dev"
-      #     username: "oauth2accesstoken"
-      #     password: "${{ steps.auth.outputs.access_token }}"
-
-      # - name: "Docker push"
-      #   run: |-
-      #     docker push "$GCP_LOCATION-docker.pkg.dev/$GCP_PROJECT_ID/$GCP_REPOSITORY/$NODE_IMAGE:$GITHUB_SHA"
-# docker push "$GCP_LOCATION-docker.pkg.dev/$GCP_PROJECT_ID/$GCP_REPOSITORY/$NGINX_IMAGE:$GITHUB_SHA"
