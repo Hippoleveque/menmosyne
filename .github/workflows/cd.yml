@@ -41,17 +41,14 @@ jobs:
             .
         working-directory: "./api"
 
-      - name: "Build the frontend app"
-      - run: npm build
-        working-directory: "./app"
-
-      - name: "Build nginx container"
-      - run: cp -rf app/build nginx/
-      - run: |-
-          docker build -f prod.Dockerfile \
+      - name: "Build the frontend app and build the nginx image"
+      - run: | 
+          cd app && npm build && cd ..
+          cd cp -rf app/build nginx/
+          docker build -f ./app/prod.Dockerfile \
             --tag "$GCP_LOCATION-docker.pkg.dev/$GCP_PROJECT_ID/$GCP_REPOSITORY/$NGINX_IMAGE:$GITHUB_SHA" \
-            .
-        working-directory: "./nginx"
+            ./app
+
 
       - id: "auth"
         name: "Authenticate to Google Cloud"
