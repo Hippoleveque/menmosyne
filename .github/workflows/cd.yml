@@ -23,6 +23,7 @@ env:
   GCP_REPOSITORY: hello-repo
   NODE_IMAGE: nodeserver
   NGINX_IMAGE: nginx
+  CI: false
 
 jobs:
   login-build-push:
