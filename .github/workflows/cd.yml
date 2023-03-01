@@ -50,13 +50,13 @@ jobs:
           credentials_json: "${{ secrets.GCLOUD_MNEMOSYNE_CREDENTIALS }}"
           token_format: "access_token"
 
-      - name: "Docker login"
-        uses: "docker/login-action@v1"
-        with:
-          registry: "${{ env.GCP_LOCATION }}-docker.pkg.dev"
-          username: "oauth2accesstoken"
-          password: "${{ steps.auth.outputs.access_token }}"
+      # - name: "Docker login"
+      #   uses: "docker/login-action@v1"
+      #   with:
+      #     registry: "${{ env.GCP_LOCATION }}-docker.pkg.dev"
+      #     username: "oauth2accesstoken"
+      #     password: "${{ steps.auth.outputs.access_token }}"
 
-      - name: "Docker push"
-        run: |-
-          docker push "$GCP_LOCATION-docker.pkg.dev/$GCP_PROJECT_ID/$GCP_REPOSITORY/$NODE_IMAGE:$GITHUB_SHA"
+      # - name: "Docker push"
+      #   run: |-
+      #     docker push "$GCP_LOCATION-docker.pkg.dev/$GCP_PROJECT_ID/$GCP_REPOSITORY/$NODE_IMAGE:$GITHUB_SHA"
