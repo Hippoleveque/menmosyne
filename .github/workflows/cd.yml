@@ -65,9 +65,11 @@ jobs:
           docker push "$GCP_LOCATION-docker.pkg.dev/$GCP_PROJECT_ID/$GCP_REPOSITORY/$NODE_IMAGE:$GITHUB_SHA"
 
       - name: "Build the frontend app"
-        run: npm run build
+        run: npm ci
         working-directory: "./app"
 
+      - run: npm build
+        working-directory: "./app"
       - run: cp -rf app/build nginx/
 
       - run: |-
