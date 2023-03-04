@@ -3,6 +3,7 @@ services:
   nodeserver:
     environment:
       - DOCKER_APP_IMAGE
+      - JWT_SECRET=example
     image: ${DOCKER_APP_IMAGE}
     ports:
       - "8080:8080"
