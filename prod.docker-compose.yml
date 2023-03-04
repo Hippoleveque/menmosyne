@@ -2,10 +2,8 @@ version: "3.1"
 services:
   nodeserver:
     environment:
-      - DOCKER_REGISTRY
-      - DOCKER_APP_IMAGE_NAME
-      - DOCKER_APP_IMAGE_TAG
-    image: ${DOCKER_REGISTRY}${DOCKER_APP_IMAGE_NAME}:${DOCKER_APP_IMAGE_TAG}
+      - DOCKER_APP_IMAGE
+    image: ${DOCKER_APP_IMAGE}
     ports:
       - "8080:8080"
     depends_on:
@@ -15,25 +13,23 @@ services:
 
   nginx:
     environment:
-      - DOCKER_REGISTRY
-      - DOCKER_NGINX_IMAGE_NAME
-      - DOCKER_NGINX_IMAGE_TAG
+      - DOCKER_NGINX_IMAGE
     restart: always
-    image: ${DOCKER_REGISTRY}${DOCKER_NGINX_IMAGE_NAME}:${DOCKER_NGINX_IMAGE_TAG}
+    image: ${DOCKER_NGINX_IMAGE}
     ports:
       - "80:80"
     depends_on:
       - nodeserver
 
-mongo:
-  image: mongo
-  restart: always
-  environment:
-    MONGO_INITDB_DATABASE: mnemosyne
-    MONGO_INITDB_ROOT_USERNAME: root
-    MONGO_INITDB_ROOT_PASSWORD: example
-  ports:
-    - "27017:27017"
-  volumes:
-    - ./mongo/data:/data/db
-    - ./mongo/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+  mongo:
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_DATABASE: mnemosyne
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./mongo/data:/data/db
+      - ./mongo/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
