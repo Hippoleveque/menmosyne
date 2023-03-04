@@ -91,4 +91,4 @@ jobs:
 
       - name: "Use gcloud CLI"
         run: |-
-          gcloud pubsub topics publish projects/$GCP_PROJECT_ID/topics/$PUB_SUB_TOPIC --message="{'nodeImage': '$GCP_LOCATION-docker.pkg.dev/$GCP_PROJECT_ID/$GCP_REPOSITORY/$NODE_IMAGE:$GITHUB_SHA', 'nginxImage': '$GCP_LOCATION-docker.pkg.dev/$GCP_PROJECT_ID/$GCP_REPOSITORY/$NGINX_IMAGE:$GITHUB_SHA'"
+          gcloud pubsub topics publish projects/$GCP_PROJECT_ID/topics/$PUB_SUB_TOPIC --message='{"nodeImage": "$GCP_LOCATION-docker.pkg.dev/$GCP_PROJECT_ID/$GCP_REPOSITORY/$NODE_IMAGE:$GITHUB_SHA", "nginxImage": "$GCP_LOCATION-docker.pkg.dev/$GCP_PROJECT_ID/$GCP_REPOSITORY/$NGINX_IMAGE:$GITHUB_SHA"}'
