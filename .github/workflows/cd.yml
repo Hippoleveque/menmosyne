@@ -43,7 +43,7 @@ jobs:
 
       - name: "Docker node container"
         run: |
-          docker build \
+          docker build -f prod.Dockerfile \
             --tag "$GCP_LOCATION-docker.pkg.dev/$GCP_PROJECT_ID/$GCP_REPOSITORY/$NODE_IMAGE:$GITHUB_SHA" \
             .
         working-directory: "./api"
