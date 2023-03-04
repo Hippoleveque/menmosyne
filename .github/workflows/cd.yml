@@ -21,6 +21,7 @@ env:
   GCP_PROJECT_ID: mnemosyne-376320
   GCP_LOCATION: europe-west1
   GCP_REPOSITORY: hello-repo
+  PUB_SUB_TOPIC: app_refresh
   NODE_IMAGE: nodeserver
   NGINX_IMAGE: nginx
   CI: false
@@ -90,4 +91,5 @@ jobs:
           version: '>= 363.0.0'
 
       - name: 'Use gcloud CLI'
-        run: 'gcloud info'
+        run: 'gcloud pubsub topics publish projects/$GCP_PROJECT_ID/topics/$PUB_SUB_TOPIC --message="published new images" \
+  --attribute="nodeImage=$GCP_LOCATION-docker.pkg.dev/$GCP_PROJECT_ID/$GCP_REPOSITORY/$NODE_IMAGE:$GITHUB_SHA,nginx_image=$GCP_LOCATION-docker.pkg.dev/$GCP_PROJECT_ID/$GCP_REPOSITORY/$NGINX_IMAGE:$GITHUB_SHA"'
