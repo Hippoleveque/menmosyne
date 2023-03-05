@@ -1,25 +1,25 @@
-# push the built image to the gcloud registry
-
-# 1. Create service account
-#.   * Service Account Token Creator
-#.   * Artifact Registry Writer
-# 2. Generate service account key
-#.   * In GitHub project -> Settings -> Secrets -> Actions -> New Repository Secret
-#.     Name: GCP_CREDENTIALS
-#.     Value: key.json contents
-# 3. Create repo in artifact repository
-#.   * Name: $env.REPOSITORY below
-#.   * Region: $env.GAR_LOCATION below
-
 name: Docker build and push to Artifact Registry
 
 on:
   push:
     branches: ["main"]
 
+env:
+  GCP_PROJECT_ID: mnemosyne-376320
+  GCP_LOCATION: europe-west1
+  GCP_REPOSITORY: hello-repo
+  PUB_SUB_TOPIC: app_refresh
+  NODE_IMAGE: nodeserver
+  NGINX_IMAGE: nginx
+  CI: false
+
 jobs:
   login-build-push:
     runs-on: ubuntu-latest
+
+    permissions:
+      contents: "read"
+      id-token: "write"
 
     steps:
       - name: Checkout
@@ -27,3 +27,54 @@ jobs:
 
       - name: Test
         run: echo "it works!"
+
+      - name: "Docker node container"
+        run: |
+          docker build -f prod.Dockerfile \
+            --tag "$GCP_LOCATION-docker.pkg.dev/$GCP_PROJECT_ID/$GCP_REPOSITORY/$NODE_IMAGE:$GITHUB_SHA" \
+            .
+        working-directory: "./api"
+
+      - id: "auth"
+        name: "Authenticate to Google Cloud"
+        uses: "google-github-actions/auth@v1"
+        with:
+          credentials_json: "${{ secrets.GCLOUD_MNEMOSYNE_CREDENTIALS }}"
+          token_format: "access_token"
+
+      - name: "Docker login"
+        uses: "docker/login-action@v1"
+        with:
+          registry: "${{ env.GCP_LOCATION }}-docker.pkg.dev"
+          username: "oauth2accesstoken"
+          password: "${{ steps.auth.outputs.access_token }}"
+
+      - name: "Docker push node image"
+        run: |-
+          docker push "$GCP_LOCATION-docker.pkg.dev/$GCP_PROJECT_ID/$GCP_REPOSITORY/$NODE_IMAGE:$GITHUB_SHA"
+
+      - name: "Build the frontend app"
+        run: npm ci
+        working-directory: "./app"
+
+      - run: npm run build
+        working-directory: "./app"
+      - run: cp -rf app/build nginx/
+
+      - run: |-
+          docker build -f prod.Dockerfile \
+            --tag "$GCP_LOCATION-docker.pkg.dev/$GCP_PROJECT_ID/$GCP_REPOSITORY/$NGINX_IMAGE:$GITHUB_SHA" \
+            .
+        working-directory: "./nginx"
+
+      - name: "Docker push node image"
+        run: |-
+          docker push "$GCP_LOCATION-docker.pkg.dev/$GCP_PROJECT_ID/$GCP_REPOSITORY/$NGINX_IMAGE:$GITHUB_SHA"
+
+      - name: "Set up Cloud SDK"
+        uses: "google-github-actions/setup-gcloud@v1"
+        with:
+          version: ">= 363.0.0"
+
+      - name: "Use gcloud CLI"
+        run: 'gcloud pubsub topics publish projects/$GCP_PROJECT_ID/topics/$PUB_SUB_TOPIC --message="published new images" --attribute="nodeImage=$GCP_LOCATION-docker.pkg.dev/$GCP_PROJECT_ID/$GCP_REPOSITORY/$NODE_IMAGE:$GITHUB_SHA,nginxImage=$GCP_LOCATION-docker.pkg.dev/$GCP_PROJECT_ID/$GCP_REPOSITORY/$NGINX_IMAGE:$GITHUB_SHA"'

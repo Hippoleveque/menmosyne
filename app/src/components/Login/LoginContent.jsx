@@ -64,7 +64,7 @@ export default function LoginContent() {
         <CssBaseline />
         <Box className={classes.loginBox}>
           <Typography component="h1" variant="h5">
-            Bienvenue sur Mnemosyne
+            Bienvenue sur Mnemosyne.
           </Typography>
           <Box
             component="form"
