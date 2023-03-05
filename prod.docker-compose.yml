@@ -19,6 +19,10 @@ services:
       - "80:80"
     depends_on:
       - nodeserver
+    volumes:
+     - ./dh-param/dhparam-2048.pem:/etc/ssl/certs/dhparam-2048.pem
+     - /docker-volumes/etc/letsencrypt/live/mnemosyne-app.fr/fullchain.pem:/etc/letsencrypt/live/mnemosyne-app.fr/fullchain.pem
+     - /docker-volumes/etc/letsencrypt/live/mnemosyne-app.fr/privkey.pem:/etc/letsencrypt/live/mnemosyne-app.fr/privkey.pem
 
   mongo:
     image: mongo
