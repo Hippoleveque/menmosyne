@@ -17,6 +17,7 @@ services:
     image: ${DOCKER_NGINX_IMAGE}
     ports:
       - "80:80"
+      - "443:443"
     depends_on:
       - nodeserver
     volumes:
