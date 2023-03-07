@@ -19,7 +19,7 @@ describe("Test the cards endpoints of the API.", () => {
       { _id: new ObjectId().toString(), recto: "front", verso: "back" },
     ];
     sinon.mock(jwt).expects("verify").returns({ userId: "id" });
-    sinon.mock(Card).expects("countDocs").resolves(10);
+    sinon.mock(Card).expects("count").resolves(10);
     sinon.mock(Card).expects("getCards").resolves(mockedCards);
     const response = await request(app)
       .get("/memo/cards/" + new ObjectId().toString())
@@ -37,7 +37,7 @@ describe("Test the cards endpoints of the API.", () => {
       { _id: new ObjectId().toString(), recto: "front", verso: "back" },
     ];
     sinon.mock(jwt).expects("verify").returns({ userId: "id" });
-    sinon.mock(Card).expects("countDocs").resolves(10);
+    sinon.mock(Card).expects("count").resolves(10);
     sinon.mock(Card).expects("getCards").resolves(mockedCards);
     const response = await request(app)
       .get(`/memo/cards/${new ObjectId().toString()}?offset=2&limit=5`)

@@ -11,7 +11,7 @@ export const getCards = async (req, res, next) => {
   const offset = +req.query.offset || 0;
   const limit = +req.query.limit || 10;
   try {
-    const totalCards = await Card.countDocs({
+    const totalCards = await Card.count({
       cardCollection: new ObjectId(collectionId),
     });
     const cards = await Card.getCards(

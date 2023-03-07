@@ -29,11 +29,6 @@ const cardSchema = new Schema(
   { timestamps: true }
 );
 
-cardSchema.statics.countDocs = async function (query) {
-  const count = await this.count(query);
-  return count;
-};
-
 cardSchema.statics.getCard = async function (query) {
   const card = await this.findOne(query).populate("cardCollection").exec();
   return card;
