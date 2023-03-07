@@ -26,9 +26,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Test
-        run: echo "it works!"
-
       - name: "Docker node container"
         run: |
           docker build -f prod.Dockerfile \
@@ -54,19 +51,10 @@ jobs:
         run: |-
           docker push "$GCP_LOCATION-docker.pkg.dev/$GCP_PROJECT_ID/$GCP_REPOSITORY/$NODE_IMAGE:$GITHUB_SHA"
 
-      # - name: "Build the frontend app"
-      #   run: npm ci
-      #   working-directory: "./app"
-
-      # - run: npm run build
-      #   working-directory: "./app"
-      # - run: cp -rf app/build nginx/
-
       - run: |-
           docker build -f ./nginx/prod.Dockerfile \
             --tag "$GCP_LOCATION-docker.pkg.dev/$GCP_PROJECT_ID/$GCP_REPOSITORY/$NGINX_IMAGE:$GITHUB_SHA" \
             .
-        # working-directory: "./nginx"
 
       - name: "Docker push node image"
         run: |-
