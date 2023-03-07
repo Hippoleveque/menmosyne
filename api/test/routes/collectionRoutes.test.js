@@ -9,8 +9,40 @@ import mongoose from "mongoose";
 const Query = mongoose.Query;
 const ObjectId = mongoose.Types.ObjectId;
 
-
 describe("Test the collections endpoints of the API.", () => {
+  it("Tests GET /collections", async () => {
+    process.env.JWT_SECRET = "test";
+    const mockedCollections = [
+      { _id: new ObjectId().toString(), title: "test", numCards: 6 },
+    ];
+    sinon
+      .mock(jwt)
+      .expects("verify")
+      .returns({ userId: new ObjectId().toString() });
+    sinon.mock(CardCollection).expects("countDocs").resolves(1);
+    sinon
+      .mock(CardCollection)
+      .expects("getCollections")
+      .resolves(mockedCollections);
+    const response = await request(app)
+      .get("/memo/cardCollections")
+      .set("Accept", "application/json")
+      .set("Authorization", "Bearer token")
+      .expect(200);
+    expect(response.body).to.have.deep.property(
+      "cardCollections",
+      mockedCollections
+    );
+    expect(response.body).to.have.deep.property(
+      "cardCollections",
+      mockedCollections
+    );
+    expect(response.body).to.have.deep.property(
+      "totalCollections",
+      1
+    );
+  });
+
   it("Tests GET /collections/:collectionId", async () => {
     process.env.JWT_SECRET = "test";
     const mockedCollection = { _id: "id", title: "test", numCards: 6 };
@@ -49,7 +81,10 @@ describe("Test the collections endpoints of the API.", () => {
       .mock(jwt)
       .expects("verify")
       .returns({ userId: new ObjectId().toString() });
-    sinon.mock(CardCollection.prototype).expects("save").resolves({message: "ok"});
+    sinon
+      .mock(CardCollection.prototype)
+      .expects("save")
+      .resolves({ message: "ok" });
     const body = {
       name: "exampleName",
       description: "exampleDescription",
