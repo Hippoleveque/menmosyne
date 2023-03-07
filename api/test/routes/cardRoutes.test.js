@@ -1,7 +1,6 @@
 import { expect } from "chai";
 import sinon from "sinon";
 import request from "supertest";
-import User from "../../models/user.js";
 import app from "../../server.js";
 import Card from "../../models/card.js";
 import CardCollection from "../../models/cardCollection.js";

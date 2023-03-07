@@ -74,6 +74,7 @@ export const deleteCard = async (req, res, next) => {
     let card = await Card.getCard({
       _id: new ObjectId(cardId),
     });
+    
     if (!card || card.cardCollection.owner.toString() !== userId.toString()) {
       const statusCode = 400;
       const message = "Bad Collection Id";
