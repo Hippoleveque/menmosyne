@@ -9,7 +9,8 @@ describe("Test the authentication endpoints of the API.", () => {
   it("Tests POST /signup", async () => {
     const userBody = { email: "test@test.com", password: "tests" };
     sinon.mock(User).expects("createUser").resolves(userBody);
-    sinon.mock(User).expects("getUser");
+    sinon.mock(User).expects("getUser").resolves(null);
+    sinon.mock(bcrypt).expects("hash").resolves("tests");
     const response = await request(app)
       .post("/auth/signup")
       .send(userBody)

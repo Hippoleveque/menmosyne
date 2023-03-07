@@ -11,7 +11,7 @@ export const getCards = async (req, res, next) => {
   const offset = +req.query.offset || 0;
   const limit = +req.query.limit || 10;
   try {
-    const totalCards = await Card.countDocs({
+    const totalCards = await Card.count({
       cardCollection: new ObjectId(collectionId),
     });
     const cards = await Card.getCards(
@@ -74,6 +74,7 @@ export const deleteCard = async (req, res, next) => {
     let card = await Card.getCard({
       _id: new ObjectId(cardId),
     });
+    
     if (!card || card.cardCollection.owner.toString() !== userId.toString()) {
       const statusCode = 400;
       const message = "Bad Collection Id";
@@ -121,18 +122,18 @@ export const getCollection = async (req, res, next) => {
   const { collectionId } = req.params;
   const { userId } = req;
   try {
-    const collection = await CardCollection.getCollection({
+    const cardCollection = await CardCollection.getCollection({
       _id: collectionId,
       owner: userId,
     });
-    if (!collection) {
+    if (!cardCollection) {
       const statusCode = 400;
       const message = "Bad Collection Id";
       const err = new Error(message);
       err.statusCode = statusCode;
       throw err;
     }
-    return res.status(200).json({ collection });
+    return res.status(200).json({ cardCollection });
   } catch (err) {
     if (!err.statusCode) {
       err.statusCode = 500;

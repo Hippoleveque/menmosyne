@@ -16,7 +16,7 @@ const router = express.Router();
 
 router.get("/cards/:collectionId", isAuth, getCards);
 router.get("/cardCollections", isAuth, getCollections);
-router.get("/collections/:collectionId", isAuth, getCollection);
+router.get("/cardCollections/:collectionId", isAuth, getCollection);
 
 router.post(
   "/cards",
