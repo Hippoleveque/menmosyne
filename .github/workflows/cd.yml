@@ -2,7 +2,8 @@ name: Docker build and push to Artifact Registry
 
 on:
   push:
-    branches: ["main"]
+    tags: 
+      - 'v[0-9]+.[0-9]+.[0-9]+'
 
 env:
   GCP_PROJECT_ID: mnemosyne-376320
