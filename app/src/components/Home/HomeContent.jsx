@@ -106,7 +106,7 @@ export default function HomeContent() {
         onClose={handleDeleteModalClose}
       />
       <Box sx={{ p: "10px 10px" }}>
-        <Typography component="h1" variant="h5">
+        <Typography component="h1" variant="h5" data-testid="welcome-message">
           {"Bon retour !"}
         </Typography>
       </Box>
