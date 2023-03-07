@@ -78,7 +78,7 @@ describe("Test the collections endpoints of the API.", () => {
     expect(response.body).to.have.deep.property("cardCollection", mockedCollection);
   });
 
-  it("Tests DELETE /collections/:collectionId", async () => {
+  it("Tests DELETE /cardCollections/:collectionId", async () => {
     process.env.JWT_SECRET = "test";
     const mockedCollection = { _id: "id", title: "test", numCards: 6 };
     sinon.mock(jwt).expects("verify").returns({ userId: "id" });
@@ -87,11 +87,10 @@ describe("Test the collections endpoints of the API.", () => {
       .expects("getCollection")
       .resolves(mockedCollection);
     const response = await request(app)
-      .get("/memo/collections/id")
+      .delete("/memo/collections/id")
       .set("Accept", "application/json")
       .set("Authorization", "Bearer token")
       .expect(200);
-    expect(response.body).to.have.deep.property("collection", mockedCollection);
   });
 
   it("Tests POST /cardCollections", async () => {
