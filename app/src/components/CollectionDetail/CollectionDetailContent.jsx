@@ -59,7 +59,7 @@ export default function CollectionDetailContent({ collectionId }) {
 
   useEffect(() => {
     const fetchCollection = async () => {
-      const response = await fetch(`/api/memo/collections/${collectionId}`, {
+      const response = await fetch(`/api/memo/cardCollections/${collectionId}`, {
         method: "GET",
         headers: {
           Accept: "application/json",
@@ -68,7 +68,7 @@ export default function CollectionDetailContent({ collectionId }) {
         },
       });
       const data = await response.json();
-      setCollection(data.collection);
+      setCollection(data.cardCollection);
     };
     fetchCollection();
   }, [loginToken, collectionId]);
