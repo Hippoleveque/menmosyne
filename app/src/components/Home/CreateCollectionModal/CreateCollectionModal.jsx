@@ -131,6 +131,7 @@ export default function CreateCollectionModal({ open, onClose }) {
                 fullWidth
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
+                data-testid="create-collection-button-from-modal"
               >
                 Créer la collection
               </Button>
