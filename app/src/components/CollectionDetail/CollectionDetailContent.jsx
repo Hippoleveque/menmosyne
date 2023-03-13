@@ -10,7 +10,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import Pagination from "@mui/material/Pagination";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 
 import CreateCardModal from "./CreateCardModal/CreateCardModal";
 import { AuthContext } from "../../store/auth-context";
@@ -126,7 +126,7 @@ export default function CollectionDetailContent({ collectionId }) {
       </Box>
       <TableContainer component={Paper}>
         <Table
-          sx={{ minWidth: 650, tableLayout: "fixed" }}
+          sx={{ minWidth: 650, tablelayout: "fixed" }}
           aria-label="simple table"
         >
           <TableHead>

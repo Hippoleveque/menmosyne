@@ -1,10 +1,5 @@
-import React, {
-  useEffect,
-  useState,
-  useContext,
-  useCallback,
-} from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState, useContext, useCallback } from "react";
+import { useNavigate } from "react-router";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
@@ -106,13 +101,13 @@ export default function HomeContent() {
         onClose={handleDeleteModalClose}
       />
       <Box sx={{ p: "10px 10px" }}>
-        <Typography component="h1" variant="h5">
+        <Typography component="h1" variant="h5" data-testid="welcome-message">
           {"Bon retour !"}
         </Typography>
       </Box>
 
       <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 650 }} tableLayout="fixed">
+        <Table sx={{ minWidth: 650, tableLayout: "fixed" }}>
           <TableHead>
             <TableRow>
               <TableCell colSpan={3}>
@@ -124,6 +119,7 @@ export default function HomeContent() {
                   color="primary"
                   onClick={handleCreateModalOpen}
                   sx={{ fontSize: "0.7rem" }}
+                  data-testid="create-collection-button"
                 >
                   Ajouter une collection
                 </Button>
@@ -141,7 +137,10 @@ export default function HomeContent() {
             {collections.map((row) => (
               <TableRow key={row._id.toString()}>
                 <TableCell align="center" width="20%">
-                  <Link href={`/collections/${row._id.toString()}`}>
+                  <Link
+                    href={`/collections/${row._id.toString()}`}
+                    data-testid={`collection-${row._id.toString()}`}
+                  >
                     {row.name}
                   </Link>
                 </TableCell>
@@ -160,6 +159,7 @@ export default function HomeContent() {
                     color="secondary"
                     onClick={() => handleReviewClick(row._id.toString())}
                     sx={{ fontSize: "0.7rem" }}
+                    data-testid={`review-button-${row._id.toString()}`}
                   >
                     Réviser
                   </Button>
@@ -170,6 +170,7 @@ export default function HomeContent() {
                     color="error"
                     onClick={() => handleDeleteModalOpen(row._id.toString())}
                     sx={{ fontSize: "0.7rem" }}
+                    data-testid={`delete-collection-${row._id.toString()}`}
                   >
                     Supprimer
                   </Button>

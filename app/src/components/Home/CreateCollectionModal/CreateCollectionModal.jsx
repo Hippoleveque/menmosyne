@@ -63,7 +63,7 @@ export default function CreateCollectionModal({ open, onClose }) {
 
   return (
     <ThemeProvider theme={theme}>
-      <Modal open={open} onClose={onClose}>
+      <Modal open={open} onClose={onClose} data-testid="create-collection-modal">
         <Container
           component="main"
           className={classes.createCollectionContainer}
@@ -131,6 +131,7 @@ export default function CreateCollectionModal({ open, onClose }) {
                 fullWidth
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
+                data-testid="create-collection-button-from-modal"
               >
                 Créer la collection
               </Button>
