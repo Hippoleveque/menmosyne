@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router";
 import { AuthContext } from "../../store/auth-context";
 import RevisionCard from "./RevisionCard/RevisionCard";
 

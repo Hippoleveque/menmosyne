@@ -63,7 +63,7 @@ export default function CreateCollectionModal({ open, onClose }) {
 
   return (
     <ThemeProvider theme={theme}>
-      <Modal open={open} onClose={onClose}>
+      <Modal open={open} onClose={onClose} data-testid="create-collection-modal">
         <Container
           component="main"
           className={classes.createCollectionContainer}

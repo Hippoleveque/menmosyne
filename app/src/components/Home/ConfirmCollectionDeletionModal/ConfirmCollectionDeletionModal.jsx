@@ -46,7 +46,7 @@ export default function ConfirmCollectionDeletionModal({
 
   return (
     <ThemeProvider theme={theme}>
-      <Modal open={open} onClose={onClose}>
+      <Modal open={open} onClose={onClose} data-testid="delete-collection-modal">
         <Container
           component="main"
           className={classes.deleteCollectionContainer}
