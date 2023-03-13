@@ -107,5 +107,6 @@ describe("ConfirmCollectionDeletionModal", () => {
         method: "DELETE",
       })
     );
+    expect(onClose).toHaveBeenCalled();
   });
 });
