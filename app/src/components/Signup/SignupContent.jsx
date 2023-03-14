@@ -80,6 +80,7 @@ export default function SignupContent() {
               value={enteredEmail}
               onChange={handleEmailChange}
               autoFocus
+              data-testid="email-field-signup"
             />
             <TextField
               margin="normal"
@@ -92,6 +93,7 @@ export default function SignupContent() {
               value={enteredPassword}
               onChange={handlePasswordChange}
               autoComplete="current-password"
+              data-testid="password-field-signup"
             />
             {signupFailed && (
               <Typography
@@ -108,6 +110,7 @@ export default function SignupContent() {
               variant="contained"
               color="secondary"
               sx={{ mt: 3, mb: 2 }}
+              data-testid="submit-button-signup"
             >
               Créer un compte
             </Button>
