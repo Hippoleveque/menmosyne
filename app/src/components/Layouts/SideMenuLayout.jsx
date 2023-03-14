@@ -127,8 +127,13 @@ export default function SideMenuLayout(props) {
                 component={Logo}
                 viewBox="0 0 75 75"
                 sx={{ fontSize: "2.5rem" }}
+                data-testid="side-menu-logo"
               />
-              <Avatar sx={{ textAlign: "center" }} onClick={handleClick}>
+              <Avatar
+                sx={{ textAlign: "center" }}
+                onClick={handleClick}
+                data-testid="side-menu-avatar"
+              >
                 {user && user[0].toUpperCase()}
               </Avatar>
             </Box>
@@ -148,7 +153,10 @@ export default function SideMenuLayout(props) {
             />
             {["Home", "Import"].map((text, index) => (
               <ListItem key={text}>
-                <ListItemButton onClick={() => handleNavMenuClick(text)}>
+                <ListItemButton
+                  onClick={() => handleNavMenuClick(text)}
+                  data-testid={`side-menu-item-${text}`}
+                >
                   <ListItemIcon>{generateIcon(text)}</ListItemIcon>
                   <ListItemText
                     primary={text}
