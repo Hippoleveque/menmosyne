@@ -48,6 +48,7 @@ export default function LoginContent() {
       }
       const data = await response.json();
       onLogin(data.token, new Date(data.expirationDate));
+      console.log("get till there")
       navigate("/");
     } catch (err) {
       setLoginFailed(true);
@@ -84,6 +85,7 @@ export default function LoginContent() {
               value={enteredEmail}
               onChange={handleEmailChange}
               autoFocus
+              data-testid="email-field-login"
             />
             <TextField
               margin="normal"
@@ -96,6 +98,7 @@ export default function LoginContent() {
               value={enteredPassword}
               onChange={handlePasswordChange}
               autoComplete="current-password"
+              data-testid="password-field-login"
             />
             {loginFailed && (
               <Typography
@@ -111,6 +114,7 @@ export default function LoginContent() {
               fullWidth
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
+              data-testid="submit-button-login"
             >
               Se connecter
             </Button>
@@ -119,7 +123,7 @@ export default function LoginContent() {
               variant="h10"
               sx={{ textAlign: "center" }}
             >
-              <Link href={"/signup"} underline="hover">
+              <Link href={"/signup"} underline="hover" data-testid="signup-button-login">
                 Créer un compte
               </Link>
             </Typography>
