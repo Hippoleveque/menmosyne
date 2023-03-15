@@ -29,14 +29,27 @@ export default function RevisionCard({ card, handleActionClick }) {
   };
 
   const rectoCard = (
-    <Card variant="outlined">
+    <Card
+      variant="outlined"
+      data-testid={`revision-card-${card._id.toString()}`}
+    >
       <CardContent>
         {card.title && (
-          <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
+          <Typography
+            sx={{ fontSize: 14 }}
+            color="text.secondary"
+            gutterBottom
+            data-testid={`title-revision-card-${card._id.toString()}`}
+          >
             {card.title}
           </Typography>
         )}
-        <Typography variant="body2">{card.rectoContent}</Typography>
+        <Typography
+          variant="body2"
+          data-testid={`recto-revision-card-${card._id.toString()}`}
+        >
+          {card.rectoContent}
+        </Typography>
       </CardContent>
       <CardActions
         sx={{
@@ -46,7 +59,12 @@ export default function RevisionCard({ card, handleActionClick }) {
           justifyContent: "end ",
         }}
       >
-        <Button variant="contained" size="small" onClick={handleShowVersoClick}>
+        <Button
+          variant="contained"
+          size="small"
+          onClick={handleShowVersoClick}
+          data-testid={`display-verso-revision-button-${card._id.toString()}`}
+        >
           Afficher le verso
         </Button>
       </CardActions>
@@ -80,7 +98,12 @@ export default function RevisionCard({ card, handleActionClick }) {
           </Box>
           <Divider light style={{ width: "100%" }} />
           <Box sx={{ width: "100%", flexGrow: 1, padding: "10px 10px" }}>
-            <Typography variant="body2">{card.versoContent}</Typography>
+            <Typography
+              variant="body2"
+              data-testid={`verso-revision-card-${card._id.toString()}`}
+            >
+              {card.versoContent}
+            </Typography>
           </Box>
         </Box>
       </CardContent>
@@ -107,7 +130,11 @@ export default function RevisionCard({ card, handleActionClick }) {
           <Button size="small" onClick={handleActionClick}>
             Correct
           </Button>
-          <Button size="small" onClick={handleActionClick}>
+          <Button
+            size="small"
+            onClick={handleActionClick}
+            data-testid={`set-easy-button-revision-${card._id.toString()}`}
+          >
             Facile
           </Button>
         </ButtonGroup>
