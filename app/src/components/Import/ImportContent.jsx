@@ -56,6 +56,7 @@ export default function ImportContent() {
             type="file"
             onChange={handleFileChange}
             ref={fileInputRef}
+            data-testid="upload-file-button-import"
           />
         </Button>
       </CardActions>
