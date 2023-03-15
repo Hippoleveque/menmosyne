@@ -74,7 +74,7 @@ export default function CreateCardModal({ open, onClose, collectionId }) {
 
   return (
     <ThemeProvider theme={theme}>
-      <Modal open={open} onClose={onClose}>
+      <Modal open={open} onClose={onClose} data-testid="create-card-modal">
         <Container component="main" className={classes.createCardContainer}>
           <CssBaseline />
           <Box
@@ -145,6 +145,7 @@ export default function CreateCardModal({ open, onClose, collectionId }) {
                 fullWidth
                 variant="contained"
                 sx={{ mt: 3, mb: 2 }}
+                data-testid="create-card-button-from-modal"
               >
                 Créer la carte
               </Button>

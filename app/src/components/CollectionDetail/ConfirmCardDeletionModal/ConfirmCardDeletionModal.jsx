@@ -46,7 +46,7 @@ export default function ConfirmCardDeletionModal({
 
   return (
     <ThemeProvider theme={theme}>
-      <Modal open={open} onClose={onClose}>
+      <Modal open={open} onClose={onClose} data-testid="delete-card-modal">
         <Container
           component="main"
           className={classes.deleteCardContainer}
@@ -78,6 +78,7 @@ export default function ConfirmCardDeletionModal({
                 onClick={onClose}
                 variant="contained"
                 sx={{ mt: 3, mb: 2, mr: 1.5, ml: 1.5 }}
+                data-testid="cancel-delete-card-button"
               >
                 Annuler
               </Button>
@@ -86,6 +87,7 @@ export default function ConfirmCardDeletionModal({
                 variant="contained"
                 color="error"
                 sx={{ mt: 3, mb: 2, mr: 1.5, ml: 1.5 }}
+                data-testid="confirm-delete-card-button"
               >
                 Supprimer
               </Button>
