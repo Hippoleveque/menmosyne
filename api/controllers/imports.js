@@ -1,7 +1,5 @@
 import path from "path";
-import fs from "fs";
 import { fileURLToPath } from "url";
-import { validationResult } from "express-validator";
 import ankiToJson from "../lib/readAnki/index.js";
 import CardCollection from "../models/cardCollection.js";
 import Card from "../models/card.js";
@@ -13,13 +11,6 @@ export const importFromAnki = async (req, res, next) => {
   const { file, userId } = req;
   //   const errors = validationResult(req);
   try {
-    // if (!errors.isEmpty()) {
-    //   const statusCode = 422;
-    //   const message = "Something in validation went wrong";
-    //   const err = new Error(message);
-    //   err.statusCode = statusCode;
-    //   throw err;
-    // }
     if (!file) {
       const statusCode = 422;
       const message = "File is required";
@@ -27,14 +18,11 @@ export const importFromAnki = async (req, res, next) => {
       err.statusCode = statusCode;
       throw err;
     }
-    console.log("it reached the endpoint");
     const filePath = file.path;
-    console.log(filePath);
     const fileName = file.originalname.split(".")[0];
     const splitPath = filePath.split("/")
     const collectionName = splitPath[splitPath.length - 2]
     const destPath = `${__dirname}/ankiImports/${userId.toString()}/${fileName}`;
-    console.log(collectionName)
     ankiToJson(filePath, destPath, async (jsonCards) => {
       let cardCollection = {
         owner: userId,

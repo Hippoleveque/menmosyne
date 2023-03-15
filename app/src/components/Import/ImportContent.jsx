@@ -16,7 +16,6 @@ export default function ImportContent() {
     const file = e.target.files[0];
     const data = new FormData();
     data.append("file", file, file.name);
-    console.log(data);
     fetch("/api/import/import", {
       method: "POST",
       body: data,
