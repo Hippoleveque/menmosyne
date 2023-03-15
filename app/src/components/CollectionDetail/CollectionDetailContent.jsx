@@ -59,14 +59,17 @@ export default function CollectionDetailContent({ collectionId }) {
 
   useEffect(() => {
     const fetchCollection = async () => {
-      const response = await fetch(`/api/memo/cardCollections/${collectionId}`, {
-        method: "GET",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + loginToken,
-        },
-      });
+      const response = await fetch(
+        `/api/memo/cardCollections/${collectionId}`,
+        {
+          method: "GET",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + loginToken,
+          },
+        }
+      );
       const data = await response.json();
       setCollection(data.cardCollection);
     };
@@ -120,7 +123,11 @@ export default function CollectionDetailContent({ collectionId }) {
           p: "10px 10px",
         }}
       >
-        <Typography component="h1" variant="h5">
+        <Typography
+          component="h1"
+          variant="h5"
+          data-testid="collection-detail-name"
+        >
           {collection && collection.name}
         </Typography>
       </Box>
@@ -141,6 +148,7 @@ export default function CollectionDetailContent({ collectionId }) {
                     color="secondary"
                     onClick={handleReviewClick}
                     sx={{ fontSize: "0.7rem", marginRight: "10px" }}
+                    data-testid="review-button-collection-detail"
                   >
                     Réviser
                   </Button>
@@ -149,6 +157,7 @@ export default function CollectionDetailContent({ collectionId }) {
                     color="primary"
                     onClick={handleModalOpen}
                     sx={{ fontSize: "0.7rem" }}
+                    data-testid="create-card-button"
                   >
                     Ajouter une carte
                   </Button>
@@ -164,7 +173,10 @@ export default function CollectionDetailContent({ collectionId }) {
           </TableHead>
           <TableBody>
             {cards.map((row) => (
-              <TableRow key={row._id.toString()}>
+              <TableRow
+                key={row._id.toString()}
+                data-testid={`card-${row._id.toString()}`}
+              >
                 <TableExtendableTextCell
                   component="th"
                   scope="row"
@@ -185,6 +197,7 @@ export default function CollectionDetailContent({ collectionId }) {
                     color="error"
                     onClick={() => handleDeleteModalOpen(row._id.toString())}
                     sx={{ fontSize: "0.7rem" }}
+                    data-testid={`delete-card-button-${row._id.toString()}`}
                   >
                     Supprimer
                   </Button>
