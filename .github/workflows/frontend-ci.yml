@@ -9,6 +9,9 @@ on:
     paths: 
       - "app/**"
 
+env:
+  CI: false
+
 jobs:
   build:
     runs-on: ubuntu-latest
