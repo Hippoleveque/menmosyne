@@ -2,7 +2,8 @@ import express from "express";
 import bodyParser from "body-parser";
 import authRoutes from "./routes/auth.js";
 import importRoutes from "./routes/imports.js";
-import cardCollectionRoutes from "./routes/cardCollection.js";
+import collectionRoutes from "./routes/collections.js";
+import cardRoutes from "./routes/cards.js";
 import path from "path";
 import { fileURLToPath } from "url";
 
@@ -15,7 +16,9 @@ app.use("/ankiImports", express.static(path.join(__dirname, "ankiImports")));
 
 app.use("/auth", authRoutes);
 
-app.use("/memo", cardCollectionRoutes);
+app.use("/collections", collectionRoutes);
+
+app.use("/cards", cardRoutes);
 
 app.use("/import", importRoutes);
 
