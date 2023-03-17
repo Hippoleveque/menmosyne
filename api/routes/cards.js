@@ -4,7 +4,7 @@ import { body } from "express-validator";
 import {
   createCard,
   deleteCard,
-} from "../controllers/cardCollection.js";
+} from "../controllers/cards.js";
 import { isAuth } from "../middlewares/isAuth.js";
 
 const router = express.Router();
