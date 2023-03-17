@@ -115,7 +115,7 @@ export const deleteCollection = async (req, res, next) => {
   const { collectionId } = req.params;
   const { userId } = req;
   try {
-    const collection = await CardCollection.deleteCollection({
+    const collection = await CardCollection.getCollection({
       _id: collectionId,
       owner: userId,
     });
