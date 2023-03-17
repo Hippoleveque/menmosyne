@@ -36,7 +36,7 @@ export default function HomeContent() {
       const offset = (page - 1) * ITEMS_PER_PAGE;
       const limit = ITEMS_PER_PAGE;
       let response = await fetch(
-        `/api/memo/cardCollections?offset=${offset}&limit=${limit}`,
+        `/api/collections?offset=${offset}&limit=${limit}`,
         {
           method: "GET",
           headers: {

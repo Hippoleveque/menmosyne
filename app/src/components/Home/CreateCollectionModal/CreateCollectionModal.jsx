@@ -39,7 +39,7 @@ export default function CreateCollectionModal({ open, onClose }) {
   const handleSubmit = async (event) => {
     event.preventDefault();
     try {
-      const response = await fetch("/api/memo/cardCollections", {
+      const response = await fetch("/api/collections", {
         method: "POST",
         body: JSON.stringify({
           name: state.newCollectionName,

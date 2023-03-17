@@ -36,7 +36,7 @@ export default function CollectionDetailContent({ collectionId }) {
       const offset = (page - 1) * ITEMS_PER_PAGE;
       const limit = ITEMS_PER_PAGE;
       let response = await fetch(
-        `/api/memo/cards/${collectionId}?offset=${offset}&limit=${limit}`,
+        `/api/collections/${collectionId}/cards?offset=${offset}&limit=${limit}`,
         {
           method: "GET",
           headers: {
@@ -60,7 +60,7 @@ export default function CollectionDetailContent({ collectionId }) {
   useEffect(() => {
     const fetchCollection = async () => {
       const response = await fetch(
-        `/api/memo/cardCollections/${collectionId}`,
+        `/api/collections/${collectionId}`,
         {
           method: "GET",
           headers: {

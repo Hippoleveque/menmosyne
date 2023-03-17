@@ -48,7 +48,6 @@ export default function LoginContent() {
       }
       const data = await response.json();
       onLogin(data.token, new Date(data.expirationDate));
-      console.log("get till there")
       navigate("/");
     } catch (err) {
       setLoginFailed(true);
