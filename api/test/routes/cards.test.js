@@ -10,7 +10,6 @@ const Query = mongoose.Query;
 const ObjectId = mongoose.Types.ObjectId;
 
 describe("Test the cards endpoints of the API.", () => {
-  
   it("Tests POST /cards", async () => {
     process.env.JWT_SECRET = "test";
     sinon
@@ -49,7 +48,7 @@ describe("Test the cards endpoints of the API.", () => {
     const userId = new ObjectId().toString();
     const mockedCollection = {
       _id: new ObjectId().toString(),
-      owner: userId,
+      owner: { _id: userId },
     };
     const mockedCard = {
       _id: cardId,
@@ -62,7 +61,32 @@ describe("Test the cards endpoints of the API.", () => {
     sinon.mock(Card).expects("getCard").resolves(mockedCard);
     sinon.mock(Card).expects("deleteCard").resolves(mockedCard);
     await request(app)
-      .delete("/memo/cards/" + cardId)
+      .delete("/cards/" + cardId)
+      .set("Accept", "application/json")
+      .set("Authorization", "Bearer token")
+      .expect(200);
+  });
+
+  it("Tests POST /cards/:cardId/review", async () => {
+    process.env.JWT_SECRET = "test";
+    const cardId = new ObjectId().toString();
+    const userId = new ObjectId().toString();
+    const mockedCollection = {
+      _id: new ObjectId().toString(),
+      owner: { _id: userId },
+    };
+    const mockedCard = {
+      _id: cardId,
+      rectoContent: "testRecto",
+      versoContent: "testVerso",
+      title: "testTitle",
+      cardCollection: mockedCollection,
+      save: () => Promise.resolve({}),
+    };
+    sinon.mock(jwt).expects("verify").returns({ userId: userId });
+    sinon.mock(Card).expects("getCard").resolves(mockedCard);
+    await request(app)
+      .post(`/cards/${cardId}/review`)
       .set("Accept", "application/json")
       .set("Authorization", "Bearer token")
       .expect(200);

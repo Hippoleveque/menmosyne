@@ -25,6 +25,18 @@ const cardSchema = new Schema(
       required: false,
       default: 1,
     },
+    lastReviewed: {
+      type: Date,
+      required: false,
+    },
+    easinessFactor: {
+      type: Number,
+      default: 2.5,
+    },
+    numberReviewed: {
+      type: Number,
+      default: 0
+    }
   },
   { timestamps: true }
 );

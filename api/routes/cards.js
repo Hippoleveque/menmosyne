@@ -4,6 +4,7 @@ import { body } from "express-validator";
 import {
   createCard,
   deleteCard,
+  reviewCard
 } from "../controllers/cards.js";
 import { isAuth } from "../middlewares/isAuth.js";
 
@@ -15,6 +16,12 @@ router.post(
   isAuth,
   createCard
 );
+
+router.post(
+  "/:cardId/review",
+  isAuth,
+  reviewCard
+)
 
 router.delete("/:cardId", isAuth, deleteCard);
 
