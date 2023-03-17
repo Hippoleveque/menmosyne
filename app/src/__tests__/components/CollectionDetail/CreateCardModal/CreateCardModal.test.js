@@ -71,7 +71,7 @@ describe("CreateCollectionModal", () => {
     });
 
     expect(global.fetch).toHaveBeenCalledWith(
-      "/api/memo/cards",
+      "/api/cards",
       expect.objectContaining({
         method: "POST",
       })

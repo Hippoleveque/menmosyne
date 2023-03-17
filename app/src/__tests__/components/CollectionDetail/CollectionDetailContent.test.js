@@ -20,7 +20,7 @@ describe("CollectionDetailContent", () => {
     root = createRoot(container);
     jest.restoreAllMocks();
     global.fetch = jest.fn((url, _) => {
-      if (url.startsWith("/api/memo/cards")) {
+      if (url.startsWith("/api/collections/0/cards")) {
         const search = url.split("?")[1];
         const urlParams = new URLSearchParams(search);
         const offset = parseInt(urlParams.get("offset")) || 0;
@@ -68,11 +68,11 @@ describe("CollectionDetailContent", () => {
   });
 
   // Test fetching the collection we are looking at
-  it("Tests the collection has been correctly", async () => {
+  it("Tests the collection has been fetched correctly", async () => {
     await act(async () => {
       root.render(
         <Router>
-          <CollectionDetailContent />
+          <CollectionDetailContent collectionId="0"/>
         </Router>
       );
     });
@@ -84,11 +84,11 @@ describe("CollectionDetailContent", () => {
   });
 
   // Test fetching the cards
-  it("Tests the cards  are fetched correctly", async () => {
+  it("Tests the cards are fetched correctly", async () => {
     await act(async () => {
       root.render(
         <Router>
-          <CollectionDetailContent />
+          <CollectionDetailContent collectionId="0"/>
         </Router>
       );
     });
@@ -114,7 +114,7 @@ describe("CollectionDetailContent", () => {
       await act(async () => {
         root.render(
           <Router>
-            <CollectionDetailContent />
+            <CollectionDetailContent collectionId="0"/>
           </Router>
         );
       });
@@ -151,7 +151,7 @@ describe("CollectionDetailContent", () => {
       await act(async () => {
         root.render(
           <Router>
-            <CollectionDetailContent />
+            <CollectionDetailContent collectionId="0"/>
           </Router>
         );
       });

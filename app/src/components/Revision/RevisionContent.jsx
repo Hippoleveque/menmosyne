@@ -16,7 +16,7 @@ export default function RevisionContent({ collectionId }) {
   useEffect(() => {
     const fetchCards = async () => {
       const response = await fetch(
-        `/api/memo/cards/${collectionId}?offset=${currentOffset}&limit=${FETCH_SIZE}`,
+        `/api/collections/${collectionId}/cards?offset=${currentOffset}&limit=${FETCH_SIZE}`,
         {
           method: "GET",
           headers: {

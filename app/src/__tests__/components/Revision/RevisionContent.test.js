@@ -59,7 +59,7 @@ describe("RevisionContent", () => {
     });
     expect(screen.getByTestId("revision-card-0")).toBeInTheDocument();
     expect(global.fetch).toHaveBeenCalledWith(
-      "/api/memo/cards/0?offset=0&limit=10",
+      "/api/collections/0/cards?offset=0&limit=10",
       expect.objectContaining({
         method: "GET",
       })
@@ -91,7 +91,7 @@ describe("RevisionContent", () => {
     expect(global.fetch).toHaveBeenCalledTimes(2);
 
     expect(global.fetch).toHaveBeenCalledWith(
-      "/api/memo/cards/0?offset=10&limit=10",
+      "/api/collections/0/cards?offset=10&limit=10",
       expect.objectContaining({
         method: "GET",
       })

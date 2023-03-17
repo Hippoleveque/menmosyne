@@ -92,7 +92,7 @@ describe("ConfirmCardDeletionModal", () => {
     });
 
     expect(global.fetch).toHaveBeenCalledWith(
-      "/api/memo/cards/0",
+      "/api/cards/0",
       expect.objectContaining({
         method: "DELETE",
       })

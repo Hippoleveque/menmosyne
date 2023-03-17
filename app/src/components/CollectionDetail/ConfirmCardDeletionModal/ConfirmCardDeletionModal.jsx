@@ -24,7 +24,7 @@ export default function ConfirmCardDeletionModal({
     event.preventDefault();
     try {
       const response = await fetch(
-        `/api/memo/cards/${cardId}`,
+        `/api/cards/${cardId}`,
         {
           method: "DELETE",
           headers: {
