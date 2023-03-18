@@ -44,7 +44,7 @@ const login = async (url, email, pwd) => {
 };
 
 const createCardCollection = async (url, token, cardCollectioName) => {
-  const createCollectionUrl = path.join(url, "memo", "cardCollections");
+  const createCollectionUrl = path.join(url, "collections");
   let response = await fetch(createCollectionUrl, {
     method: "POST",
     headers: {
@@ -61,7 +61,7 @@ const createCardCollection = async (url, token, cardCollectioName) => {
 };
 
 const createCard = async (url, token, collectionId, title, recto, verso) => {
-  const createCardUrl = path.join(url, "memo", "cards");
+  const createCardUrl = path.join(url, "cards");
   let response = await fetch(createCardUrl, {
     method: "POST",
     headers: {

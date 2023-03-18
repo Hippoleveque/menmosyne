@@ -17,6 +17,8 @@ export default function RevisionCard({ card, handleActionClick }) {
     setIsVersoShown(false);
   }, [card]);
 
+  if (!card) return null;
+
   const handleShowVersoClick = (e) => {
     setIsVersoShown(true);
   };
@@ -124,15 +126,19 @@ export default function RevisionCard({ card, handleActionClick }) {
             flexGrow: 1,
           }}
         >
-          <Button size="small" onClick={handleActionClick}>
+          <Button
+            size="small"
+            onClick={(e) => handleActionClick(e, 0)}
+            data-testid={`set-hard-button-revision-${card._id.toString()}`}
+          >
             A revoir
           </Button>
-          <Button size="small" onClick={handleActionClick}>
+          <Button size="small" onClick={(e) => handleActionClick(e, 3)}>
             Correct
           </Button>
           <Button
             size="small"
-            onClick={handleActionClick}
+            onClick={(e) => handleActionClick(e, 5)}
             data-testid={`set-easy-button-revision-${card._id.toString()}`}
           >
             Facile

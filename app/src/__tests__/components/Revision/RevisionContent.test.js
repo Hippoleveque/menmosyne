@@ -88,7 +88,7 @@ describe("RevisionContent", () => {
         .dispatchEvent(new MouseEvent("click", { bubbles: true }));
     });
 
-    expect(global.fetch).toHaveBeenCalledTimes(2);
+    expect(global.fetch).toHaveBeenCalledTimes(3);
 
     expect(global.fetch).toHaveBeenCalledWith(
       "/api/collections/0/cards?offset=10&limit=10",
@@ -96,6 +96,58 @@ describe("RevisionContent", () => {
         method: "GET",
       })
     );
+  });
+
+  // Test that the cards are reviewed again when bad answer
+  it("Tests card re-reviewing and api call to review endpoint", async () => {
+    global.fetch = jest.fn(() =>
+      Promise.resolve({
+        status: 200,
+        json: () =>
+          Promise.resolve({
+            cards: [
+              {
+                _id: 0,
+                rectoContent: "1",
+                versoContent: "1",
+                title: "1",
+              },
+            ],
+            totalCards: 1,
+          }),
+      })
+    );
+
+    await act(async () => {
+      root.render(
+        <Router>
+          <RevisionContent collectionId="0" />
+        </Router>
+      );
+    });
+
+    act(() => {
+      screen
+        .getByTestId("display-verso-revision-button-0")
+        .dispatchEvent(new MouseEvent("click", { bubbles: true }));
+    });
+
+    await act(async () => {
+      screen
+        .getByTestId("set-hard-button-revision-0")
+        .dispatchEvent(new MouseEvent("click", { bubbles: true }));
+    });
+
+    expect(global.fetch).toHaveBeenCalledWith(
+      "/api/cards/0/review",
+      expect.objectContaining({
+        method: "POST",
+      })
+    );
+    expect(screen.getByTestId("recto-revision-card-0")).toBeInTheDocument();
+    expect(
+      screen.queryByTestId("verso-revision-card-0")
+    ).not.toBeInTheDocument();
   });
 
   // TBD : Test navigating back to / when there are no more cards
