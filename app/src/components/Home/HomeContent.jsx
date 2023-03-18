@@ -47,18 +47,15 @@ export default function HomeContent() {
         }
       );
       response = await response.json();
+      setCollections(response.cardCollections);
+      setTotalCollections(response.totalCollections);
       return response;
     },
     [loginToken]
   );
 
   useEffect(() => {
-    const fetchSetCollections = async () => {
-      const res = await fetchCollections(currentPage);
-      setCollections(res.cardCollections);
-      setTotalCollections(res.totalCollections);
-    };
-    fetchSetCollections();
+    fetchCollections(currentPage);
   }, [currentPage, fetchCollections]);
 
   const handleReviewClick = (collectionId) => {
@@ -71,6 +68,7 @@ export default function HomeContent() {
 
   const handleCreateModalClose = () => {
     setCreateModalOpen(false);
+    setCurrentPage(1);
     fetchCollections(1);
   };
 
