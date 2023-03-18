@@ -9,12 +9,15 @@ export default function RevisionContent({ collectionId }) {
   const { loginToken } = useContext(AuthContext);
   const navigate = useNavigate();
   const [cards, setCards] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [cardsToReview, setCardsToReview] = useState([]);
   const [currentOffset, setCurrentOffset] = useState(0);
   const [numCards, setNumCards] = useState(0);
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
 
   useEffect(() => {
     const fetchCards = async () => {
+      setIsLoading(true);
       const response = await fetch(
         `/api/collections/${collectionId}/cards?offset=${currentOffset}&limit=${FETCH_SIZE}`,
         {
@@ -31,29 +34,74 @@ export default function RevisionContent({ collectionId }) {
         currCards ? currCards.concat(res.cards) : res.cards
       );
       setNumCards(res.totalCards);
+      setIsLoading(false);
     };
     fetchCards();
   }, [loginToken, collectionId, currentOffset]);
 
   useEffect(() => {
-    if (cards && currentCardIndex === cards.length) {
+    if (
+      cards &&
+      currentCardIndex === cards.length &&
+      currentCardIndex < numCards
+    ) {
       setCurrentOffset((currVal) => currVal + FETCH_SIZE);
     }
-    if (currentCardIndex && currentCardIndex >= numCards) {
+    if (
+      currentCardIndex &&
+      currentCardIndex >= numCards &&
+      !cardsToReview.length
+    ) {
       navigate("/");
     }
-  }, [currentCardIndex, cards, navigate, numCards]);
+  }, [currentCardIndex, cards, navigate, numCards, cardsToReview.length]);
 
-  const handleActionClick = (e) => {
-    setCurrentCardIndex((currVal) => currVal + 1);
+  const reviewCard = async (cardId, ansQuality) => {
+    const response = await fetch(`/api/cards/${cardId}/review`, {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + loginToken,
+      },
+      body: JSON.stringify({ ansQuality }),
+    });
+    const res = await response.json();
+    return res;
   };
 
-  return cards && currentCardIndex < cards.length ? (
-    <RevisionCard
-      card={cards[currentCardIndex]}
-      handleActionClick={handleActionClick}
-    />
-  ) : (
+  const handleActionClick = async (e, ansQuality) => {
+    if (ansQuality !== 5) {
+      // TO DO: find a better way to do this
+      if (cards && currentCardIndex < cards.length) {
+        setCardsToReview((currCards) =>
+          currCards.concat(JSON.parse(JSON.stringify(cards[currentCardIndex])))
+        );
+      } else {
+        setCardsToReview((currCards) =>
+          currCards.concat(JSON.parse(JSON.stringify(cardsToReview[0])))
+        );
+      }
+    }
+    if (cards && currentCardIndex < cards.length) {
+      await reviewCard(cards[currentCardIndex]._id.toString(), ansQuality);
+      setCurrentCardIndex((currVal) => currVal + 1);
+    } else {
+      await reviewCard(cardsToReview[0]._id.toString(), ansQuality);
+      setCardsToReview((currCards) => currCards.slice(1));
+    }
+  };
+
+  let card;
+  if (cards && currentCardIndex < cards.length) {
+    card = cards[currentCardIndex];
+  } else if (cardsToReview.length) {
+    card = cardsToReview[0];
+  }
+
+  return isLoading ? (
     <h1> Loading... </h1>
+  ) : (
+    <RevisionCard card={card} handleActionClick={handleActionClick} />
   );
 }
