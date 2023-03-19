@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Card from "@mui/material/Card";
@@ -10,8 +10,38 @@ import ButtonGroup from "@mui/material/ButtonGroup";
 import Divider from "@mui/material/Divider";
 import classes from "./RevisionCard.module.css";
 
-export default function RevisionCard({ card, handleActionClick }) {
+export default function RevisionCard({ card, handleReviewAction }) {
   const [isVersoShown, setIsVersoShown] = useState(false);
+
+  useEffect(() => {
+    const handleKeyPress = (e) => {
+      if (!isVersoShown && e.key === "Enter") {
+        setIsVersoShown(true);
+      } else if (isVersoShown) {
+        switch (e.key) {
+          case "1":
+          case "&":
+            handleReviewAction(1);
+            break;
+          case "2":
+          case "é":
+            handleReviewAction(3);
+            break;
+          case "3":
+          case '"':
+            handleReviewAction(5);
+            break;
+          default:
+            break;
+        }
+      }
+    };
+    document.addEventListener("keydown", handleKeyPress);
+
+    return () => {
+      document.removeEventListener("keydown", handleKeyPress);
+    };
+  }, [isVersoShown, handleReviewAction]);
 
   useEffect(() => {
     setIsVersoShown(false);
@@ -128,17 +158,17 @@ export default function RevisionCard({ card, handleActionClick }) {
         >
           <Button
             size="small"
-            onClick={(e) => handleActionClick(e, 0)}
+            onClick={() => handleReviewAction(0)}
             data-testid={`set-hard-button-revision-${card._id.toString()}`}
           >
             A revoir
           </Button>
-          <Button size="small" onClick={(e) => handleActionClick(e, 3)}>
+          <Button size="small" onClick={() => handleReviewAction(3)}>
             Correct
           </Button>
           <Button
             size="small"
-            onClick={(e) => handleActionClick(e, 5)}
+            onClick={() => handleReviewAction(5)}
             data-testid={`set-easy-button-revision-${card._id.toString()}`}
           >
             Facile
