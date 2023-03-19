@@ -47,7 +47,7 @@ describe("ImportContent", () => {
     userEvent.upload(uploader, file);
     await waitFor(async () =>
       expect(global.fetch).toHaveBeenCalledWith(
-        "/api/import/import",
+        "/api/import/anki",
         expect.objectContaining({
           method: "POST",
         })

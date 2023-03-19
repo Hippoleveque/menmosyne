@@ -16,7 +16,7 @@ export default function ImportContent() {
     const file = e.target.files[0];
     const data = new FormData();
     data.append("file", file, file.name);
-    fetch("/api/import/import", {
+    fetch("/api/import/anki", {
       method: "POST",
       body: data,
       headers: {

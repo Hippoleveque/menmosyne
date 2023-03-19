@@ -27,6 +27,6 @@ const upload = multer({ storage: fileStorage }).single("file");
 
 const router = express.Router();
 
-router.post("/import", isAuth, upload, importFromAnki);
+router.post("/anki", isAuth, upload, importFromAnki);
 
 export default router;
