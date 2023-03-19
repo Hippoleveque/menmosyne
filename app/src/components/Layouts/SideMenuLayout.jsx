@@ -57,6 +57,7 @@ export default function SideMenuLayout(props) {
     switch (selectedAction) {
       case "logout":
         onLogout();
+        navigate("/");
         break;
       default:
         break;
