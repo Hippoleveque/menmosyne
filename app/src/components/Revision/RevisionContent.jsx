@@ -48,9 +48,10 @@ export default function RevisionContent({ collectionId }) {
       setCurrentOffset((currVal) => currVal + FETCH_SIZE);
     }
     if (
-      currentCardIndex &&
-      currentCardIndex >= numCards &&
-      !cardsToReview.length
+      (!isLoading && numCards === 0) ||
+      (currentCardIndex &&
+        currentCardIndex >= numCards &&
+        !cardsToReview.length)
     ) {
       navigate("/");
     }
