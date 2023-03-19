@@ -16,10 +16,6 @@ const cardSchema = new Schema(
       type: String,
       required: true,
     },
-    title: {
-      type: String,
-      required: false,
-    },
     priority: {
       type: Number,
       required: false,
@@ -35,8 +31,8 @@ const cardSchema = new Schema(
     },
     numberReviewed: {
       type: Number,
-      default: 0
-    }
+      default: 0,
+    },
   },
   { timestamps: true }
 );

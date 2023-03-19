@@ -12,7 +12,7 @@ const router = express.Router();
 
 router.post(
   "/",
-  [body("title").trim().isLength({ min: 3 })],
+  [body("rectoContent").trim().isLength({ min: 3 })],
   isAuth,
   createCard
 );

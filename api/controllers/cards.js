@@ -7,7 +7,7 @@ import { validationResult } from "express-validator";
 const ObjectId = mongoose.Types.ObjectId;
 
 export const createCard = async (req, res, next) => {
-  const { rectoContent, versoContent, title, cardCollectionId } = req.body;
+  const { rectoContent, versoContent, cardCollectionId } = req.body;
   const { userId } = req;
   const errors = validationResult(req);
   try {
@@ -32,7 +32,6 @@ export const createCard = async (req, res, next) => {
     let card = {
       rectoContent,
       versoContent,
-      title,
       cardCollection: cardCollectionId,
     };
     card = new Card(card);
