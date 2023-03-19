@@ -43,7 +43,7 @@ export default function SignupContent() {
       if (!response.ok) {
         throw new Error("Request failed!");
       }
-      const data = await response.json();
+      await response.json();
       navigate("/login");
     } catch (err) {
       setSignupFailed(true);
