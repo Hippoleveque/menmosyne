@@ -1,5 +1,8 @@
 import React, { useEffect, useState, useContext } from "react";
 import { useNavigate } from "react-router";
+import CircularProgress from "@mui/material/CircularProgress";
+import Box from "@mui/material/Box";
+
 import { AuthContext } from "../../store/auth-context";
 import RevisionCard from "./RevisionCard/RevisionCard";
 
@@ -101,7 +104,11 @@ export default function RevisionContent({ collectionId }) {
   }
 
   return isLoading ? (
-    <h1> Loading... </h1>
+    <Box
+      sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }}
+    >
+      <CircularProgress /> 
+    </Box>
   ) : (
     <RevisionCard card={card} handleReviewAction={handleReviewAction} />
   );
