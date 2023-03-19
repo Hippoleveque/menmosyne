@@ -115,7 +115,6 @@ export default function CreateCardModal({ open, onClose, collectionId }) {
                 onChange={(e) =>
                   dispatch({ type: "newCardRecto", value: e.target.value })
                 }
-                autoFocus
               />
               <TextField
                 margin="normal"
@@ -129,7 +128,6 @@ export default function CreateCardModal({ open, onClose, collectionId }) {
                 onChange={(e) =>
                   dispatch({ type: "newCardVerso", value: e.target.value })
                 }
-                autoFocus
               />
               {submitFailed && (
                 <Typography

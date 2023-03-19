@@ -59,17 +59,14 @@ export default function CollectionDetailContent({ collectionId }) {
 
   useEffect(() => {
     const fetchCollection = async () => {
-      const response = await fetch(
-        `/api/collections/${collectionId}`,
-        {
-          method: "GET",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + loginToken,
-          },
-        }
-      );
+      const response = await fetch(`/api/collections/${collectionId}`, {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + loginToken,
+        },
+      });
       const data = await response.json();
       setCollection(data.cardCollection);
     };
@@ -107,16 +104,20 @@ export default function CollectionDetailContent({ collectionId }) {
 
   return (
     <Box sx={{ height: "100%" }}>
-      <CreateCardModal
-        open={modalOpen}
-        onClose={handleModalClose}
-        collectionId={collectionId}
-      />
-      <ConfirmCardDeletionModal
-        cardId={deletingCardId}
-        open={deleteModalOpen}
-        onClose={handleDeleteModalClose}
-      />
+      {modalOpen && (
+        <CreateCardModal
+          open={modalOpen}
+          onClose={handleModalClose}
+          collectionId={collectionId}
+        />
+      )}
+      {deleteModalOpen && (
+        <ConfirmCardDeletionModal
+          cardId={deletingCardId}
+          open={deleteModalOpen}
+          onClose={handleDeleteModalClose}
+        />
+      )}
 
       <Box
         sx={{
