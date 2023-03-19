@@ -8,9 +8,12 @@ body {
   background-color: #f6f9fc !important;
 }
 
-html,
-body {
-  overflow: auto;
+body,html {
+  margin: 0;
+  padding: 0;
+}
+* {
+  box-sizing: border-box;
 }
 
 .leftAligned {
