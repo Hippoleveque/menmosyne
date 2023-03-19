@@ -113,7 +113,6 @@ describe("Test the collections endpoints of the API.", () => {
     const collectionId = new ObjectId();
     const mockedCollection = {
       _id: collectionId.toString(),
-      title: "test",
       numCards: 6,
     };
     sinon
@@ -140,7 +139,6 @@ describe("Test the collections endpoints of the API.", () => {
     const collectionId = new ObjectId();
     const mockedCollection = {
       _id: collectionId.toString(),
-      title: "test",
       numCards: 6,
     };
     sinon
