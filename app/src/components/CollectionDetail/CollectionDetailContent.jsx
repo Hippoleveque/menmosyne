@@ -1,4 +1,10 @@
-import React, { useEffect, useState, useContext, useCallback } from "react";
+import React, {
+  useEffect,
+  useState,
+  useContext,
+  useCallback,
+  useMemo,
+} from "react";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
@@ -11,6 +17,8 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import Pagination from "@mui/material/Pagination";
 import { useNavigate } from "react-router";
+import { formatDistance } from "date-fns";
+import frLocale from "date-fns/locale/fr";
 
 import CreateCardModal from "./CreateCardModal/CreateCardModal";
 import { AuthContext } from "../../store/auth-context";
@@ -102,6 +110,8 @@ export default function CollectionDetailContent({ collectionId }) {
 
   let numPages = Math.ceil(totalCards / ITEMS_PER_PAGE);
 
+  const now = useMemo(() => new Date(), []);
+
   return (
     <Box sx={{ height: "100%" }}>
       {modalOpen && (
@@ -142,7 +152,7 @@ export default function CollectionDetailContent({ collectionId }) {
               <TableCell colSpan={2}>
                 <Typography component="h2">Mes cartes</Typography>
               </TableCell>
-              <TableCell colSpan={3} align="right">
+              <TableCell colSpan={5} align="right">
                 <Box>
                   <Button
                     variant="contained"
@@ -172,6 +182,9 @@ export default function CollectionDetailContent({ collectionId }) {
               <TableCell align="center" colSpan={2}>
                 Verso
               </TableCell>
+              <TableCell align="center" colSpan={2}>
+                Dernière Révision
+              </TableCell>
               <TableCell align="center" colSpan={1}>
                 Actions
               </TableCell>
@@ -191,6 +204,15 @@ export default function CollectionDetailContent({ collectionId }) {
                 <TableExtendableTextCell
                   align="center"
                   text={row.versoContent || ""}
+                  colSpan={2}
+                />
+                <TableExtendableTextCell
+                  align="center"
+                  text={
+                    row.lastReviewed ? formatDistance(now, new Date(row.lastReviewed), {
+                      locale: frLocale,
+                    }) :  "jamais"
+                  }
                   colSpan={2}
                 />
                 <TableCell align="center" colSpan={1}>
