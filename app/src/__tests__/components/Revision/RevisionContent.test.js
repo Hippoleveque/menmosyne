@@ -17,6 +17,7 @@ describe("RevisionContent", () => {
     root = createRoot(container);
     jest.restoreAllMocks();
     global.fetch = jest.fn((url, _) => {
+      console.log(url);
       const search = url.split("?")[1];
       const urlParams = new URLSearchParams(search);
       const offset = parseInt(urlParams.get("offset")) || 0;

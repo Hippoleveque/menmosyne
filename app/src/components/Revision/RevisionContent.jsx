@@ -55,14 +55,7 @@ export default function RevisionContent({ collectionId }) {
     ) {
       navigate("/");
     }
-  }, [
-    currentCardIndex,
-    cards,
-    navigate,
-    numCards,
-    cardsToReview.length,
-    isLoading,
-  ]);
+  }, [currentCardIndex, cards, navigate, numCards, cardsToReview.length]);
 
   const reviewCard = async (cardId, ansQuality) => {
     const response = await fetch(`/api/cards/${cardId}/review`, {
