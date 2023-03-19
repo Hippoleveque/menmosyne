@@ -33,6 +33,7 @@ describe("CollectionDetailContent", () => {
                   _id: offset.toString(),
                   rectoContent: `Recto ${offset}`,
                   versoContent: `Verso ${offset}`,
+                  lastReviewed: new Date(),
                 },
                 {
                   _id: (offset + 1).toString(),
@@ -70,7 +71,7 @@ describe("CollectionDetailContent", () => {
     await act(async () => {
       root.render(
         <Router>
-          <CollectionDetailContent collectionId="0"/>
+          <CollectionDetailContent collectionId="0" />
         </Router>
       );
     });
@@ -86,7 +87,7 @@ describe("CollectionDetailContent", () => {
     await act(async () => {
       root.render(
         <Router>
-          <CollectionDetailContent collectionId="0"/>
+          <CollectionDetailContent collectionId="0" />
         </Router>
       );
     });
@@ -102,64 +103,64 @@ describe("CollectionDetailContent", () => {
     });
 
     await waitFor(async () => expect(global.fetch).toHaveBeenCalledTimes(3));
-    
+
     expect(screen.getByTestId("card-7")).toBeInTheDocument();
     expect(screen.getByTestId("card-8")).toBeInTheDocument();
   });
 
-    // Test click adding a card button
-    it("Tests that clicking adding a card button open the modal", async () => {
-      await act(async () => {
-        root.render(
-          <Router>
-            <CollectionDetailContent collectionId="0"/>
-          </Router>
-        );
-      });
-
-      act(() => {
-        screen
-          .getByTestId("create-card-button")
-          .dispatchEvent(new MouseEvent("click", { bubbles: true }));
-      });
-      expect(screen.getByTestId("create-card-modal")).toBeInTheDocument();
+  // Test click adding a card button
+  it("Tests that clicking adding a card button open the modal", async () => {
+    await act(async () => {
+      root.render(
+        <Router>
+          <CollectionDetailContent collectionId="0" />
+        </Router>
+      );
     });
 
-    // Test the "réviser" button
-    it("Tests clicking the review button", async () => {
-      await act(async () => {
-        root.render(
-          <Router>
-            <CollectionDetailContent collectionId="0"/>
-          </Router>
-        );
-      });
+    act(() => {
+      screen
+        .getByTestId("create-card-button")
+        .dispatchEvent(new MouseEvent("click", { bubbles: true }));
+    });
+    expect(screen.getByTestId("create-card-modal")).toBeInTheDocument();
+  });
 
-      act(() => {
-        screen
-          .getByTestId("review-button-collection-detail")
-          .dispatchEvent(new MouseEvent("click", { bubbles: true }));
-      });
-
-      expect(mockedNavigate).toHaveBeenCalledWith("/revision/0");
+  // Test the "réviser" button
+  it("Tests clicking the review button", async () => {
+    await act(async () => {
+      root.render(
+        <Router>
+          <CollectionDetailContent collectionId="0" />
+        </Router>
+      );
     });
 
-    // Test the "supprimer" button
-    it("Tests clicking the delete button", async () => {
-      await act(async () => {
-        root.render(
-          <Router>
-            <CollectionDetailContent collectionId="0"/>
-          </Router>
-        );
-      });
-
-      await act(async () => {
-        screen
-          .getByTestId("delete-card-button-0")
-          .dispatchEvent(new MouseEvent("click", { bubbles: true }));
-      });
-
-      expect(screen.getByTestId("delete-card-modal")).toBeInTheDocument();
+    act(() => {
+      screen
+        .getByTestId("review-button-collection-detail")
+        .dispatchEvent(new MouseEvent("click", { bubbles: true }));
     });
+
+    expect(mockedNavigate).toHaveBeenCalledWith("/revision/0");
+  });
+
+  // Test the "supprimer" button
+  it("Tests clicking the delete button", async () => {
+    await act(async () => {
+      root.render(
+        <Router>
+          <CollectionDetailContent collectionId="0" />
+        </Router>
+      );
+    });
+
+    await act(async () => {
+      screen
+        .getByTestId("delete-card-button-0")
+        .dispatchEvent(new MouseEvent("click", { bubbles: true }));
+    });
+
+    expect(screen.getByTestId("delete-card-modal")).toBeInTheDocument();
+  });
 });
