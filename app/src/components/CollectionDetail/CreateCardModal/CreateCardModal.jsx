@@ -15,7 +15,6 @@ const theme = createTheme();
 
 const initialState = {
   newCardName: "",
-  newCardTitle: "",
   newCardRecto: "",
   newCardVerso: "",
   cardCollectionId: "",
@@ -25,8 +24,6 @@ const reducer = (state, action) => {
   switch (action.type) {
     case "newCardName":
       return { ...state, newCardName: action.value };
-    case "newCardTitle":
-      return { ...state, newCardTitle: action.value };
     case "newCardRecto":
       return { ...state, newCardRecto: action.value };
     case "newCardVerso":
@@ -51,7 +48,6 @@ export default function CreateCardModal({ open, onClose, collectionId }) {
       const response = await fetch("/api/cards", {
         method: "POST",
         body: JSON.stringify({
-          title: state.newCardTitle,
           cardCollectionId: collectionId,
           rectoContent: state.newCardRecto,
           versoContent: state.newCardVerso,
@@ -89,20 +85,6 @@ export default function CreateCardModal({ open, onClose, collectionId }) {
               Créer une nouvelle Carte
             </Typography>
             <Box component="form" onSubmit={handleSubmit} noValidate>
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                id="title"
-                label="Title"
-                name="title"
-                type="text"
-                value={state.newCardTitle}
-                onChange={(e) =>
-                  dispatch({ type: "newCardTitle", value: e.target.value })
-                }
-                autoFocus
-              />
               <TextField
                 margin="normal"
                 required
