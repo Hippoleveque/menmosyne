@@ -33,13 +33,11 @@ describe("CollectionDetailContent", () => {
                   _id: offset.toString(),
                   rectoContent: `Recto ${offset}`,
                   versoContent: `Verso ${offset}`,
-                  title: `Title ${offset}`,
                 },
                 {
                   _id: (offset + 1).toString(),
                   rectoContent: `Recto ${offset + 1}`,
                   versoContent: `Verso ${offset + 1}`,
-                  title: `Title ${offset + 1}`,
                 },
               ],
               totalCards: 30,

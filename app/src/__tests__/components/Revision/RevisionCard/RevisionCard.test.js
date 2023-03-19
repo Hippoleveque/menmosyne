@@ -36,7 +36,6 @@ describe("RevisionCard", () => {
           <RevisionCard
             card={{
               _id: "0",
-              title: "title0",
               rectoContent: "rectoContent0",
               versoContent: "versoContent0",
             }}
@@ -45,9 +44,6 @@ describe("RevisionCard", () => {
       );
     });
     expect(screen.getByTestId("revision-card-0")).toBeInTheDocument();
-    expect(screen.getByTestId("title-revision-card-0").textContent).toBe(
-      "title0"
-    );
     expect(screen.getByTestId("recto-revision-card-0").textContent).toBe(
       "rectoContent0"
     );
@@ -63,7 +59,6 @@ describe("RevisionCard", () => {
           <RevisionCard
             card={{
               _id: "0",
-              title: "title0",
               rectoContent: "rectoContent0",
               versoContent: "versoContent0",
             }}
