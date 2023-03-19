@@ -89,15 +89,19 @@ export default function HomeContent() {
 
   return (
     <Box sx={{ height: "100%" }}>
-      <CreateCollectionModal
-        open={createModalOpen}
-        onClose={handleCreateModalClose}
-      />
-      <ConfirmCollectionDeletionModal
-        collectionId={deletingCollectionId}
-        open={deleteModalOpen}
-        onClose={handleDeleteModalClose}
-      />
+      {createModalOpen && (
+        <CreateCollectionModal
+          open={createModalOpen}
+          onClose={handleCreateModalClose}
+        />
+      )}
+      {deleteModalOpen && (
+        <ConfirmCollectionDeletionModal
+          collectionId={deletingCollectionId}
+          open={deleteModalOpen}
+          onClose={handleDeleteModalClose}
+        />
+      )}
       <Box sx={{ p: "10px 10px" }}>
         <Typography component="h1" variant="h5" data-testid="welcome-message">
           {"Bon retour !"}

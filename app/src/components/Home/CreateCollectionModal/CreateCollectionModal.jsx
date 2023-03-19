@@ -63,7 +63,11 @@ export default function CreateCollectionModal({ open, onClose }) {
 
   return (
     <ThemeProvider theme={theme}>
-      <Modal open={open} onClose={onClose} data-testid="create-collection-modal">
+      <Modal
+        open={open}
+        onClose={onClose}
+        data-testid="create-collection-modal"
+      >
         <Container
           component="main"
           className={classes.createCollectionContainer}
@@ -94,7 +98,6 @@ export default function CreateCollectionModal({ open, onClose }) {
                 label="Name"
                 name="name"
                 type="text"
-                autoComplete="email"
                 value={state.newCollectionName}
                 onChange={(e) =>
                   dispatch({ type: "newCollectionName", value: e.target.value })
@@ -108,7 +111,6 @@ export default function CreateCollectionModal({ open, onClose }) {
                 label="Description"
                 name="description"
                 type="text"
-                autoComplete="email"
                 value={state.newCollectionDescription}
                 onChange={(e) =>
                   dispatch({
