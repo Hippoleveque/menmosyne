@@ -213,6 +213,7 @@ export default function CollectionDetailContent({ collectionId }) {
           count={numPages}
           className={classes.collectionTablePagination}
           onChange={(event, value) => setCurrentPage(value)}
+          page={currentPage}
         />
       )}
     </Box>
