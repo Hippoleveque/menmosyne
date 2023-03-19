@@ -187,6 +187,7 @@ export default function HomeContent() {
           count={numPages}
           className={classes.homeTablePagination}
           onChange={(event, value) => setCurrentPage(value)}
+          page={currentPage}
         />
       )}
     </Box>
