@@ -31,7 +31,6 @@ describe("Test the cards endpoints of the API.", () => {
       rectoContent: "exampleRecto",
       versoContent: "exampleVerso",
       collectionId: collectionId,
-      title: "exampleTitle",
     };
     const response = await request(app)
       .post("/cards")
@@ -54,7 +53,6 @@ describe("Test the cards endpoints of the API.", () => {
       _id: cardId,
       rectoContent: "testRecto",
       versoContent: "testVerso",
-      title: "testTitle",
       cardCollection: mockedCollection,
     };
     sinon.mock(jwt).expects("verify").returns({ userId: userId });
@@ -79,7 +77,6 @@ describe("Test the cards endpoints of the API.", () => {
       _id: cardId,
       rectoContent: "testRecto",
       versoContent: "testVerso",
-      title: "testTitle",
       cardCollection: mockedCollection,
       save: () => Promise.resolve({}),
     };

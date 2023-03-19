@@ -66,16 +66,6 @@ export default function RevisionCard({ card, handleReviewAction }) {
       data-testid={`revision-card-${card._id.toString()}`}
     >
       <CardContent>
-        {card.title && (
-          <Typography
-            sx={{ fontSize: 14 }}
-            color="text.secondary"
-            gutterBottom
-            data-testid={`title-revision-card-${card._id.toString()}`}
-          >
-            {card.title}
-          </Typography>
-        )}
         <Typography
           variant="body2"
           data-testid={`recto-revision-card-${card._id.toString()}`}
@@ -112,11 +102,6 @@ export default function RevisionCard({ card, handleReviewAction }) {
           flexDirection: "column",
         }}
       >
-        {card.title && (
-          <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
-            {card.title}
-          </Typography>
-        )}
         <Box
           sx={{
             display: "flex",

@@ -142,7 +142,7 @@ export default function CollectionDetailContent({ collectionId }) {
               <TableCell colSpan={2}>
                 <Typography component="h2">Mes cartes</Typography>
               </TableCell>
-              <TableCell colSpan={2} align="right">
+              <TableCell colSpan={3} align="right">
                 <Box>
                   <Button
                     variant="contained"
@@ -166,10 +166,15 @@ export default function CollectionDetailContent({ collectionId }) {
               </TableCell>
             </TableRow>
             <TableRow>
-              <TableCell align="center">Titre</TableCell>
-              <TableCell align="center">Recto</TableCell>
-              <TableCell align="center">Verso</TableCell>
-              <TableCell align="center">Actions</TableCell>
+              <TableCell align="center" colSpan={2}>
+                Recto
+              </TableCell>
+              <TableCell align="center" colSpan={2}>
+                Verso
+              </TableCell>
+              <TableCell align="center" colSpan={1}>
+                Actions
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -179,20 +184,16 @@ export default function CollectionDetailContent({ collectionId }) {
                 data-testid={`card-${row._id.toString()}`}
               >
                 <TableExtendableTextCell
-                  component="th"
-                  scope="row"
-                  align="center"
-                  text={row.title || ""}
-                />
-                <TableExtendableTextCell
                   align="center"
                   text={row.rectoContent || ""}
+                  colSpan={2}
                 />
                 <TableExtendableTextCell
                   align="center"
                   text={row.versoContent || ""}
+                  colSpan={2}
                 />
-                <TableCell align="center">
+                <TableCell align="center" colSpan={1}>
                   <Button
                     variant="contained"
                     color="error"

@@ -60,7 +60,7 @@ const createCardCollection = async (url, token, cardCollectioName) => {
   return response;
 };
 
-const createCard = async (url, token, collectionId, title, recto, verso) => {
+const createCard = async (url, token, collectionId, recto, verso) => {
   const createCardUrl = path.join(url, "cards");
   let response = await fetch(createCardUrl, {
     method: "POST",
@@ -71,7 +71,6 @@ const createCard = async (url, token, collectionId, title, recto, verso) => {
     },
     body: JSON.stringify({
       cardCollectionId: collectionId,
-      title,
       rectoContent: recto,
       versoContent: verso,
     }),
@@ -98,7 +97,6 @@ for (let i = 0; i < nCols; i++) {
       loginToken,
       collectionId,
       cardName,
-      `Collection${i}Title${j}`,
       `Collection${i}Recto${j}`,
       `Collection${i}Verso${j}`
     );
