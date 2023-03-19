@@ -54,10 +54,10 @@ export default function RevisionCard({ card, handleReviewAction }) {
   };
 
   let boxCss = {
-    height: isVersoShown ? "100vh" : "50vh",
+    height: "100%",
     display: "flex",
     justifyContent: "center",
-    alignItems: isVersoShown ? "center" : "end",
+    alignItems: "center"
   };
 
   const rectoCard = (
