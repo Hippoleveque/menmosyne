@@ -6,7 +6,7 @@ import "@testing-library/jest-dom";
 
 import RevisionCard from "../../../../components/Revision/RevisionCard/RevisionCard";
 
-describe("RevisionContent", () => {
+describe("RevisionCard", () => {
   let container = null;
   let root = null;
 
@@ -55,7 +55,7 @@ describe("RevisionContent", () => {
 
   // Test verso position
   it("Tests verso position", () => {
-    const handleActionClick = jest.fn();
+    const handleReviewAction = jest.fn();
 
     act(() => {
       root.render(
@@ -67,7 +67,7 @@ describe("RevisionContent", () => {
               rectoContent: "rectoContent0",
               versoContent: "versoContent0",
             }}
-            handleActionClick={handleActionClick}
+            handleReviewAction={handleReviewAction}
           />
         </Fragment>
       );
@@ -87,6 +87,6 @@ describe("RevisionContent", () => {
         .getByTestId("set-easy-button-revision-0")
         .dispatchEvent(new MouseEvent("click", { bubbles: true }));
     });
-    expect(handleActionClick).toHaveBeenCalled();
+    expect(handleReviewAction).toHaveBeenCalled();
   });
 });
