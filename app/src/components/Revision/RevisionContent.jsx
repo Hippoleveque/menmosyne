@@ -71,7 +71,7 @@ export default function RevisionContent({ collectionId }) {
     return res;
   };
 
-  const handleActionClick = async (e, ansQuality) => {
+  const handleReviewAction = async (ansQuality) => {
     if (ansQuality !== 5) {
       // TO DO: find a better way to do this
       if (cards && currentCardIndex < cards.length) {
@@ -103,6 +103,6 @@ export default function RevisionContent({ collectionId }) {
   return isLoading ? (
     <h1> Loading... </h1>
   ) : (
-    <RevisionCard card={card} handleActionClick={handleActionClick} />
+    <RevisionCard card={card} handleReviewAction={handleReviewAction} />
   );
 }
