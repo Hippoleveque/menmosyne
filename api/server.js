@@ -4,6 +4,7 @@ import authRoutes from "./routes/auth.js";
 import importRoutes from "./routes/imports.js";
 import collectionRoutes from "./routes/collections.js";
 import cardRoutes from "./routes/cards.js";
+import sessionRoutes from "./routes/dailySessions.js";
 import path from "path";
 import { fileURLToPath } from "url";
 
@@ -21,6 +22,8 @@ app.use("/collections", collectionRoutes);
 app.use("/cards", cardRoutes);
 
 app.use("/import", importRoutes);
+
+app.use("/sessions", sessionRoutes);
 
 app.use((req, res) => {
   return res.send("Hello the world");
