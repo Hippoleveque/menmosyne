@@ -65,6 +65,33 @@ describe("RevisionContent", () => {
     );
   });
 
+  // Test initial session creation
+  it("Tests initial session creation", async () => {
+    global.fetch = jest.fn(() =>
+      Promise.resolve({
+        status: 200,
+        json: () =>
+          Promise.resolve({
+            session: { collectionId: 0, date: new Date() },
+          }),
+      })
+    );
+    await act(async () => {
+      root.render(
+        <Router>
+          <RevisionContent collectionId="0" />
+        </Router>
+      );
+    });
+    expect(global.fetch).toHaveBeenCalledWith(
+      "/api/sessions",
+      expect.objectContaining({
+        method: "POST",
+      })
+    );
+    global.fetch.mockRestore();
+  });
+
   // Test that the cards are refetched when needed
   it("Tests card re-fetching", async () => {
     await act(async () => {
@@ -87,7 +114,7 @@ describe("RevisionContent", () => {
         .dispatchEvent(new MouseEvent("click", { bubbles: true }));
     });
 
-    expect(global.fetch).toHaveBeenCalledTimes(3);
+    expect(global.fetch).toHaveBeenCalledTimes(4);
 
     expect(global.fetch).toHaveBeenCalledWith(
       "/api/collections/0/cards?offset=10&limit=10",
