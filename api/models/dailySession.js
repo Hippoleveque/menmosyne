@@ -3,7 +3,7 @@ const { Schema, model } = mongoose;
 
 const dailySessionSchema = new Schema(
   {
-    collection: {
+    cardCollection: {
       type: Schema.Types.ObjectId,
       required: true,
       ref: "CardCollection",
@@ -12,14 +12,13 @@ const dailySessionSchema = new Schema(
       type: Schema.Types.Date,
       required: true,
     },
-    reviews: [
-        {
-          type: Schema.Types.ObjectId,
-          ref: "CardReview",
-        },
-      ],
+    numReviews: {
+      type: Number,
+      required: false,
+      default: 0,
+    },
   },
   { timestamps: true }
 );
 
-export default model("DailySession", dailySessionSchema)
+export default model("DailySession", dailySessionSchema);
