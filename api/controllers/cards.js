@@ -107,7 +107,6 @@ export const reviewCard = async (req, res, next) => {
       }
       card.lastReviewed = new Date();
       card.numberReviewed += 1;
-      console.log(dailySessionId);
       const cardReview = new CardReview({
         card: cardId,
         dailySession: new ObjectId(dailySessionId),
