@@ -17,6 +17,11 @@ const cardReviewSchema = new Schema(
       type: Schema.Types.Date,
       required: true,
     },
+    input: {
+      easy: Number,
+      medium: Number,
+      hard: Number,
+    },
     oldPriority: {
       type: Number,
       required: false,
