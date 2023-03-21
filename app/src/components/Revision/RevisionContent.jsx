@@ -86,7 +86,10 @@ export default function RevisionContent({ collectionId }) {
         "Content-Type": "application/json",
         Authorization: "Bearer " + loginToken,
       },
-      body: JSON.stringify({ ansQuality }),
+      body: JSON.stringify({
+        ansQuality,
+        dailySessionId: session._id,
+      }),
     });
     const res = await response.json();
     return res;

@@ -3,7 +3,7 @@ const { Schema, model } = mongoose;
 
 const cardReviewSchema = new Schema(
   {
-    session: {
+    dailySession: {
       type: Schema.Types.ObjectId,
       required: true,
       ref: "DailySession",
@@ -15,11 +15,6 @@ const cardReviewSchema = new Schema(
     },
     date: {
       type: Schema.Types.Date,
-      required: true,
-    },
-    input: {
-      type: String,
-      enum: ["EASY", "OK", "REVIEW"],
       required: true,
     },
     oldPriority: {
