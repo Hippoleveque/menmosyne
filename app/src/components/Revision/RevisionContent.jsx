@@ -17,6 +17,7 @@ export default function RevisionContent({ collectionId }) {
   const [currentOffset, setCurrentOffset] = useState(0);
   const [numCards, setNumCards] = useState(0);
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
+  const [session, setSession] = useState(null);
 
   useEffect(() => {
     const fetchCards = async () => {
@@ -41,6 +42,23 @@ export default function RevisionContent({ collectionId }) {
     };
     fetchCards();
   }, [loginToken, collectionId, currentOffset]);
+
+  useEffect(() => {
+    const createSession = async () => {
+      const response = await fetch("/api/sessions", {
+        method: "POST",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + loginToken,
+        },
+        body: JSON.stringify({ cardCollectionId: collectionId }),
+      });
+      const res = await response.json();
+      setSession(res.dailySession);
+    };
+    createSession();
+  }, [loginToken, collectionId]);
 
   useEffect(() => {
     if (
@@ -68,7 +86,10 @@ export default function RevisionContent({ collectionId }) {
         "Content-Type": "application/json",
         Authorization: "Bearer " + loginToken,
       },
-      body: JSON.stringify({ ansQuality }),
+      body: JSON.stringify({
+        ansQuality,
+        dailySessionId: session._id,
+      }),
     });
     const res = await response.json();
     return res;
@@ -105,9 +126,14 @@ export default function RevisionContent({ collectionId }) {
 
   return isLoading ? (
     <Box
-      sx={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100%" }}
+      sx={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        height: "100%",
+      }}
     >
-      <CircularProgress /> 
+      <CircularProgress />
     </Box>
   ) : (
     <RevisionCard card={card} handleReviewAction={handleReviewAction} />

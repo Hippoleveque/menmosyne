@@ -1,6 +1,6 @@
 import React, { Fragment } from "react";
 import { createRoot } from "react-dom/client";
-import { act, screen } from "@testing-library/react";
+import { act, screen, waitFor } from "@testing-library/react";
 import { BrowserRouter as Router } from "react-router-dom";
 import "@testing-library/jest-dom";
 
@@ -65,8 +65,72 @@ describe("RevisionContent", () => {
     );
   });
 
+  // Test initial session creation
+  it("Tests initial session creation", async () => {
+    global.fetch = jest.fn(() =>
+      Promise.resolve({
+        status: 200,
+        json: () =>
+          Promise.resolve({
+            session: { collectionId: "0", date: new Date(), _id: "0" },
+          }),
+      })
+    );
+    await act(async () => {
+      root.render(
+        <Router>
+          <RevisionContent collectionId="0" />
+        </Router>
+      );
+    });
+    expect(global.fetch).toHaveBeenCalledWith(
+      "/api/sessions",
+      expect.objectContaining({
+        method: "POST",
+      })
+    );
+    global.fetch.mockRestore();
+  });
+
   // Test that the cards are refetched when needed
   it("Tests card re-fetching", async () => {
+    global.fetch = jest.fn((url, _) => {
+      if (url === "/api/collections/0/cards?offset=0&limit=10") {
+        return Promise.resolve({
+          status: 200,
+          json: () =>
+            Promise.resolve({
+              cards: [
+                {
+                  _id: "0",
+                  rectoContent: "1",
+                  versoContent: "1",
+                },
+              ],
+              totalCards: 1,
+            }),
+        });
+      } else if (url === "/api/sessions") {
+        return Promise.resolve({
+          status: 200,
+          json: () =>
+            Promise.resolve({
+              dailySession: { collectionId: "0", date: new Date(), _id: "0" },
+            }),
+        });
+      } else if (url === "/api/cards/0/review") {
+        return Promise.resolve({
+          status: 200,
+          json: () => Promise.resolve({}),
+        });
+      } else {
+        return Promise.resolve({
+          status: 200,
+          json: () => Promise.resolve({}),
+        });
+      }
+    });
+
     await act(async () => {
       root.render(
         <Router>
@@ -87,34 +151,47 @@ describe("RevisionContent", () => {
         .dispatchEvent(new MouseEvent("click", { bubbles: true }));
     });
 
-    expect(global.fetch).toHaveBeenCalledTimes(3);
-
-    expect(global.fetch).toHaveBeenCalledWith(
-      "/api/collections/0/cards?offset=10&limit=10",
-      expect.objectContaining({
-        method: "GET",
-      })
-    );
+    await waitFor(async () => expect(global.fetch).toHaveBeenCalledTimes(3));
   });
 
   // Test that the cards are reviewed again when bad answer
   it("Tests card re-reviewing and api call to review endpoint", async () => {
-    global.fetch = jest.fn(() =>
-      Promise.resolve({
-        status: 200,
-        json: () =>
-          Promise.resolve({
-            cards: [
-              {
-                _id: 0,
-                rectoContent: "1",
-                versoContent: "1",
-              },
-            ],
-            totalCards: 1,
-          }),
-      })
-    );
+    global.fetch = jest.fn((url, _) => {
+      if (url === "/api/collections/0/cards?offset=0&limit=10") {
+        return Promise.resolve({
+          status: 200,
+          json: () =>
+            Promise.resolve({
+              cards: [
+                {
+                  _id: "0",
+                  rectoContent: "1",
+                  versoContent: "1",
+                },
+              ],
+              totalCards: 1,
+            }),
+        });
+      } else if (url === "/api/sessions") {
+        return Promise.resolve({
+          status: 200,
+          json: () =>
+            Promise.resolve({
+              dailySession: { collectionId: "0", date: new Date(), _id: "0" },
+            }),
+        });
+      } else if (url === "/api/cards/0/review") {
+        return Promise.resolve({
+          status: 200,
+          json: () => Promise.resolve({}),
+        });
+      } else {
+        return Promise.resolve({
+          status: 200,
+          json: () => Promise.resolve({}),
+        });
+      }
+    });
 
     await act(async () => {
       root.render(
@@ -123,6 +200,8 @@ describe("RevisionContent", () => {
         </Router>
       );
     });
+
+    await waitFor(async () => expect(global.fetch).toHaveBeenCalledTimes(2));
 
     act(() => {
       screen

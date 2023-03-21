@@ -1,8 +1,9 @@
 import mongoose from "mongoose";
+import { validationResult } from "express-validator";
 
 import Card from "../models/card.js";
 import CardCollection from "../models/cardCollection.js";
-import { validationResult } from "express-validator";
+import CardReview from "../models/cardReview.js";
 
 const ObjectId = mongoose.Types.ObjectId;
 
@@ -74,7 +75,7 @@ export const deleteCard = async (req, res, next) => {
 };
 
 export const reviewCard = async (req, res, next) => {
-  const { cardId } = req.params;
+  const { cardId, dailySessionId } = req.params;
   const { ansQuality } = req.body;
   const { userId } = req;
   try {
@@ -89,9 +90,10 @@ export const reviewCard = async (req, res, next) => {
       err.statusCode = statusCode;
       throw err;
     }
-    // Update the priority only if ansQuality is 5
+    // Update the priority and create a review itme only if ansQuality is 5
     const { easinessFactor, priority, numberReviewed } = card;
     if (ansQuality === 5) {
+      const oldPriority = card.priority;
       switch (numberReviewed) {
         case 0:
           card.priority = 1;
@@ -101,14 +103,23 @@ export const reviewCard = async (req, res, next) => {
           break;
         default:
           card.priority = priority * easinessFactor;
+          break;
       }
+      card.lastReviewed = new Date();
+      card.numberReviewed += 1;
+      const cardReview = new CardReview({
+        card: cardId,
+        dailySession: new ObjectId(dailySessionId),
+        date: new Date(),
+        oldPriority,
+        newPriority: card.priority,
+      });
+      await cardReview.save();
     }
     // update easiness factor
     card.easinessFactor =
       easinessFactor +
       (0.1 - (5 - ansQuality) * (0.08 + (5 - ansQuality) * 0.02));
-    card.numberReviewed += 1;
-    card.lastReviewed = new Date();
     await card.save();
     return res
       .status(200)

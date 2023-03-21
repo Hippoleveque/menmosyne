@@ -36,8 +36,6 @@ export default function ankiToJson(inputFile, outputDir, cb) {
       });
     }
   }
-
-  console.log(dir + "/collection.anki2");
   const db = new sqlite3.Database(dir + "/collection.anki2");
   let res;
   db.all("SELECT id, flds, sfld FROM notes", (err, notes) => {
