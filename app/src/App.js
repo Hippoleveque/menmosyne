@@ -23,7 +23,8 @@ function App() {
           <Route path="/revision/:collectionId" element={<RevisionPage />} />
           <Route path="/login" element={<Navigate to="/" />} />
           <Route path="/import" element={<ImportPage />} />
-          <Route path="/" exact element={<HomePage />} />
+          <Route path="/" element={<HomePage />} />
+          <Route path="*" element={<HomePage />} />
         </Fragment>
       )}
       {!isLoggedIn && (
@@ -31,6 +32,7 @@ function App() {
           <Route path="/signup" exact element={<SignupPage />} />
           <Route path="/login" exact element={<LoginPage />} />
           <Route path="/" element={<Navigate to="/login" />} />
+          <Route path="*" element={<Navigate to="/login" />} />
         </Fragment>
       )}
     </Routes>
