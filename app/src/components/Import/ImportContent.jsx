@@ -12,20 +12,18 @@ export default function ImportContent() {
   const { loginToken } = useContext(AuthContext);
   const fileInputRef = useRef(null);
 
-  const handleFileChange = (e) => {
+  const handleFileChange = async (e) => {
     const file = e.target.files[0];
     const data = new FormData();
     data.append("file", file, file.name);
-    fetch("/api/import/anki", {
+    const response = await fetch("/api/import/anki", {
       method: "POST",
       body: data,
       headers: {
         Authorization: "Bearer " + loginToken,
       },
-    })
-      .then((res) => res.json())
-      .then((data) => console.log(data))
-      .catch((err) => console.error(err));
+    });
+    await response.json();
   };
 
   const handleFileUpload = (e) => {
