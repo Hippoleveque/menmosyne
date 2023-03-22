@@ -57,7 +57,7 @@ export default function RevisionCard({ card, handleReviewAction }) {
     height: "100%",
     display: "flex",
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
   };
 
   const rectoCard = (
@@ -66,12 +66,14 @@ export default function RevisionCard({ card, handleReviewAction }) {
       data-testid={`revision-card-${card._id.toString()}`}
     >
       <CardContent>
-        <Typography
-          variant="body2"
-          data-testid={`recto-revision-card-${card._id.toString()}`}
-        >
-          {card.rectoContent}
-        </Typography>
+        <Box className={classes.centeredCardContent}>
+          <Typography
+            variant="body2"
+            data-testid={`recto-revision-card-${card._id.toString()}`}
+          >
+            {card.rectoContent}
+          </Typography>
+        </Box>
       </CardContent>
       <CardActions
         sx={{
@@ -106,15 +108,15 @@ export default function RevisionCard({ card, handleReviewAction }) {
           sx={{
             display: "flex",
             flexDirection: "column",
-            alignItems: "start",
+            alignItems: "center",
             flexGrow: 1,
           }}
         >
-          <Box sx={{ width: "100%", flexGrow: 1, padding: "0px 10px" }}>
+          <Box className={classes.centeredCardContent}>
             <Typography variant="body2">{card.rectoContent}</Typography>
           </Box>
           <Divider light style={{ width: "100%" }} />
-          <Box sx={{ width: "100%", flexGrow: 1, padding: "10px 10px" }}>
+          <Box className={classes.centeredCardContent}>
             <Typography
               variant="body2"
               data-testid={`verso-revision-card-${card._id.toString()}`}
