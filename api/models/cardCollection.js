@@ -21,6 +21,10 @@ const cardCollectionSchema = new Schema(
       type: String,
       required: false,
     },
+    reviewPolicy : {
+      reviewCardsPerDay: Number,
+      newCardsPerDay: Number,
+    }
   },
   { timestamps: true }
 );
