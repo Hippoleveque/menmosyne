@@ -7,6 +7,7 @@ import { AuthContext } from "../../store/auth-context";
 import RevisionCard from "./RevisionCard/RevisionCard";
 
 const FETCH_SIZE = 10;
+const ANS_QUALITY_MAPPING = { 5: "easy", 3: "medium", 0: "hard" };
 
 export default function RevisionContent({ collectionId }) {
   const { loginToken } = useContext(AuthContext);
@@ -14,6 +15,7 @@ export default function RevisionContent({ collectionId }) {
   const [cards, setCards] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [cardsToReview, setCardsToReview] = useState([]);
+  const [cardsInputHistory, setCardsInputHistory] = useState({});
   const [currentOffset, setCurrentOffset] = useState(0);
   const [numCards, setNumCards] = useState(0);
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
@@ -78,7 +80,7 @@ export default function RevisionContent({ collectionId }) {
     }
   }, [currentCardIndex, cards, navigate, numCards, cardsToReview.length]);
 
-  const reviewCard = async (cardId, ansQuality) => {
+  const reviewCard = async (cardId, ansQuality, inputs) => {
     const response = await fetch(`/api/cards/${cardId}/review`, {
       method: "POST",
       headers: {
@@ -89,6 +91,7 @@ export default function RevisionContent({ collectionId }) {
       body: JSON.stringify({
         ansQuality,
         dailySessionId: session._id,
+        inputs,
       }),
     });
     const res = await response.json();
@@ -102,17 +105,39 @@ export default function RevisionContent({ collectionId }) {
         setCardsToReview((currCards) =>
           currCards.concat(JSON.parse(JSON.stringify(cards[currentCardIndex])))
         );
+        cardsInputHistory[cards[currentCardIndex]._id] = {};
+        cardsInputHistory[cards[currentCardIndex]._id][
+          ANS_QUALITY_MAPPING[ansQuality]
+        ] = 1;
       } else {
         setCardsToReview((currCards) =>
           currCards.concat(JSON.parse(JSON.stringify(cardsToReview[0])))
         );
+        if (
+          cardsInputHistory[cardsToReview[0]._id.toString()][
+            ANS_QUALITY_MAPPING[ansQuality]
+          ]
+        ) {
+          cardsInputHistory[cardsToReview[0]._id.toString()][
+            ANS_QUALITY_MAPPING[ansQuality]
+          ] += 1;
+        } else {
+          cardsInputHistory[cardsToReview[0]._id.toString()][
+            ANS_QUALITY_MAPPING[ansQuality]
+          ] = 1;
+        }
       }
     }
+
     if (cards && currentCardIndex < cards.length) {
       await reviewCard(cards[currentCardIndex]._id.toString(), ansQuality);
       setCurrentCardIndex((currVal) => currVal + 1);
     } else {
-      await reviewCard(cardsToReview[0]._id.toString(), ansQuality);
+      await reviewCard(
+        cardsToReview[0]._id.toString(),
+        ansQuality,
+        cardsInputHistory[cardsToReview[0]._id.toString()]
+      );
       setCardsToReview((currCards) => currCards.slice(1));
     }
   };

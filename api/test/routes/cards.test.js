@@ -1,10 +1,14 @@
-import { expect } from "chai";
+import chai, { expect } from "chai";
 import sinon from "sinon";
+import sinonChai from "sinon-chai";
 import request from "supertest";
 import app from "../../server.js";
 import Card from "../../models/card.js";
+import CardReview from "../../models/cardReview.js";
 import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
+
+chai.use(sinonChai);
 
 const Query = mongoose.Query;
 const ObjectId = mongoose.Types.ObjectId;
@@ -65,7 +69,7 @@ describe("Test the cards endpoints of the API.", () => {
       .expect(200);
   });
 
-  it("Tests POST /cards/:cardId/review", async () => {
+  it("Tests POST /cards/:cardId/review without saving review", async () => {
     process.env.JWT_SECRET = "test";
     const cardId = new ObjectId().toString();
     const userId = new ObjectId().toString();
@@ -73,12 +77,15 @@ describe("Test the cards endpoints of the API.", () => {
       _id: new ObjectId().toString(),
       owner: { _id: userId },
     };
+    const mockedCardSave = sinon.spy();
     const mockedCard = {
       _id: cardId,
       rectoContent: "testRecto",
       versoContent: "testVerso",
       cardCollection: mockedCollection,
-      save: () => Promise.resolve({}),
+      save: mockedCardSave,
+      easinessFactor: 2.5,
+      numberReviewed: 0,
     };
     sinon.mock(jwt).expects("verify").returns({ userId: userId });
     sinon.mock(Card).expects("getCard").resolves(mockedCard);
@@ -86,7 +93,48 @@ describe("Test the cards endpoints of the API.", () => {
       .post(`/cards/${cardId}/review`)
       .set("Accept", "application/json")
       .set("Authorization", "Bearer token")
+      .send({ ansQuality: 1 })
       .expect(200);
+    expect(mockedCardSave).to.have.been.called;
+    expect(mockedCard.easinessFactor).equal(1.96);
+    expect(mockedCard).to.not.have.property("lastReviewed");
+    expect(mockedCard.numberReviewed).equal(0);
+  });
+
+  it("Tests POST /cards/:cardId/review with saving review", async () => {
+    process.env.JWT_SECRET = "test";
+    const cardId = new ObjectId().toString();
+    const userId = new ObjectId().toString();
+    const mockedCollection = {
+      _id: new ObjectId().toString(),
+      owner: { _id: userId },
+    };
+    const mockedCardSave = sinon.spy();
+    const mockedCard = {
+      _id: cardId,
+      rectoContent: "testRecto",
+      versoContent: "testVerso",
+      cardCollection: mockedCollection,
+      save: mockedCardSave,
+      easinessFactor: 2.5,
+      numberReviewed: 0,
+    };
+    sinon.mock(jwt).expects("verify").returns({ userId: userId });
+    sinon.mock(Card).expects("getCard").resolves(mockedCard);
+    const mockedCardReviewSave = sinon.spy();
+    sinon.stub(CardReview.prototype, "save").callsFake(mockedCardReviewSave);
+
+    await request(app)
+      .post(`/cards/${cardId}/review`)
+      .set("Accept", "application/json")
+      .set("Authorization", "Bearer token")
+      .send({ ansQuality: 5 })
+      .expect(200);
+    expect(mockedCardSave).to.have.been.called;
+    expect(mockedCard.easinessFactor).equal(2.6);
+    expect(mockedCard).to.have.property("lastReviewed");
+    expect(mockedCard.numberReviewed).equal(1);
+    expect(mockedCardReviewSave).to.have.been.called;
   });
 
   afterEach(() => {
