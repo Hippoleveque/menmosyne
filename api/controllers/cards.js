@@ -76,7 +76,7 @@ export const deleteCard = async (req, res, next) => {
 
 export const reviewCard = async (req, res, next) => {
   const { cardId, dailySessionId } = req.params;
-  const { ansQuality } = req.body;
+  const { ansQuality, inputs } = req.body;
   const { userId } = req;
   try {
     let card = await Card.getCard({
@@ -114,6 +114,9 @@ export const reviewCard = async (req, res, next) => {
         oldPriority,
         newPriority: card.priority,
       });
+      if (inputs) {
+        cardReview.inputs = inputs;
+      }
       await cardReview.save();
     }
     // update easiness factor
