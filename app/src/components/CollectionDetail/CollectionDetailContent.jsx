@@ -209,9 +209,11 @@ export default function CollectionDetailContent({ collectionId }) {
                 <TableExtendableTextCell
                   align="center"
                   text={
-                    row.lastReviewed ? formatDistance(now, new Date(row.lastReviewed), {
-                      locale: frLocale,
-                    }) :  "jamais"
+                    row.lastReviewed
+                      ? formatDistance(now, new Date(row.lastReviewed), {
+                          locale: frLocale,
+                        })
+                      : "jamais"
                   }
                   colSpan={2}
                 />
