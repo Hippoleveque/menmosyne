@@ -140,8 +140,10 @@ export default function HomeContent() {
               <TableRow key={row._id.toString()}>
                 <TableCell align="center" width="20%">
                   <Link
-                    href={`/collections/${row._id.toString()}`}
                     data-testid={`collection-${row._id.toString()}`}
+                    onClick={() =>
+                      navigate(`/collections/${row._id.toString()}`)
+                    }
                   >
                     {row.name}
                   </Link>
