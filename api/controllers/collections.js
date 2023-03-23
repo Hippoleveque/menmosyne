@@ -59,6 +59,94 @@ export const getCollectionCards = async (req, res, next) => {
   }
 };
 
+export const getCollectionCardsToReview = async (req, res, next) => {
+  const { collectionId } = req.params;
+  const { userId } = req;
+  const offset = +req.query.offset || 0;
+  const limit = +req.query.limit || 10;
+  try {
+    const cardCollection = await CardCollection.getCollection({
+      _id: collectionId,
+      owner: userId,
+    });
+    const { reviewCardsPerDay, newCardsPerDay } = cardCollection.reviewPolicy;
+    const totalNewCards = await Card.count({
+      cardCollection: new ObjectId(collectionId),
+      user: { _id: new ObjectId(userId) },
+      lastReviewed: { $exists: false },
+    });
+    const totalCardsToReview = await Card.count({
+      cardCollection: new ObjectId(collectionId),
+      user: { _id: new ObjectId(userId) },
+      lastReviewed: { $exists: true },
+    });
+    const totalCards =
+      Math.min(newCardsPerDay, totalNewCards) +
+      Math.min(reviewCardsPerDay, totalCardsToReview);
+    // Get the cards not yet reviewed
+    let ansCards = [];
+    if (offset + limit < newCardsPerDay) {
+      ansCards = await Card.getCards(
+        {
+          cardCollection: {
+            _id: new ObjectId(collectionId),
+            user: { _id: new ObjectId(userId) },
+          },
+          lastReviewed: { $exists: false },
+        },
+        offset,
+        limit
+      );
+    }
+    // We query a mix of cards never reviewed and cards already reviewed
+    else if (offset < newCardsPerDay) {
+      const newCards = await Card.getCards(
+        {
+          cardCollection: {
+            _id: new ObjectId(collectionId),
+            user: { _id: new ObjectId(userId) },
+          },
+          lastReviewed: { $exists: false },
+        },
+        offset,
+        totalNewCards - offset
+      );
+      const cardsToReview = await Card.find({
+        cardCollection: {
+          _id: new ObjectId(collectionId),
+          user: { _id: new ObjectId(userId) },
+        },
+        lastReviewed: { $exists: true },
+      })
+        .limit(limit - (totalNewCards - offset))
+        .sort({ priority: 1 })
+        .exec();
+      ansCards = [...newCards, ...cardsToReview];
+    }
+    // We adjust the offset and query only cards already reviewed
+    else {
+      const trueOffset = offset - totalNewCards;
+      ansCards = await Card.find({
+        cardCollection: {
+          _id: new ObjectId(collectionId),
+          user: { _id: new ObjectId(userId) },
+        },
+        lastReviewed: { $exists: true },
+      })
+        .skip(trueOffset)
+        .limit(limit)
+        .sort({ priority: 1 })
+        .exec();
+    }
+    return res.status(200).json({ cards: ansCards, totalCards: totalCards });
+  } catch (err) {
+    if (!err.statusCode) {
+      err.statusCode = 500;
+    }
+    next(err);
+  }
+};
+
 export const getCollection = async (req, res, next) => {
   const { collectionId } = req.params;
   const { userId } = req;

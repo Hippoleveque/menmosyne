@@ -25,7 +25,7 @@ export default function RevisionContent({ collectionId }) {
     const fetchCards = async () => {
       setIsLoading(true);
       const response = await fetch(
-        `/api/collections/${collectionId}/cards?offset=${currentOffset}&limit=${FETCH_SIZE}`,
+        `/api/collections/${collectionId}/cards-to-review?offset=${currentOffset}&limit=${FETCH_SIZE}`,
         {
           method: "GET",
           headers: {
