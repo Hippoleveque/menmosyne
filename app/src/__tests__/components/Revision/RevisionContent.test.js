@@ -58,7 +58,7 @@ describe("RevisionContent", () => {
     });
     expect(screen.getByTestId("revision-card-0")).toBeInTheDocument();
     expect(global.fetch).toHaveBeenCalledWith(
-      "/api/collections/0/cards?offset=0&limit=10",
+      "/api/collections/0/cards-to-review?offset=0&limit=10",
       expect.objectContaining({
         method: "GET",
       })
@@ -95,7 +95,7 @@ describe("RevisionContent", () => {
   // Test that the cards are refetched when needed
   it("Tests card re-fetching", async () => {
     global.fetch = jest.fn((url, _) => {
-      if (url === "/api/collections/0/cards?offset=0&limit=10") {
+      if (url === "/api/collections/0/cards-to-review?offset=0&limit=10") {
         return Promise.resolve({
           status: 200,
           json: () =>
@@ -157,7 +157,7 @@ describe("RevisionContent", () => {
   // Test that the cards are reviewed again when bad answer
   it("Tests card re-reviewing and api call to review endpoint", async () => {
     global.fetch = jest.fn((url, _) => {
-      if (url === "/api/collections/0/cards?offset=0&limit=10") {
+      if (url === "/api/collections/0/cards-to-review?offset=0&limit=10") {
         return Promise.resolve({
           status: 200,
           json: () =>
