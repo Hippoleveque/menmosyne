@@ -6,12 +6,9 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import Modal from "@mui/material/Modal";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 import { AuthContext } from "../../../store/auth-context";
 import classes from "./CreateCardModal.module.css";
-
-const theme = createTheme();
 
 const initialState = {
   newCardName: "",
@@ -69,70 +66,68 @@ export default function CreateCardModal({ open, onClose, collectionId }) {
   };
 
   return (
-    <ThemeProvider theme={theme}>
-      <Modal open={open} onClose={onClose} data-testid="create-card-modal">
-        <Container component="main" className={classes.createCardContainer}>
-          <CssBaseline />
-          <Box
-            sx={{
-              backgroundColor: "white",
-              padding: "1rem",
-              borderRadius: "2.5%",
-              width: "30rem",
-            }}
-          >
-            <Typography component="h1" variant="h5" sx={{ padding: "0.5rem" }}>
-              Créer une nouvelle Carte
-            </Typography>
-            <Box component="form" onSubmit={handleSubmit} noValidate>
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                id="recto"
-                label="Recto"
-                name="recto"
-                type="text"
-                value={state.newCardRecto}
-                onChange={(e) =>
-                  dispatch({ type: "newCardRecto", value: e.target.value })
-                }
-              />
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                id="verso"
-                label="Verso"
-                name="verso"
-                type="text"
-                value={state.newCardVerso}
-                onChange={(e) =>
-                  dispatch({ type: "newCardVerso", value: e.target.value })
-                }
-              />
-              {submitFailed && (
-                <Typography
-                  component="h5"
-                  variant="h10"
-                  className={classes.createCardErrorMessage}
-                >
-                  Carte invalide
-                </Typography>
-              )}
-              <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                sx={{ mt: 3, mb: 2 }}
-                data-testid="create-card-button-from-modal"
+    <Modal open={open} onClose={onClose} data-testid="create-card-modal">
+      <Container component="main" className={classes.createCardContainer}>
+        <CssBaseline />
+        <Box
+          sx={{
+            backgroundColor: "white",
+            padding: "1rem",
+            borderRadius: "2.5%",
+            width: "30rem",
+          }}
+        >
+          <Typography component="h1" variant="h5" sx={{ padding: "0.5rem" }}>
+            Créer une nouvelle Carte
+          </Typography>
+          <Box component="form" onSubmit={handleSubmit} noValidate>
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              id="recto"
+              label="Recto"
+              name="recto"
+              type="text"
+              value={state.newCardRecto}
+              onChange={(e) =>
+                dispatch({ type: "newCardRecto", value: e.target.value })
+              }
+            />
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              id="verso"
+              label="Verso"
+              name="verso"
+              type="text"
+              value={state.newCardVerso}
+              onChange={(e) =>
+                dispatch({ type: "newCardVerso", value: e.target.value })
+              }
+            />
+            {submitFailed && (
+              <Typography
+                component="h5"
+                variant="h10"
+                className={classes.createCardErrorMessage}
               >
-                Créer la carte
-              </Button>
-            </Box>
+                Carte invalide
+              </Typography>
+            )}
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              sx={{ mt: 3, mb: 2 }}
+              data-testid="create-card-button-from-modal"
+            >
+              Créer la carte
+            </Button>
           </Box>
-        </Container>
-      </Modal>
-    </ThemeProvider>
+        </Box>
+      </Container>
+    </Modal>
   );
 }
