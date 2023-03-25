@@ -22,14 +22,13 @@ describe("Test the sessions endpoints of the API.", () => {
       .mock(DailySession.prototype)
       .expects("save")
       .resolves({ message: "ok" });
+    const mockedSaveCollection = sinon.spy();
     sinon
       .mock(Query.prototype)
       .expects("exec")
       .resolves({
         _id: collectionId,
-        save: () => {
-          return { message: "ok" };
-        },
+        save: mockedSaveCollection,
       });
     const body = {
       cardCollectionId: collectionId,
@@ -41,6 +40,7 @@ describe("Test the sessions endpoints of the API.", () => {
       .send(body)
       .expect(201);
     expect(response.body).to.have.property("dailySession");
+    expect(mockedSaveCollection).to.have.been.calledOnce;
   });
 
   afterEach(() => {

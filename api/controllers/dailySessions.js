@@ -20,12 +20,14 @@ export const createSession = async (req, res, next) => {
       err.statusCode = statusCode;
       throw err;
     }
+    const currentDate = new Date();
+    collection.lastReviewed = currentDate;
     let dailySession = {
       cardCollection: cardCollectionId,
-      date: new Date(),
+      date: currentDate,
     };
     dailySession = new DailySession(dailySession);
-    await dailySession.save();
+    await Promise.all([dailySession.save(), collection.save()]);
     return res.status(201).json({ dailySession });
   } catch (err) {
     if (!err.statusCode) {

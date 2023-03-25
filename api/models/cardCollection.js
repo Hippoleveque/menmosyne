@@ -21,6 +21,10 @@ const cardCollectionSchema = new Schema(
       type: String,
       required: false,
     },
+    lastReviewed: {
+      type: Date,
+      required: false,
+    },
     reviewPolicy: {
       reviewCardsPerDay: {
         type: Number,
