@@ -7,12 +7,9 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import Link from "@mui/material/Link";
-import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 import { AuthContext } from "../../store/auth-context";
 import classes from "./LoginContent.module.css";
-
-const theme = createTheme();
 
 export default function LoginContent() {
   const navigate = useNavigate();
@@ -55,80 +52,73 @@ export default function LoginContent() {
   };
 
   return (
-    <ThemeProvider theme={theme}>
-      <Container
-        component="main"
-        maxWidth="xs"
-        className={classes.loginContainer}
-      >
-        <CssBaseline />
-        <Box className={classes.loginBox}>
-          <Typography component="h1" variant="h5">
-            Bienvenue sur Mnemosyne.
-          </Typography>
-          <Box
-            component="form"
-            onSubmit={handleSubmit}
-            noValidate
-            sx={{ mt: 1 }}
-          >
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              id="email"
-              label="Email"
-              name="email"
-              type="email"
-              autoComplete="email"
-              value={enteredEmail}
-              onChange={handleEmailChange}
-              autoFocus
-              data-testid="email-field-login"
-            />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="Mot de passe"
-              type="password"
-              id="password"
-              value={enteredPassword}
-              onChange={handlePasswordChange}
-              autoComplete="current-password"
-              data-testid="password-field-login"
-            />
-            {loginFailed && (
-              <Typography
-                component="h5"
-                variant="h10"
-                className={classes.loginErrorMessage}
-              >
-                Identifiants incorrects
-              </Typography>
-            )}
-            <Button
-              type="submit"
-              fullWidth
-              variant="contained"
-              sx={{ mt: 3, mb: 2 }}
-              data-testid="submit-button-login"
-            >
-              Se connecter
-            </Button>
+    <Container
+      component="main"
+      maxWidth="xs"
+      className={classes.loginContainer}
+    >
+      <CssBaseline />
+      <Box className={classes.loginBox}>
+        <Typography component="h1" variant="h5">
+          Bienvenue sur Mnemosyne.
+        </Typography>
+        <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            id="email"
+            label="Email"
+            name="email"
+            type="email"
+            autoComplete="email"
+            value={enteredEmail}
+            onChange={handleEmailChange}
+            autoFocus
+            data-testid="email-field-login"
+          />
+          <TextField
+            margin="normal"
+            required
+            fullWidth
+            name="password"
+            label="Mot de passe"
+            type="password"
+            id="password"
+            value={enteredPassword}
+            onChange={handlePasswordChange}
+            autoComplete="current-password"
+            data-testid="password-field-login"
+          />
+          {loginFailed && (
             <Typography
               component="h5"
               variant="h10"
-              sx={{ textAlign: "center" }}
+              className={classes.loginErrorMessage}
             >
-              <Link href={"/signup"} underline="hover" data-testid="signup-button-login">
-                Créer un compte
-              </Link>
+              Identifiants incorrects
             </Typography>
-          </Box>
+          )}
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            sx={{ mt: 3, mb: 2 }}
+            data-testid="submit-button-login"
+          >
+            Se connecter
+          </Button>
+          <Typography component="h5" variant="h10" sx={{ textAlign: "center" }}>
+            <Link
+              href={"/signup"}
+              underline="hover"
+              data-testid="signup-button-login"
+            >
+              Créer un compte
+            </Link>
+          </Typography>
         </Box>
-      </Container>
-    </ThemeProvider>
+      </Box>
+    </Container>
   );
 }
