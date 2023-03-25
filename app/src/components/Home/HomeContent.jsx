@@ -1,4 +1,10 @@
-import React, { useEffect, useState, useContext, useCallback } from "react";
+import React, {
+  useEffect,
+  useState,
+  useContext,
+  useCallback,
+  useMemo,
+} from "react";
 import { useNavigate } from "react-router";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
@@ -12,6 +18,8 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import Link from "@mui/material/Link";
 import Pagination from "@mui/material/Pagination";
+import { formatDistance } from "date-fns";
+import frLocale from "date-fns/locale/fr";
 
 import { AuthContext } from "../../store/auth-context";
 import classes from "./HomeContent.module.css";
@@ -87,6 +95,7 @@ export default function HomeContent() {
 
   let numPages = Math.ceil(totalCollections / ITEMS_PER_PAGE);
 
+  const now = useMemo(() => new Date(), []);
   return (
     <Box sx={{ height: "100%" }}>
       {createModalOpen && (
@@ -115,7 +124,7 @@ export default function HomeContent() {
               <TableCell colSpan={3}>
                 <Typography component="h2">Mes collections</Typography>
               </TableCell>
-              <TableCell colSpan={2} align="right">
+              <TableCell colSpan={3} align="right">
                 <Button
                   variant="contained"
                   color="primary"
@@ -131,6 +140,7 @@ export default function HomeContent() {
               <TableCell align="center">Nom</TableCell>
               <TableCell align="center"># Cartes</TableCell>
               <TableCell align="center">Description</TableCell>
+              <TableCell align="center">Dernière Révision</TableCell>
               <TableCell align="center">Réviser</TableCell>
               <TableCell align="center">Supprimer</TableCell>
             </TableRow>
@@ -156,7 +166,16 @@ export default function HomeContent() {
                   text={row.description || ""}
                   width="25%"
                 />
-
+                <TableExtendableTextCell
+                  align="center"
+                  text={
+                    row.lastReviewed
+                      ? formatDistance(now, new Date(row.lastReviewed), {
+                          locale: frLocale,
+                        })
+                      : "jamais"
+                  }
+                />
                 <TableCell align="center" width="20%">
                   <Button
                     variant="contained"
