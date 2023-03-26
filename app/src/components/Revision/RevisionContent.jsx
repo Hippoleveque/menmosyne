@@ -63,13 +63,13 @@ export default function RevisionContent({ collectionId }) {
   }, [loginToken, collectionId]);
 
   useEffect(() => {
-    if (
-      cards &&
-      currentCardIndex === cards.length &&
-      currentCardIndex < numCards
-    ) {
-      setCurrentOffset((currVal) => currVal + FETCH_SIZE);
-    }
+    // if (
+    //   cards &&
+    //   currentCardIndex === cards.length &&
+    //   currentCardIndex < numCards
+    // ) {
+    //   setCurrentOffset((currVal) => currVal + FETCH_SIZE);
+    // }
     if (
       (!isLoading && numCards === 0) ||
       (currentCardIndex &&
@@ -132,6 +132,9 @@ export default function RevisionContent({ collectionId }) {
     if (cards && currentCardIndex < cards.length) {
       await reviewCard(cards[currentCardIndex]._id.toString(), ansQuality);
       setCurrentCardIndex((currVal) => currVal + 1);
+      if (currentCardIndex >= cards.length) {
+        setCurrentOffset((currVal) => currVal + FETCH_SIZE);
+      }
     } else {
       await reviewCard(
         cardsToReview[0]._id.toString(),
