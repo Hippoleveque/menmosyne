@@ -134,3 +134,43 @@ export const reviewCard = async (req, res, next) => {
     next(err);
   }
 };
+
+export const editCard = async (req, res, next) => {
+  console.log("called edit card")
+  const { cardId } = req.params;
+  const { rectoContent, versoContent } = req.body;
+  const { userId } = req;
+  const errors = validationResult(req);
+  try {
+    if (!errors.isEmpty()) {
+      const statusCode = 422;
+      const message = "Something in validation went wrong";
+      const err = new Error(message);
+      err.statusCode = statusCode;
+      throw err;
+    }
+    let card = await Card.getCard({
+      _id: new ObjectId(cardId),
+    });
+    if (!card || card.cardCollection.owner._id.toString() !== userId) {
+      const statusCode = 400;
+      const message = "Bad Collection Id";
+      const err = new Error(message);
+      err.statusCode = statusCode;
+      throw err;
+    }
+    card.rectoContent = rectoContent;
+    card.versoContent = versoContent;
+    delete card.lastReviewed;
+    card.numberReviewed = 0;
+    card.easinessFactor = 2.5;
+    card.priority = 1;
+    await card.save();
+    return res.status(200).json({ card });
+  } catch (err) {
+    if (!err.statusCode) {
+      err.statusCode = 500;
+    }
+    next(err);
+  }
+};

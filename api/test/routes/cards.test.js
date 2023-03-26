@@ -137,6 +137,44 @@ describe("Test the cards endpoints of the API.", () => {
     expect(mockedCardReviewSave).to.have.been.called;
   });
 
+  it("Tests POST /cards/:cardId/edit", async () => {
+    process.env.JWT_SECRET = "test";
+    const cardId = new ObjectId().toString();
+    const userId = new ObjectId().toString();
+    const mockedCardSave = sinon.spy();
+    const mockedCollection = {
+      _id: new ObjectId().toString(),
+      owner: { _id: userId },
+    };
+    const mockedCard = {
+      _id: cardId,
+      rectoContent: "testRecto",
+      versoContent: "testVerso",
+      save: mockedCardSave,
+      easinessFactor: 3.8,
+      numberReviewed: 10,
+      priority: 12,
+      cardCollection: mockedCollection,
+    };
+    sinon.mock(jwt).expects("verify").returns({ userId: userId });
+    sinon.mock(Card).expects("getCard").resolves(mockedCard);
+    await request(app)
+      .post(`/cards/${cardId}/edit`)
+      .set("Accept", "application/json")
+      .set("Authorization", "Bearer token")
+      .send({
+        rectoContent: "testRectoEdited",
+        versoContent: "testVersoEdited",
+      })
+      .expect(200);
+    expect(mockedCardSave).to.have.been.called;
+    expect(mockedCard.easinessFactor).equal(2.5);
+    expect(mockedCard.priority).equal(1);
+    expect(mockedCard.numberReviewed).equal(0);
+    console.log(mockedCard);
+    expect(mockedCard).not.to.have.property("lastReviewed");
+  });
+
   afterEach(() => {
     sinon.restore();
   });
