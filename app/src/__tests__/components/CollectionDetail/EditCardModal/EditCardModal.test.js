@@ -30,10 +30,15 @@ describe("EditCardModal", () => {
 
   // Modal content is visible when the modal is open
   it("Tests that the modal renders correctly when opened", () => {
+    const mockedCard = {
+        _id: "idTest",
+        rectoContent: "rectoContentTest",
+        versoContent: "versoContentTest",
+      };
     act(() => {
       root.render(
         <Fragment>
-          <EditCardModal open={true} />
+          <EditCardModal open={true} card={mockedCard}/>
         </Fragment>
       );
     });
@@ -42,10 +47,15 @@ describe("EditCardModal", () => {
 
   // Modal content is not visible when the modal is closed
   it("Tests that the modal is not rendered when the modal is closed", () => {
+    const mockedCard = {
+      _id: "idTest",
+      rectoContent: "rectoContentTest",
+      versoContent: "versoContentTest",
+    };
     act(() => {
       root.render(
         <Fragment>
-          <EditCardModal open={false} />
+          <EditCardModal open={false} card={mockedCard} />
         </Fragment>
       );
     });
@@ -60,7 +70,6 @@ describe("EditCardModal", () => {
       rectoContent: "rectoContentTest",
       versoContent: "versoContentTest",
     };
-
     act(() => {
       root.render(
         <Fragment>
