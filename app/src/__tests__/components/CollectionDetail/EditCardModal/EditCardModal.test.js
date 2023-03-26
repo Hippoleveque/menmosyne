@@ -3,9 +3,9 @@ import { createRoot } from "react-dom/client";
 import { act, screen } from "@testing-library/react";
 import "@testing-library/jest-dom";
 
-import CreateCardModal from "../../../../components/CollectionDetail/CreateCardModal/CreateCardModal";
+import EditCardModal from "../../../../components/CollectionDetail/EditCardModal/EditCardModal";
 
-describe("CreateCollectionModal", () => {
+describe("EditCardModal", () => {
   let container = null;
   let root = null;
 
@@ -33,45 +33,50 @@ describe("CreateCollectionModal", () => {
     act(() => {
       root.render(
         <Fragment>
-          <CreateCardModal open={true} />
+          <EditCardModal open={true} />
         </Fragment>
       );
     });
-    expect(screen.getByTestId("create-card-modal")).toBeInTheDocument();
+    expect(screen.getByTestId("edit-card-modal")).toBeInTheDocument();
   });
 
-  //   // Modal content is not visible when the modal is closed
+  // Modal content is not visible when the modal is closed
   it("Tests that the modal is not rendered when the modal is closed", () => {
     act(() => {
       root.render(
         <Fragment>
-          <CreateCardModal open={false} />
+          <EditCardModal open={false} />
         </Fragment>
       );
     });
-    expect(screen.queryByTestId("create-card-modal")).not.toBeInTheDocument();
+    expect(screen.queryByTestId("edit-card-modal")).not.toBeInTheDocument();
   });
 
   // Clicking on the confirm button triggers the correct api call and close the modal
-  it("Tests that the card is created and the modal closed when clicking on confirm", async () => {
+  it("Tests that the card is updated and the modal closed when clicking on edit", async () => {
     const onClose = jest.fn();
+    const mockedCard = {
+      _id: "idTest",
+      rectoContent: "rectoContentTest",
+      versoContent: "versoContentTest",
+    };
 
     act(() => {
       root.render(
         <Fragment>
-          <CreateCardModal open={true} onClose={onClose} />
+          <EditCardModal open={true} onClose={onClose} card={mockedCard} />
         </Fragment>
       );
     });
 
     await act(async () => {
       screen
-        .getByTestId("create-card-button-from-modal")
+        .getByTestId("edit-card-button-from-modal")
         .dispatchEvent(new MouseEvent("click", { bubbles: true }));
     });
 
     expect(global.fetch).toHaveBeenCalledWith(
-      "/api/cards",
+      `/api/cards/${mockedCard._id}/edit`,
       expect.objectContaining({
         method: "POST",
       })
