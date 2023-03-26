@@ -6,7 +6,6 @@ import Box from "@mui/material/Box";
 import { AuthContext } from "../../store/auth-context";
 import RevisionCard from "./RevisionCard/RevisionCard";
 
-const FETCH_SIZE = 10;
 const ANS_QUALITY_MAPPING = { 5: "easy", 3: "medium", 0: "hard" };
 
 export default function RevisionContent({ collectionId }) {
@@ -16,8 +15,6 @@ export default function RevisionContent({ collectionId }) {
   const [isLoading, setIsLoading] = useState(true);
   const [cardsToReview, setCardsToReview] = useState([]);
   const [cardsInputHistory, setCardsInputHistory] = useState({});
-  const [currentOffset, setCurrentOffset] = useState(0);
-  const [numCards, setNumCards] = useState(0);
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
   const [session, setSession] = useState(null);
 
@@ -25,7 +22,7 @@ export default function RevisionContent({ collectionId }) {
     const fetchCards = async () => {
       setIsLoading(true);
       const response = await fetch(
-        `/api/collections/${collectionId}/cards-to-review?offset=${currentOffset}&limit=${FETCH_SIZE}`,
+        `/api/collections/${collectionId}/cards-to-review`,
         {
           method: "GET",
           headers: {
@@ -36,14 +33,11 @@ export default function RevisionContent({ collectionId }) {
         }
       );
       const res = await response.json();
-      setCards((currCards) =>
-        currCards ? currCards.concat(res.cards) : res.cards
-      );
-      setNumCards(res.totalCards);
+      setCards(res.cards);
       setIsLoading(false);
     };
     fetchCards();
-  }, [loginToken, collectionId, currentOffset]);
+  }, [loginToken, collectionId]);
 
   useEffect(() => {
     const createSession = async () => {
@@ -63,22 +57,15 @@ export default function RevisionContent({ collectionId }) {
   }, [loginToken, collectionId]);
 
   useEffect(() => {
-    // if (
-    //   cards &&
-    //   currentCardIndex === cards.length &&
-    //   currentCardIndex < numCards
-    // ) {
-    //   setCurrentOffset((currVal) => currVal + FETCH_SIZE);
-    // }
     if (
-      (!isLoading && numCards === 0) ||
+      (cards && cards.length === 0) ||
       (currentCardIndex &&
-        currentCardIndex >= numCards &&
+        currentCardIndex >= cards.length &&
         !cardsToReview.length)
     ) {
       navigate("/");
     }
-  }, [currentCardIndex, cards, navigate, numCards, cardsToReview.length]);
+  }, [currentCardIndex, cards, navigate, cardsToReview.length]);
 
   const reviewCard = async (cardId, ansQuality, inputs) => {
     const response = await fetch(`/api/cards/${cardId}/review`, {
@@ -105,10 +92,14 @@ export default function RevisionContent({ collectionId }) {
         setCardsToReview((currCards) =>
           currCards.concat(JSON.parse(JSON.stringify(cards[currentCardIndex])))
         );
-        cardsInputHistory[cards[currentCardIndex]._id] = {};
-        cardsInputHistory[cards[currentCardIndex]._id][
-          ANS_QUALITY_MAPPING[ansQuality]
-        ] = 1;
+        setCardsInputHistory((currHistory) => {
+          const newHistory = { ...currHistory };
+          newHistory[cards[currentCardIndex]._id.toString()] = {};
+          newHistory[cards[currentCardIndex]._id.toString()][
+            ANS_QUALITY_MAPPING[ansQuality]
+          ] = 1;
+          return newHistory;
+        });
       } else {
         setCardsToReview((currCards) =>
           currCards.concat(JSON.parse(JSON.stringify(cardsToReview[0])))
@@ -118,13 +109,21 @@ export default function RevisionContent({ collectionId }) {
             ANS_QUALITY_MAPPING[ansQuality]
           ]
         ) {
-          cardsInputHistory[cardsToReview[0]._id.toString()][
-            ANS_QUALITY_MAPPING[ansQuality]
-          ] += 1;
+          setCardsInputHistory((currHistory) => {
+            const newHistory = { ...currHistory };
+            newHistory[cardsToReview[0]._id.toString()][
+              ANS_QUALITY_MAPPING[ansQuality]
+            ] += 1;
+            return newHistory;
+          });
         } else {
-          cardsInputHistory[cardsToReview[0]._id.toString()][
-            ANS_QUALITY_MAPPING[ansQuality]
-          ] = 1;
+          setCardsInputHistory((currHistory) => {
+            const newHistory = { ...currHistory };
+            newHistory[cardsToReview[0]._id.toString()][
+              ANS_QUALITY_MAPPING[ansQuality]
+            ] = 1;
+            return newHistory;
+          });
         }
       }
     }
@@ -132,9 +131,6 @@ export default function RevisionContent({ collectionId }) {
     if (cards && currentCardIndex < cards.length) {
       await reviewCard(cards[currentCardIndex]._id.toString(), ansQuality);
       setCurrentCardIndex((currVal) => currVal + 1);
-      if (currentCardIndex >= cards.length) {
-        setCurrentOffset((currVal) => currVal + FETCH_SIZE);
-      }
     } else {
       await reviewCard(
         cardsToReview[0]._id.toString(),
