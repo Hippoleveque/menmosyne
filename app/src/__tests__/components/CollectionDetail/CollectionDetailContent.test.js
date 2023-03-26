@@ -160,7 +160,23 @@ describe("CollectionDetailContent", () => {
         .getByTestId("delete-card-button-0")
         .dispatchEvent(new MouseEvent("click", { bubbles: true }));
     });
+  });
+  // Test the "mofidier" button
+  it("Tests clicking the edit button", async () => {
+    await act(async () => {
+      root.render(
+        <Router>
+          <CollectionDetailContent collectionId="0" />
+        </Router>
+      );
+    });
 
-    expect(screen.getByTestId("delete-card-modal")).toBeInTheDocument();
+    await act(async () => {
+      screen
+        .getByTestId("edit-card-button-0")
+        .dispatchEvent(new MouseEvent("click", { bubbles: true }));
+    });
+
+    expect(screen.getByTestId("edit-card-modal")).toBeInTheDocument();
   });
 });

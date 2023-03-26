@@ -4,7 +4,8 @@ import { body } from "express-validator";
 import {
   createCard,
   deleteCard,
-  reviewCard
+  reviewCard,
+  editCard,
 } from "../controllers/cards.js";
 import { isAuth } from "../middlewares/isAuth.js";
 
@@ -18,10 +19,13 @@ router.post(
 );
 
 router.post(
-  "/:cardId/review",
+  "/:cardId/edit",
+  [body("rectoContent").trim().isLength({ min: 3 })],
   isAuth,
-  reviewCard
-)
+  editCard
+);
+
+router.post("/:cardId/review", isAuth, reviewCard);
 
 router.delete("/:cardId", isAuth, deleteCard);
 

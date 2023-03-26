@@ -24,6 +24,7 @@ import CreateCardModal from "./CreateCardModal/CreateCardModal";
 import { AuthContext } from "../../store/auth-context";
 import classes from "./CollectionDetailContent.module.css";
 import ConfirmCardDeletionModal from "./ConfirmCardDeletionModal/ConfirmCardDeletionModal";
+import EditCardModal from "./EditCardModal/EditCardModal";
 import TableExtendableTextCell from "../Common/TableExtendableTextCell";
 
 const ITEMS_PER_PAGE = 7;
@@ -35,6 +36,8 @@ export default function CollectionDetailContent({ collectionId }) {
   const [modalOpen, setModalOpen] = useState(false);
   const [collection, setCollection] = useState(null);
   const [deletingCardId, setDeletingCardId] = useState(null);
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [editingCard, setEditingCard] = useState(null);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [totalCards, setTotalCards] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
@@ -103,9 +106,18 @@ export default function CollectionDetailContent({ collectionId }) {
   const handleDeleteModalClose = async () => {
     setDeleteModalOpen(false);
     setDeletingCardId(null);
-    const newCards = await fetchCards(currentPage);
-    setCards(newCards.cards);
-    setTotalCards(newCards.totalCards);
+    await fetchCards(currentPage);
+  };
+
+  const handleEditModalOpen = (card) => {
+    setEditingCard(card);
+    setEditModalOpen(true);
+  };
+
+  const handleEditModalClose = async () => {
+    setEditModalOpen(false);
+    setEditingCard(null);
+    await fetchCards(currentPage);
   };
 
   let numPages = Math.ceil(totalCards / ITEMS_PER_PAGE);
@@ -128,7 +140,13 @@ export default function CollectionDetailContent({ collectionId }) {
           onClose={handleDeleteModalClose}
         />
       )}
-
+      {editModalOpen && (
+        <EditCardModal
+          open={editModalOpen}
+          onClose={handleEditModalClose}
+          card={editingCard}
+        />
+      )}
       <Box
         sx={{
           p: "10px 10px",
@@ -152,7 +170,7 @@ export default function CollectionDetailContent({ collectionId }) {
               <TableCell colSpan={2}>
                 <Typography component="h2">Mes cartes</Typography>
               </TableCell>
-              <TableCell colSpan={5} align="right">
+              <TableCell colSpan={7} align="right">
                 <Box>
                   <Button
                     variant="contained"
@@ -186,7 +204,10 @@ export default function CollectionDetailContent({ collectionId }) {
                 Dernière Révision
               </TableCell>
               <TableCell align="center" colSpan={1}>
-                Actions
+                Modifier
+              </TableCell>
+              <TableCell align="center" colSpan={1}>
+                Supprimer
               </TableCell>
             </TableRow>
           </TableHead>
@@ -217,6 +238,17 @@ export default function CollectionDetailContent({ collectionId }) {
                   }
                   colSpan={2}
                 />
+                <TableCell align="center" colSpan={1}>
+                  <Button
+                    variant="contained"
+                    color="warning"
+                    onClick={() => handleEditModalOpen(row)}
+                    sx={{ fontSize: "0.7rem" }}
+                    data-testid={`edit-card-button-${row._id.toString()}`}
+                  >
+                    Mofifier
+                  </Button>
+                </TableCell>
                 <TableCell align="center" colSpan={1}>
                   <Button
                     variant="contained"
