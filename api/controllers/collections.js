@@ -63,94 +63,35 @@ export const getCollectionCardsToReview = async (req, res, next) => {
   console.log("called");
   const { collectionId } = req.params;
   const { userId } = req;
-  const offset = +req.query.offset || 0;
-  const limit = +req.query.limit || 10;
   try {
     const cardCollection = await CardCollection.getCollection({
       _id: collectionId,
       owner: userId,
     });
     const { reviewCardsPerDay, newCardsPerDay } = cardCollection.reviewPolicy;
-    const totalNewCards = await Card.count({
-      cardCollection: new ObjectId(collectionId),
-      user: { _id: new ObjectId(userId) },
-      lastReviewed: { $exists: false },
-    });
-    const totalCardsToReview = await Card.count({
-      cardCollection: new ObjectId(collectionId),
-      user: { _id: new ObjectId(userId) },
+    const newCards = await Card.getCards(
+      {
+        cardCollection: {
+          _id: new ObjectId(collectionId),
+          user: { _id: new ObjectId(userId) },
+        },
+        lastReviewed: { $exists: false },
+      },
+      0,
+      newCardsPerDay
+    );
+    const cardsToReview = await Card.find({
+      cardCollection: {
+        _id: new ObjectId(collectionId),
+        user: { _id: new ObjectId(userId) },
+      },
       lastReviewed: { $exists: true },
-    });
-    const totalCards =
-      Math.min(newCardsPerDay, totalNewCards) +
-      Math.min(reviewCardsPerDay, totalCardsToReview);
-    // Get the cards not yet reviewed
-    let ansCards = [];
-    console.log({offset, newCardsPerDay, totalNewCards})
-    if (offset + limit <= newCardsPerDay && offset + limit <= totalNewCards) {
-      ansCards = await Card.getCards(
-        {
-          cardCollection: {
-            _id: new ObjectId(collectionId),
-            user: { _id: new ObjectId(userId) },
-          },
-          lastReviewed: { $exists: false },
-        },
-        offset,
-        limit
-      );
-      console.log("new", ansCards.length);
-    }
-    // We query a mix of cards never reviewed and cards already reviewed
-    else if (offset < newCardsPerDay && offset < totalNewCards) {
-      const newCards = await Card.getCards(
-        {
-          cardCollection: {
-            _id: new ObjectId(collectionId),
-            user: { _id: new ObjectId(userId) },
-          },
-          lastReviewed: { $exists: false },
-        },
-        offset,
-        limit
-      );
-      const cardsToReview = await Card.find({
-        cardCollection: {
-          _id: new ObjectId(collectionId),
-          user: { _id: new ObjectId(userId) },
-        },
-        lastReviewed: { $exists: true },
-      })
-        .limit(limit - newCards.length)
-        .sort({ priority: 1 })
-        .exec();
-      ansCards = [...newCards, ...cardsToReview];
-      console.log("mix", newCards.length, ansCards.length);
-    }
-    // We adjust the offset and query only cards already reviewed
-    else {
-      let trueOffset;
-      // First case, we exceeded the total number of new cards
-      if (offset >= totalNewCards) {
-        trueOffset = offset - totalNewCards;
-      } 
-      else {
-        trueOffset = offset - newCardsPerDay;
-      }
-      ansCards = await Card.find({
-        cardCollection: {
-          _id: new ObjectId(collectionId),
-          user: { _id: new ObjectId(userId) },
-        },
-        lastReviewed: { $exists: true },
-      })
-        .skip(trueOffset)
-        .limit(limit)
-        .sort({ priority: 1 })
-        .exec();
-      console.log("reviewed", ansCards.length);
-    }
-    return res.status(200).json({ cards: ansCards, totalCards: totalCards });
+    })
+      .limit(reviewCardsPerDay)
+      .sort({ priority: 1 })
+      .exec();
+    const ansCards = [...newCards, ...cardsToReview];
+    return res.status(200).json({ cards: ansCards });
   } catch (err) {
     if (!err.statusCode) {
       err.statusCode = 500;
