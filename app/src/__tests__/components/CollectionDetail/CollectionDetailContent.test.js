@@ -48,7 +48,10 @@ describe("CollectionDetailContent", () => {
         return Promise.resolve({
           json: () =>
             Promise.resolve({
-              cardCollection: { name: "Collection 0" },
+              cardCollection: {
+                name: "Collection 0",
+                reviewPolicy: { newCardsPerDay: 10, reviewCardsPerDay: 10 },
+              },
             }),
         });
       }
@@ -106,6 +109,24 @@ describe("CollectionDetailContent", () => {
 
     expect(screen.getByTestId("card-7")).toBeInTheDocument();
     expect(screen.getByTestId("card-8")).toBeInTheDocument();
+  });
+
+  // Test click edit the collection button
+  it("Tests that clicking edit the collection button open the modal", async () => {
+    await act(async () => {
+      root.render(
+        <Router>
+          <CollectionDetailContent collectionId="0" />
+        </Router>
+      );
+    });
+
+    act(() => {
+      screen
+        .getByTestId("edit-collection-button-collection-detail")
+        .dispatchEvent(new MouseEvent("click", { bubbles: true }));
+    });
+    expect(screen.getByTestId("edit-collection-modal")).toBeInTheDocument();
   });
 
   // Test click adding a card button

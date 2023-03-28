@@ -8,8 +8,14 @@ import {
   deleteCollection,
   getCollectionCards,
   getCollectionCardsToReview,
+  editCollection,
 } from "../controllers/collections.js";
 import { isAuth } from "../middlewares/isAuth.js";
+
+const checkCorrectPolicy = (value) => {
+  const isNumber = !isNaN(value) && !isNaN(parseFloat(value));
+  return isNumber && parseFloat(value) >= 0;
+};
 
 const router = express.Router();
 
@@ -26,6 +32,16 @@ router.post(
   [body("name").trim().isLength({ min: 3 })],
   isAuth,
   createCollection
+);
+router.post(
+  "/:collectionId/edit",
+  [
+    body("name").trim().isLength({ min: 3 }),
+    body("newCardsPolicy").custom(checkCorrectPolicy),
+    body("reviewCardsPolicy").custom(checkCorrectPolicy),
+  ],
+  isAuth,
+  editCollection
 );
 router.delete("/:collectionId", isAuth, deleteCollection);
 

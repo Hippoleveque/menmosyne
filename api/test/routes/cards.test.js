@@ -171,7 +171,6 @@ describe("Test the cards endpoints of the API.", () => {
     expect(mockedCard.easinessFactor).equal(2.5);
     expect(mockedCard.priority).equal(1);
     expect(mockedCard.numberReviewed).equal(0);
-    console.log(mockedCard);
     expect(mockedCard).not.to.have.property("lastReviewed");
   });
 

@@ -152,6 +152,43 @@ export const createCollection = async (req, res, next) => {
   }
 };
 
+export const editCollection = async (req, res, next) => {
+  const { collectionId } = req.params;
+  const { name, newCardsPolicy, reviewCardsPolicy } = req.body;
+  const { userId } = req;
+  const errors = validationResult(req);
+  try {
+    if (!errors.isEmpty()) {
+      const statusCode = 422;
+      const message = "Something in validation went wrong";
+      const err = new Error(message);
+      err.statusCode = statusCode;
+      throw err;
+    }
+    const collection = await CardCollection.getCollection({
+      _id: collectionId,
+      owner: userId,
+    });
+    if (!collection) {
+      const statusCode = 400;
+      const message = "Bad Collection Id";
+      const err = new Error(message);
+      err.statusCode = statusCode;
+      throw err;
+    }
+    collection.name = name;
+    collection.reviewPolicy.newCardsPerDay = parseFloat(newCardsPolicy);
+    collection.reviewPolicy.reviewCardsPerDay = parseFloat(reviewCardsPolicy);
+    await collection.save();
+    return res.status(201).json({ collection });
+  } catch (err) {
+    if (!err.statusCode) {
+      err.statusCode = 500;
+    }
+    next(err);
+  }
+};
+
 export const deleteCollection = async (req, res, next) => {
   const { collectionId } = req.params;
   const { userId } = req;
