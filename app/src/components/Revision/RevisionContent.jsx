@@ -17,7 +17,6 @@ export default function RevisionContent({ collectionId }) {
   const [cardsToReview, setCardsToReview] = useState([]);
   const [cardsInputHistory, setCardsInputHistory] = useState({});
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
-  const [session, setSession] = useState(null);
   const [isContinueModalOpen, setIsContinueModalOpen] = useState(false);
 
   const fetchCards = useCallback(async () => {
@@ -44,23 +43,6 @@ export default function RevisionContent({ collectionId }) {
   }, [fetchCards]);
 
   useEffect(() => {
-    const createSession = async () => {
-      const response = await fetch("/api/sessions", {
-        method: "POST",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + loginToken,
-        },
-        body: JSON.stringify({ cardCollectionId: collectionId }),
-      });
-      const res = await response.json();
-      setSession(res.dailySession);
-    };
-    createSession();
-  }, [loginToken, collectionId]);
-
-  useEffect(() => {
     if (cards && cards.length === 0) {
       navigate("/");
     } else if (
@@ -82,7 +64,6 @@ export default function RevisionContent({ collectionId }) {
       },
       body: JSON.stringify({
         ansQuality,
-        dailySessionId: session._id,
         inputs,
       }),
     });
