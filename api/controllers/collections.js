@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 
 import Card from "../models/card.js";
 import CardCollection from "../models/cardCollection.js";
+import DailySession from "../models/dailySession.js";
 import { validationResult } from "express-validator";
 
 const ObjectId = mongoose.Types.ObjectId;
@@ -60,36 +61,67 @@ export const getCollectionCards = async (req, res, next) => {
 };
 
 export const getCollectionCardsToReview = async (req, res, next) => {
-  console.log("called");
   const { collectionId } = req.params;
   const { userId } = req;
   try {
+    const now = new Date();
+    const foundSession = await DailySession.find({
+      date: {
+        $gte: new Date(now.getFullYear(), now.getMonth(), now.getDate()),
+      },
+      cardCollection: new ObjectId(collectionId),
+    })
+      .sort({ date: -1 })
+      .limit(1);
     const cardCollection = await CardCollection.getCollection({
       _id: collectionId,
       owner: userId,
     });
     const { reviewCardsPerDay, newCardsPerDay } = cardCollection.reviewPolicy;
-    const newCards = await Card.getCards(
-      {
+    let numNewCards = newCardsPerDay;
+    let numReviewCards = reviewCardsPerDay;
+    if (foundSession.length) {
+      // The user has already reviewed the cards
+      const session = foundSession[0];
+      if (
+        session.numReviews.newCards >= newCardsPerDay &&
+        session.numReviews.reviewCards >= reviewCardsPerDay
+      ) {
+        numNewCards = newCardsPerDay;
+        numReviewCards = reviewCardsPerDay;
+      } else {
+        numNewCards = newCardsPerDay - session.numReviews.newCards;
+        numReviewCards = reviewCardsPerDay - session.numReviews.reviewCards;
+      }
+    }
+
+    let newCards = [];
+    if (numNewCards > 0) {
+      newCards = await Card.getCards(
+        {
+          cardCollection: {
+            _id: new ObjectId(collectionId),
+            user: { _id: new ObjectId(userId) },
+          },
+          lastReviewed: { $exists: false },
+        },
+        0,
+        numNewCards
+      );
+    }
+    let cardsToReview = [];
+    if (numReviewCards > 0) {
+      cardsToReview = await Card.find({
         cardCollection: {
           _id: new ObjectId(collectionId),
           user: { _id: new ObjectId(userId) },
         },
-        lastReviewed: { $exists: false },
-      },
-      0,
-      newCardsPerDay
-    );
-    const cardsToReview = await Card.find({
-      cardCollection: {
-        _id: new ObjectId(collectionId),
-        user: { _id: new ObjectId(userId) },
-      },
-      lastReviewed: { $exists: true },
-    })
-      .limit(reviewCardsPerDay)
-      .sort({ priority: 1 })
-      .exec();
+        lastReviewed: { $exists: true },
+      })
+        .limit(numReviewCards)
+        .sort({ priority: 1 })
+        .exec();
+    }
     const ansCards = [...newCards, ...cardsToReview];
     return res.status(200).json({ cards: ansCards });
   } catch (err) {

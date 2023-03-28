@@ -65,33 +65,6 @@ describe("RevisionContent", () => {
     );
   });
 
-  // Test initial session creation
-  it("Tests initial session creation", async () => {
-    global.fetch = jest.fn(() =>
-      Promise.resolve({
-        status: 200,
-        json: () =>
-          Promise.resolve({
-            session: { collectionId: "0", date: new Date(), _id: "0" },
-          }),
-      })
-    );
-    await act(async () => {
-      root.render(
-        <Router>
-          <RevisionContent collectionId="0" />
-        </Router>
-      );
-    });
-    expect(global.fetch).toHaveBeenCalledWith(
-      "/api/sessions",
-      expect.objectContaining({
-        method: "POST",
-      })
-    );
-    global.fetch.mockRestore();
-  });
-
   it("Tests continue review modal opens and cards are re-fetched when continue fetching", async () => {
     global.fetch = jest.fn((url, _) => {
       if (url === "/api/collections/0/cards-to-review") {
@@ -107,14 +80,6 @@ describe("RevisionContent", () => {
                 },
               ],
               totalCards: 1,
-            }),
-        });
-      } else if (url === "/api/sessions") {
-        return Promise.resolve({
-          status: 200,
-          json: () =>
-            Promise.resolve({
-              dailySession: { collectionId: "0", date: new Date(), _id: "0" },
             }),
         });
       } else if (url === "/api/cards/0/review") {
@@ -158,7 +123,7 @@ describe("RevisionContent", () => {
         .dispatchEvent(new MouseEvent("click", { bubbles: true }));
     });
 
-    await waitFor(async () => expect(global.fetch).toHaveBeenCalledTimes(4));
+    await waitFor(async () => expect(global.fetch).toHaveBeenCalledTimes(3));
   });
 
   // Test that the cards are reviewed again when bad answer
@@ -177,14 +142,6 @@ describe("RevisionContent", () => {
                 },
               ],
               totalCards: 1,
-            }),
-        });
-      } else if (url === "/api/sessions") {
-        return Promise.resolve({
-          status: 200,
-          json: () =>
-            Promise.resolve({
-              dailySession: { collectionId: "0", date: new Date(), _id: "0" },
             }),
         });
       } else if (url === "/api/cards/0/review") {
@@ -208,7 +165,7 @@ describe("RevisionContent", () => {
       );
     });
 
-    await waitFor(async () => expect(global.fetch).toHaveBeenCalledTimes(2));
+    await waitFor(async () => expect(global.fetch).toHaveBeenCalledTimes(1));
 
     act(() => {
       screen

@@ -3,6 +3,7 @@ import { validationResult } from "express-validator";
 
 import Card from "../models/card.js";
 import CardCollection from "../models/cardCollection.js";
+import DailySession from "../models/dailySession.js";
 import CardReview from "../models/cardReview.js";
 
 const ObjectId = mongoose.Types.ObjectId;
@@ -75,7 +76,7 @@ export const deleteCard = async (req, res, next) => {
 };
 
 export const reviewCard = async (req, res, next) => {
-  const { cardId, dailySessionId } = req.params;
+  const { cardId } = req.params;
   const { ansQuality, inputs } = req.body;
   const { userId } = req;
   try {
@@ -90,7 +91,31 @@ export const reviewCard = async (req, res, next) => {
       err.statusCode = statusCode;
       throw err;
     }
-    // Update the priority and create a review itme only if ansQuality is 5
+    const now = new Date();
+    let dailySession;
+    const foundSession = await DailySession.find({
+      date: {
+        $gte: new Date(now.getFullYear(), now.getMonth(), now.getDate()),
+      },
+      cardCollection: card.cardCollection._id,
+    })
+      .sort({ date: -1 })
+      .limit(1);
+    if (foundSession.length) dailySession = foundSession[0];
+    else {
+      const currentDate = new Date();
+      const collection = await CardCollection.getCollection({
+        _id: card.cardCollection._id,
+      });
+      collection.lastReviewed = currentDate;
+      dailySession = {
+        cardCollection: collection._id.toString(),
+        date: currentDate,
+      };
+      dailySession = new DailySession(dailySession);
+      await Promise.all([dailySession.save(), collection.save()]);
+    }
+    // Update the priority and create a review only if ansQuality is 5
     const { easinessFactor, priority, numberReviewed } = card;
     if (ansQuality === 5) {
       const oldPriority = card.priority;
@@ -109,7 +134,7 @@ export const reviewCard = async (req, res, next) => {
       card.numberReviewed += 1;
       const cardReview = new CardReview({
         card: cardId,
-        dailySession: new ObjectId(dailySessionId),
+        dailySession: dailySession._id,
         date: new Date(),
         oldPriority,
         newPriority: card.priority,
@@ -117,7 +142,13 @@ export const reviewCard = async (req, res, next) => {
       if (inputs) {
         cardReview.inputs = inputs;
       }
-      await cardReview.save();
+      // It means that the card is new
+      if (card.numberReviewed === 1) {
+        dailySession.numReviews.newCards += 1;
+      } else {
+        dailySession.numReviews.reviewCards += 1;
+      }
+      await Promise.all([cardReview.save(), dailySession.save()]);
     }
     // update easiness factor
     card.easinessFactor =
