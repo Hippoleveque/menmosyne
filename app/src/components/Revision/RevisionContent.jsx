@@ -1,10 +1,11 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState, useContext, useCallback } from "react";
 import { useNavigate } from "react-router";
 import CircularProgress from "@mui/material/CircularProgress";
 import Box from "@mui/material/Box";
 
 import { AuthContext } from "../../store/auth-context";
 import RevisionCard from "./RevisionCard/RevisionCard";
+import ContinueRevisionModal from "./ContinueRevisionModal/ContinueRevisionModal";
 
 const ANS_QUALITY_MAPPING = { 5: "easy", 3: "medium", 0: "hard" };
 
@@ -17,27 +18,30 @@ export default function RevisionContent({ collectionId }) {
   const [cardsInputHistory, setCardsInputHistory] = useState({});
   const [currentCardIndex, setCurrentCardIndex] = useState(0);
   const [session, setSession] = useState(null);
+  const [isContinueModalOpen, setIsContinueModalOpen] = useState(false);
+
+  const fetchCards = useCallback(async () => {
+    setIsLoading(true);
+    const response = await fetch(
+      `/api/collections/${collectionId}/cards-to-review`,
+      {
+        method: "GET",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + loginToken,
+        },
+      }
+    );
+    const res = await response.json();
+    setCurrentCardIndex(0);
+    setCards(res.cards);
+    setIsLoading(false);
+  }, [collectionId, loginToken]);
 
   useEffect(() => {
-    const fetchCards = async () => {
-      setIsLoading(true);
-      const response = await fetch(
-        `/api/collections/${collectionId}/cards-to-review`,
-        {
-          method: "GET",
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-            Authorization: "Bearer " + loginToken,
-          },
-        }
-      );
-      const res = await response.json();
-      setCards(res.cards);
-      setIsLoading(false);
-    };
     fetchCards();
-  }, [loginToken, collectionId]);
+  }, [fetchCards]);
 
   useEffect(() => {
     const createSession = async () => {
@@ -57,13 +61,14 @@ export default function RevisionContent({ collectionId }) {
   }, [loginToken, collectionId]);
 
   useEffect(() => {
-    if (
-      (cards && cards.length === 0) ||
-      (currentCardIndex &&
-        currentCardIndex >= cards.length &&
-        !cardsToReview.length)
-    ) {
+    if (cards && cards.length === 0) {
       navigate("/");
+    } else if (
+      currentCardIndex &&
+      currentCardIndex >= cards.length &&
+      !cardsToReview.length
+    ) {
+      setIsContinueModalOpen(true);
     }
   }, [currentCardIndex, cards, navigate, cardsToReview.length]);
 
@@ -141,6 +146,16 @@ export default function RevisionContent({ collectionId }) {
     }
   };
 
+  const handleContinueReview = async () => {
+    await fetchCards();
+    setIsContinueModalOpen(false);
+  };
+
+  const handleContinueModalClose = () => {
+    setIsContinueModalOpen(false);
+    navigate("/");
+  };
+
   let card;
   if (cards && currentCardIndex < cards.length) {
     card = cards[currentCardIndex];
@@ -160,6 +175,15 @@ export default function RevisionContent({ collectionId }) {
       <CircularProgress />
     </Box>
   ) : (
-    <RevisionCard card={card} handleReviewAction={handleReviewAction} />
+    <>
+      {isContinueModalOpen && (
+        <ContinueRevisionModal
+          onClose={handleContinueModalClose}
+          onContinueReview={handleContinueReview}
+          open={isContinueModalOpen}
+        />
+      )}
+      <RevisionCard card={card} handleReviewAction={handleReviewAction} />
+    </>
   );
 }

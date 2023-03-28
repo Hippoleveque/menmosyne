@@ -92,8 +92,7 @@ describe("RevisionContent", () => {
     global.fetch.mockRestore();
   });
 
-  // Test that the cards are refetched when needed
-  it("Tests card re-fetching", async () => {
+  it("Tests continue review modal opens and cards are re-fetched when continue fetching", async () => {
     global.fetch = jest.fn((url, _) => {
       if (url === "/api/collections/0/cards-to-review") {
         return Promise.resolve({
@@ -151,7 +150,15 @@ describe("RevisionContent", () => {
         .dispatchEvent(new MouseEvent("click", { bubbles: true }));
     });
 
-    await waitFor(async () => expect(global.fetch).toHaveBeenCalledTimes(3));
+    expect(screen.getByTestId("continue-review-modal")).toBeInTheDocument();
+
+    await act(async () => {
+      screen
+        .getByTestId("confirm-continue-review-button")
+        .dispatchEvent(new MouseEvent("click", { bubbles: true }));
+    });
+
+    await waitFor(async () => expect(global.fetch).toHaveBeenCalledTimes(4));
   });
 
   // Test that the cards are reviewed again when bad answer
