@@ -206,8 +206,8 @@ describe("Test the collections endpoints of the API.", () => {
       .resolves(mockedCollection);
     const body = {
       name: "testCollectionEdited",
-      newCardsPolicy: 20,
-      reviewCardsPolicy: 15,
+      newCardsPolicy: "20",
+      reviewCardsPolicy: "15",
     };
     const response = await request(app)
       .post(`/collections/${mockedCollection._id}/edit`)

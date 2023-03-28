@@ -13,7 +13,8 @@ import {
 import { isAuth } from "../middlewares/isAuth.js";
 
 const checkCorrectPolicy = (value) => {
-  return typeof value === "number" && value >= 0;
+  const isNumber = !isNaN(value) && !isNaN(parseFloat(value));
+  return isNumber && parseFloat(value) >= 0;
 };
 
 const router = express.Router();

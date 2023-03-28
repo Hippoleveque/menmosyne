@@ -177,8 +177,8 @@ export const editCollection = async (req, res, next) => {
       throw err;
     }
     collection.name = name;
-    collection.reviewPolicy.newCardsPerDay = newCardsPolicy;
-    collection.reviewPolicy.reviewCardsPerDay = reviewCardsPolicy;
+    collection.reviewPolicy.newCardsPerDay = parseFloat(newCardsPolicy);
+    collection.reviewPolicy.reviewCardsPerDay = parseFloat(reviewCardsPolicy);
     await collection.save();
     return res.status(201).json({ collection });
   } catch (err) {
