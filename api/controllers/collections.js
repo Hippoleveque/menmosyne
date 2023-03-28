@@ -60,7 +60,6 @@ export const getCollectionCards = async (req, res, next) => {
 };
 
 export const getCollectionCardsToReview = async (req, res, next) => {
-  console.log("called");
   const { collectionId } = req.params;
   const { userId } = req;
   try {
