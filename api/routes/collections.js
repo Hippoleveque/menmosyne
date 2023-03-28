@@ -33,7 +33,7 @@ router.post(
   createCollection
 );
 router.post(
-  "/:collectionId",
+  "/:collectionId/edit",
   [
     body("name").trim().isLength({ min: 3 }),
     body("newCardsPolicy").custom(checkCorrectPolicy),

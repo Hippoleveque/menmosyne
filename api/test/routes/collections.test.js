@@ -210,7 +210,7 @@ describe("Test the collections endpoints of the API.", () => {
       reviewCardsPolicy: 15,
     };
     const response = await request(app)
-      .post(`/collections/${mockedCollection._id}`)
+      .post(`/collections/${mockedCollection._id}/edit`)
       .set("Accept", "application/json")
       .set("Authorization", "Bearer token")
       .send(body)
