@@ -13,9 +13,16 @@ const dailySessionSchema = new Schema(
       required: true,
     },
     numReviews: {
-      type: Number,
-      required: false,
-      default: 0,
+      newCards: {
+        type: Number,
+        required: false,
+        default: 0,
+      },
+      reviewCards: {
+        type: Number,
+        required: false,
+        default: 0,
+      },
     },
   },
   { timestamps: true }

@@ -3,6 +3,7 @@ import { validationResult } from "express-validator";
 
 import Card from "../models/card.js";
 import CardCollection from "../models/cardCollection.js";
+import DailySession from "../models/dailySession.js";
 import CardReview from "../models/cardReview.js";
 
 const ObjectId = mongoose.Types.ObjectId;
@@ -75,8 +76,8 @@ export const deleteCard = async (req, res, next) => {
 };
 
 export const reviewCard = async (req, res, next) => {
-  const { cardId, dailySessionId } = req.params;
-  const { ansQuality, inputs } = req.body;
+  const { cardId } = req.params;
+  const { ansQuality, inputs, dailySessionId } = req.body;
   const { userId } = req;
   try {
     let card = await Card.getCard({
@@ -86,6 +87,14 @@ export const reviewCard = async (req, res, next) => {
     if (!card || card.cardCollection.owner._id.toString() !== userId) {
       const statusCode = 400;
       const message = "Bad Collection Id";
+      const err = new Error(message);
+      err.statusCode = statusCode;
+      throw err;
+    }
+    let dailySession = await DailySession.findOne({ _id: dailySessionId });
+    if (!dailySession) {
+      const statusCode = 400;
+      const message = "Bad daily session Id";
       const err = new Error(message);
       err.statusCode = statusCode;
       throw err;
@@ -117,7 +126,13 @@ export const reviewCard = async (req, res, next) => {
       if (inputs) {
         cardReview.inputs = inputs;
       }
-      await cardReview.save();
+      // It means that the card is new
+      if (card.numberReviewed === 1) {
+        dailySession.numReviews.newCards += 1;
+      } else {
+        dailySession.numReviews.reviewCards += 1;
+      }
+      await Promise.all([cardReview.save(), dailySession.save()]);
     }
     // update easiness factor
     card.easinessFactor =
