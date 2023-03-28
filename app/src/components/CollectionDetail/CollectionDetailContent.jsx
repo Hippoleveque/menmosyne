@@ -190,8 +190,8 @@ export default function CollectionDetailContent({ collectionId }) {
                     color="warning"
                     onClick={handleEditCollectionClick}
                     sx={{ fontSize: "0.7rem", marginRight: "10px" }}
-                    data-testid="edit-button-collection-detail"
-                  >
+                    data-testid="edit-collection-button-collection-detail"
+                    >
                     Modifier la collection
                   </Button>
                   <Button
