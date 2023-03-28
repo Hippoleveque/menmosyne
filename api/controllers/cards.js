@@ -77,7 +77,7 @@ export const deleteCard = async (req, res, next) => {
 
 export const reviewCard = async (req, res, next) => {
   const { cardId } = req.params;
-  const { ansQuality, inputs, dailySessionId } = req.body;
+  const { ansQuality, inputs } = req.body;
   const { userId } = req;
   try {
     let card = await Card.getCard({
@@ -91,15 +91,31 @@ export const reviewCard = async (req, res, next) => {
       err.statusCode = statusCode;
       throw err;
     }
-    let dailySession = await DailySession.findOne({ _id: dailySessionId });
-    if (!dailySession) {
-      const statusCode = 400;
-      const message = "Bad daily session Id";
-      const err = new Error(message);
-      err.statusCode = statusCode;
-      throw err;
+    const now = new Date();
+    let dailySession;
+    const foundSession = await DailySession.find({
+      date: {
+        $gte: new Date(now.getFullYear(), now.getMonth(), now.getDate()),
+      },
+      cardCollection: card.cardCollection._id,
+    })
+      .sort({ date: -1 })
+      .limit(1);
+    if (foundSession.length) dailySession = foundSession[0];
+    else {
+      const currentDate = new Date();
+      const collection = await CardCollection.getCollection({
+        _id: card.cardCollection._id,
+      });
+      collection.lastReviewed = currentDate;
+      dailySession = {
+        cardCollection: collection._id.toString(),
+        date: currentDate,
+      };
+      dailySession = new DailySession(dailySession);
+      await Promise.all([dailySession.save(), collection.save()]);
     }
-    // Update the priority and create a review itme only if ansQuality is 5
+    // Update the priority and create a review only if ansQuality is 5
     const { easinessFactor, priority, numberReviewed } = card;
     if (ansQuality === 5) {
       const oldPriority = card.priority;
@@ -118,7 +134,7 @@ export const reviewCard = async (req, res, next) => {
       card.numberReviewed += 1;
       const cardReview = new CardReview({
         card: cardId,
-        dailySession: new ObjectId(dailySessionId),
+        dailySession: dailySession._id,
         date: new Date(),
         oldPriority,
         newPriority: card.priority,
