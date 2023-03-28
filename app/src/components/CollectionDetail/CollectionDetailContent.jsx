@@ -25,6 +25,7 @@ import { AuthContext } from "../../store/auth-context";
 import classes from "./CollectionDetailContent.module.css";
 import ConfirmCardDeletionModal from "./ConfirmCardDeletionModal/ConfirmCardDeletionModal";
 import EditCardModal from "./EditCardModal/EditCardModal";
+import EditCollectionModal from "./EditCollectionModal/EditCollectionModal";
 import TableExtendableTextCell from "../Common/TableExtendableTextCell";
 
 const ITEMS_PER_PAGE = 7;
@@ -36,9 +37,10 @@ export default function CollectionDetailContent({ collectionId }) {
   const [modalOpen, setModalOpen] = useState(false);
   const [collection, setCollection] = useState(null);
   const [deletingCardId, setDeletingCardId] = useState(null);
-  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [editCardModalOpen, setEditCardModalOpen] = useState(false);
   const [editingCard, setEditingCard] = useState(null);
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [editCollectionModalOpen, setEditCollectionModalOpen] = useState(false);
   const [totalCards, setTotalCards] = useState(0);
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -88,6 +90,10 @@ export default function CollectionDetailContent({ collectionId }) {
     navigate(`/revision/${collectionId}`);
   };
 
+  const handleEditCollectionClick = () => {
+    setEditCollectionModalOpen(true);
+  };
+
   const handleModalOpen = () => {
     setModalOpen(true);
   };
@@ -111,11 +117,11 @@ export default function CollectionDetailContent({ collectionId }) {
 
   const handleEditModalOpen = (card) => {
     setEditingCard(card);
-    setEditModalOpen(true);
+    setEditCardModalOpen(true);
   };
 
   const handleEditModalClose = async () => {
-    setEditModalOpen(false);
+    setEditCardModalOpen(false);
     setEditingCard(null);
     await fetchCards(currentPage);
   };
@@ -140,11 +146,18 @@ export default function CollectionDetailContent({ collectionId }) {
           onClose={handleDeleteModalClose}
         />
       )}
-      {editModalOpen && (
+      {editCardModalOpen && (
         <EditCardModal
-          open={editModalOpen}
+          open={editCardModalOpen}
           onClose={handleEditModalClose}
           card={editingCard}
+        />
+      )}
+      {editCollectionModalOpen && (
+        <EditCollectionModal
+          open={editCollectionModalOpen}
+          onClose={() => setEditCollectionModalOpen(false)}
+          collection={collection}
         />
       )}
       <Box
@@ -172,6 +185,15 @@ export default function CollectionDetailContent({ collectionId }) {
               </TableCell>
               <TableCell colSpan={7} align="right">
                 <Box>
+                  <Button
+                    variant="contained"
+                    color="warning"
+                    onClick={handleEditCollectionClick}
+                    sx={{ fontSize: "0.7rem", marginRight: "10px" }}
+                    data-testid="edit-button-collection-detail"
+                  >
+                    Modifier la collection
+                  </Button>
                   <Button
                     variant="contained"
                     color="secondary"
