@@ -136,7 +136,6 @@ export const reviewCard = async (req, res, next) => {
 };
 
 export const editCard = async (req, res, next) => {
-  console.log("called edit card")
   const { cardId } = req.params;
   const { rectoContent, versoContent } = req.body;
   const { userId } = req;
