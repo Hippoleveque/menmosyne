@@ -4,7 +4,9 @@ import sinonChai from "sinon-chai";
 import request from "supertest";
 import app from "../../server.js";
 import Card from "../../models/card.js";
+import CardCollection from "../../models/cardCollection.js";
 import CardReview from "../../models/cardReview.js";
+import DailySession from "../../models/dailySession.js";
 import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
 
@@ -69,6 +71,58 @@ describe("Test the cards endpoints of the API.", () => {
       .expect(200);
   });
 
+  it("Tests POST /cards/:cardId/review creates new dailySession if need be", async () => {
+    process.env.JWT_SECRET = "test";
+    const cardId = new ObjectId().toString();
+    const userId = new ObjectId().toString();
+    const mockedCollectionSave = sinon.spy();
+    const mockedCollection = {
+      _id: new ObjectId().toString(),
+      owner: { _id: userId },
+      save: mockedCollectionSave,
+    };
+    const mockedCardSave = sinon.spy();
+    const mockedDailySessionSave = sinon.spy();
+    const mockedCard = {
+      _id: cardId,
+      rectoContent: "testRecto",
+      versoContent: "testVerso",
+      cardCollection: mockedCollection,
+      save: mockedCardSave,
+      easinessFactor: 2.5,
+      numberReviewed: 0,
+    };
+    sinon.mock(jwt).expects("verify").returns({ userId: userId });
+    sinon.mock(Card).expects("getCard").resolves(mockedCard);
+    sinon
+      .mock(CardCollection)
+      .expects("getCollection")
+      .resolves(mockedCollection);
+    sinon
+      .mock(DailySession)
+      .expects("find")
+      .returns({
+        sort: () => {
+          return {
+            limit: () => {
+              return [];
+            },
+          };
+        },
+      });
+    sinon
+      .stub(DailySession.prototype, "save")
+      .callsFake(mockedDailySessionSave);
+    await request(app)
+      .post(`/cards/${cardId}/review`)
+      .set("Accept", "application/json")
+      .set("Authorization", "Bearer token")
+      .send({ ansQuality: 1 })
+      .expect(200);
+    expect(mockedCollectionSave).to.have.been.calledOnce;
+    expect(mockedDailySessionSave).to.have.been.calledOnce;
+  });
+
   it("Tests POST /cards/:cardId/review without saving review", async () => {
     process.env.JWT_SECRET = "test";
     const cardId = new ObjectId().toString();
@@ -87,8 +141,23 @@ describe("Test the cards endpoints of the API.", () => {
       easinessFactor: 2.5,
       numberReviewed: 0,
     };
+    const mockedSession = {
+      _id: new ObjectId().toString(),
+    };
     sinon.mock(jwt).expects("verify").returns({ userId: userId });
     sinon.mock(Card).expects("getCard").resolves(mockedCard);
+    sinon
+      .mock(DailySession)
+      .expects("find")
+      .returns({
+        sort: () => {
+          return {
+            limit: () => {
+              return [mockedSession];
+            },
+          };
+        },
+      });
     await request(app)
       .post(`/cards/${cardId}/review`)
       .set("Accept", "application/json")
@@ -119,8 +188,29 @@ describe("Test the cards endpoints of the API.", () => {
       easinessFactor: 2.5,
       numberReviewed: 0,
     };
+    const mockedSessionSave = sinon.spy();
+    const mockedSession = {
+      _id: new ObjectId().toString(),
+      numReviews: {
+        newCards: 0,
+        reviewCards: 0,
+      },
+      save: mockedSessionSave,
+    };
     sinon.mock(jwt).expects("verify").returns({ userId: userId });
     sinon.mock(Card).expects("getCard").resolves(mockedCard);
+    sinon
+      .mock(DailySession)
+      .expects("find")
+      .returns({
+        sort: () => {
+          return {
+            limit: () => {
+              return [mockedSession];
+            },
+          };
+        },
+      });
     const mockedCardReviewSave = sinon.spy();
     sinon.stub(CardReview.prototype, "save").callsFake(mockedCardReviewSave);
 
@@ -135,6 +225,7 @@ describe("Test the cards endpoints of the API.", () => {
     expect(mockedCard).to.have.property("lastReviewed");
     expect(mockedCard.numberReviewed).equal(1);
     expect(mockedCardReviewSave).to.have.been.called;
+    expect(mockedSessionSave).to.have.been.called;
   });
 
   it("Tests POST /cards/:cardId/edit", async () => {
