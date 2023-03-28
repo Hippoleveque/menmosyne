@@ -184,6 +184,44 @@ describe("Test the collections endpoints of the API.", () => {
     expect(response.body).to.have.property("cardCollection");
   });
 
+  it("Tests POST /collections/:collectionId", async () => {
+    process.env.JWT_SECRET = "test";
+    const mockedCollectionSave = sinon.spy();
+    const mockedCollection = {
+      _id: new ObjectId().toString(),
+      reviewPolicy: {
+        reviewCardsPerDay: 10,
+        newCardsPerDay: 10,
+      },
+      name: "testCollection",
+      save: mockedCollectionSave,
+    };
+    sinon
+      .mock(jwt)
+      .expects("verify")
+      .returns({ userId: new ObjectId().toString() });
+    sinon
+      .mock(CardCollection)
+      .expects("getCollection")
+      .resolves(mockedCollection);
+    const body = {
+      name: "testCollectionEdited",
+      newCardsPolicy: 20,
+      reviewCardsPolicy: 15,
+    };
+    const response = await request(app)
+      .post(`/collections/${mockedCollection._id}`)
+      .set("Accept", "application/json")
+      .set("Authorization", "Bearer token")
+      .send(body)
+      .expect(201);
+    expect(response.body).to.have.property("collection");
+    expect(mockedCollectionSave.calledOnce).to.be.true;
+    expect(mockedCollection.name).to.equal("testCollectionEdited");
+    expect(mockedCollection.reviewPolicy.reviewCardsPerDay).to.equal(15);
+    expect(mockedCollection.reviewPolicy.newCardsPerDay).to.equal(20);
+  });
+
   afterEach(() => {
     sinon.restore();
   });
