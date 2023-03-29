@@ -4,11 +4,10 @@ import request from "supertest";
 import app from "../../server.js";
 import CardCollection from "../../models/cardCollection.js";
 import Card from "../../models/card.js";
+import DailySession from "../../models/dailySession.js";
 import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
-import sinonStubPromise from "sinon-stub-promise";
 
-// const Query = mongoose.Query;
 const ObjectId = mongoose.Types.ObjectId;
 
 describe("Test the collections endpoints of the API.", () => {
@@ -108,6 +107,161 @@ describe("Test the collections endpoints of the API.", () => {
     expect(response.body).to.have.deep.property("cards", mockedCards);
   });
 
+  it("Tests GET /collections/:collectionId/cards-to-review without existing session", async () => {
+    process.env.JWT_SECRET = "test";
+    const collectionId = new ObjectId().toString();
+    const mockedNewCards = [
+      { _id: new ObjectId().toString(), name: "card1" },
+      { _id: new ObjectId().toString(), name: "card2" },
+    ];
+    const mockedReviewCards = [
+      { _id: new ObjectId().toString(), name: "card3" },
+      { _id: new ObjectId().toString(), name: "card4" },
+    ];
+    const mockedCollection = {
+      _id: collectionId.toString(),
+      reviewPolicy: {
+        newCardsPerDay: 2,
+        reviewCardsPerDay: 3,
+      },
+    };
+    const userId = new ObjectId();
+    sinon.mock(jwt).expects("verify").returns({ userId: userId.toString() });
+    sinon
+      .mock(CardCollection)
+      .expects("getCollection")
+      .resolves(mockedCollection);
+    const mockedCallNewCards = sinon.spy(() => Promise.resolve(mockedNewCards));
+    sinon.stub(Card, "getCards").callsFake(mockedCallNewCards);
+    const mockedCallReviewCards = sinon.spy(() =>
+      Promise.resolve(mockedReviewCards)
+    );
+    const mockedFindCallReviewCards = {
+      limit: () => {
+        return {
+          sort: () => {
+            return {
+              exec: mockedCallReviewCards,
+            };
+          },
+        };
+      },
+    };
+    sinon.mock(Card).expects("find").returns(mockedFindCallReviewCards);
+    sinon
+      .mock(DailySession)
+      .expects("find")
+      .returns({
+        sort: () => {
+          return {
+            limit: () => {
+              return [];
+            },
+          };
+        },
+      });
+    const response = await request(app)
+      .get(`/collections/${collectionId}/cards-to-review`)
+      .set("Accept", "application/json")
+      .set("Authorization", "Bearer token")
+      .expect(200);
+    expect(response.body).to.have.deep.property("cards", [
+      ...mockedNewCards,
+      ...mockedReviewCards,
+    ]);
+    expect(mockedCallNewCards).to.have.been.calledWith(
+      {
+        cardCollection: {
+          _id: new ObjectId(collectionId),
+          user: { _id: userId },
+        },
+        lastReviewed: { $exists: false },
+      },
+      0,
+      mockedCollection.reviewPolicy.newCardsPerDay
+    );
+  });
+
+  it("Tests GET /collections/:collectionId/cards-to-review with existing session", async () => {
+    process.env.JWT_SECRET = "test";
+    const collectionId = new ObjectId().toString();
+    const mockedNewCards = [
+      { _id: new ObjectId().toString(), name: "card1" },
+      { _id: new ObjectId().toString(), name: "card2" },
+    ];
+    const mockedReviewCards = [
+      { _id: new ObjectId().toString(), name: "card3" },
+      { _id: new ObjectId().toString(), name: "card4" },
+    ];
+    const mockedCollection = {
+      _id: collectionId.toString(),
+      reviewPolicy: {
+        newCardsPerDay: 2,
+        reviewCardsPerDay: 2,
+      },
+    };
+    const userId = new ObjectId();
+    sinon.mock(jwt).expects("verify").returns({ userId: userId.toString() });
+    sinon
+      .mock(CardCollection)
+      .expects("getCollection")
+      .resolves(mockedCollection);
+    const mockedCallNewCards = sinon.spy(() => Promise.resolve(mockedNewCards));
+    sinon.stub(Card, "getCards").callsFake(mockedCallNewCards);
+    const mockedCallReviewCards = sinon.spy(() =>
+      Promise.resolve(mockedReviewCards)
+    );
+    const mockedFindCallReviewCards = {
+      limit: () => {
+        return {
+          sort: () => {
+            return {
+              exec: mockedCallReviewCards,
+            };
+          },
+        };
+      },
+    };
+    sinon.mock(Card).expects("find").returns(mockedFindCallReviewCards);
+    const sessionId = new ObjectId();
+    const mockedSession = {
+      _id: sessionId,
+      numReviews: {
+        newCards: 1,
+        reviewCards: 1,
+      },
+    };
+    sinon
+      .mock(DailySession)
+      .expects("find")
+      .returns({
+        sort: () => {
+          return {
+            limit: () => {
+              return [mockedSession];
+            },
+          };
+        },
+      });
+    await request(app)
+      .get(`/collections/${collectionId}/cards-to-review`)
+      .set("Accept", "application/json")
+      .set("Authorization", "Bearer token")
+      .expect(200);
+    expect(mockedCallNewCards).to.have.been.calledWith(
+      {
+        cardCollection: {
+          _id: new ObjectId(collectionId),
+          user: { _id: userId },
+        },
+        lastReviewed: { $exists: false },
+      },
+      0,
+      mockedCollection.reviewPolicy.newCardsPerDay -
+        mockedSession.numReviews.newCards
+    );
+  });
+
   it("Tests GET /collections/:collectionId", async () => {
     process.env.JWT_SECRET = "test";
     const collectionId = new ObjectId();
@@ -184,7 +338,7 @@ describe("Test the collections endpoints of the API.", () => {
     expect(response.body).to.have.property("cardCollection");
   });
 
-  it("Tests POST /collections/:collectionId", async () => {
+  it("Tests POST /collections/:collectionId/edit", async () => {
     process.env.JWT_SECRET = "test";
     const mockedCollectionSave = sinon.spy();
     const mockedCollection = {
