@@ -29,7 +29,7 @@ jobs:
       - name: "Docker node container"
         run: |
           docker build -f prod.Dockerfile \
-            --tag "$GCP_LOCATION-docker.pkg.dev/$GCP_PROJECT_ID/$GCP_REPOSITORY/$NODE_IMAGE:$GITHUB_SHA" \
+            --tag "$GCP_LOCATION-docker.pkg.dev/$GCP_PROJECT_ID/$GCP_REPOSITORY/$NODE_IMAGE:$GITHUB_REF_NAME" \
             .
         working-directory: "./api"
 
@@ -49,16 +49,16 @@ jobs:
 
       - name: "Docker push node image"
         run: |-
-          docker push "$GCP_LOCATION-docker.pkg.dev/$GCP_PROJECT_ID/$GCP_REPOSITORY/$NODE_IMAGE:$GITHUB_SHA"
+          docker push "$GCP_LOCATION-docker.pkg.dev/$GCP_PROJECT_ID/$GCP_REPOSITORY/$NODE_IMAGE:$GITHUB_REF_NAME"
 
       - run: |-
           docker build -f ./nginx/prod.Dockerfile \
-            --tag "$GCP_LOCATION-docker.pkg.dev/$GCP_PROJECT_ID/$GCP_REPOSITORY/$NGINX_IMAGE:$GITHUB_SHA" \
+            --tag "$GCP_LOCATION-docker.pkg.dev/$GCP_PROJECT_ID/$GCP_REPOSITORY/$NGINX_IMAGE:$GITHUB_REF_NAME" \
             .
 
-      - name: "Docker push node image"
+      - name: "Docker push nginx image"
         run: |-
-          docker push "$GCP_LOCATION-docker.pkg.dev/$GCP_PROJECT_ID/$GCP_REPOSITORY/$NGINX_IMAGE:$GITHUB_SHA"
+          docker push "$GCP_LOCATION-docker.pkg.dev/$GCP_PROJECT_ID/$GCP_REPOSITORY/$NGINX_IMAGE:$GITHUB_REF_NAME"
 
       - name: "Set up Cloud SDK"
         uses: "google-github-actions/setup-gcloud@v1"
@@ -66,4 +66,4 @@ jobs:
           version: ">= 363.0.0"
 
       - name: "Use gcloud CLI"
-        run: 'gcloud pubsub topics publish projects/$GCP_PROJECT_ID/topics/$PUB_SUB_TOPIC --message="published new images" --attribute="nodeImage=$GCP_LOCATION-docker.pkg.dev/$GCP_PROJECT_ID/$GCP_REPOSITORY/$NODE_IMAGE:$GITHUB_SHA,nginxImage=$GCP_LOCATION-docker.pkg.dev/$GCP_PROJECT_ID/$GCP_REPOSITORY/$NGINX_IMAGE:$GITHUB_SHA"'
+        run: 'gcloud pubsub topics publish projects/$GCP_PROJECT_ID/topics/$PUB_SUB_TOPIC --message="published new images" --attribute="nodeImage=$GCP_LOCATION-docker.pkg.dev/$GCP_PROJECT_ID/$GCP_REPOSITORY/$NODE_IMAGE:$GITHUB_REF_NAME,nginxImage=$GCP_LOCATION-docker.pkg.dev/$GCP_PROJECT_ID/$GCP_REPOSITORY/$NGINX_IMAGE:$GITHUB_REF_NAME"'
