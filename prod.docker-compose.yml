@@ -8,8 +8,6 @@ services:
     image: ${DOCKER_APP_IMAGE}
     ports:
       - "8080:8080"
-    depends_on:
-      - mongo
 
   nginx:
     environment:
@@ -22,7 +20,6 @@ services:
     depends_on:
       - nodeserver
     volumes:
-     - ./dh-param/dhparam-2048.pem:/etc/ssl/certs/dhparam-2048.pem
-     - /docker-volumes/etc/letsencrypt/live/mnemosyne-app.fr/fullchain.pem:/etc/letsencrypt/live/mnemosyne-app.fr/fullchain.pem
-     - /docker-volumes/etc/letsencrypt/live/mnemosyne-app.fr/privkey.pem:/etc/letsencrypt/live/mnemosyne-app.fr/privkey.pem
-
+      - ./dh-param/dhparam-2048.pem:/etc/ssl/certs/dhparam-2048.pem
+      - /docker-volumes/etc/letsencrypt/live/mnemosyne-app.fr/fullchain.pem:/etc/letsencrypt/live/mnemosyne-app.fr/fullchain.pem
+      - /docker-volumes/etc/letsencrypt/live/mnemosyne-app.fr/privkey.pem:/etc/letsencrypt/live/mnemosyne-app.fr/privkey.pem

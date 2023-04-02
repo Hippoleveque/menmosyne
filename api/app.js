@@ -14,5 +14,3 @@ const main = async () => {
 };
 
 main();
-
-mongodb+srv://hippolyte:Eragon123@cluster-personal.p7sdom6.mongodb.net/mnemosyne?retryWrites=true&w=majority
