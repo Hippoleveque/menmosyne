@@ -1,14 +1,11 @@
 import app from "./server.js";
 import mongoose from "mongoose";
 
-const mongoUrl = "mongodb://mongo:27017/mnemosyne";
+const mongoUrl = process.env.MONGO_URL;
 
 const main = async () => {
   try {
-    await mongoose.connect(mongoUrl, {
-      user: "testUser",
-      pass: "testPwd",
-    });
+    await mongoose.connect(mongoUrl);
     console.log("Connection successful to mongodb");
     app.listen(8080);
   } catch (err) {
