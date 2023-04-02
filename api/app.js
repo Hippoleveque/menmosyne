@@ -3,6 +3,8 @@ import mongoose from "mongoose";
 
 const mongoUrl = process.env.MONGO_URL;
 
+console.log("Trying to connect to mongo db at: ", mongoUrl);
+
 const main = async () => {
   try {
     await mongoose.connect(mongoUrl);
