@@ -4,6 +4,7 @@ services:
     environment:
       - DOCKER_APP_IMAGE
       - JWT_SECRET=example
+      - MONGO_URL
     image: ${DOCKER_APP_IMAGE}
     ports:
       - "8080:8080"
@@ -25,15 +26,3 @@ services:
      - /docker-volumes/etc/letsencrypt/live/mnemosyne-app.fr/fullchain.pem:/etc/letsencrypt/live/mnemosyne-app.fr/fullchain.pem
      - /docker-volumes/etc/letsencrypt/live/mnemosyne-app.fr/privkey.pem:/etc/letsencrypt/live/mnemosyne-app.fr/privkey.pem
 
-  mongo:
-    image: mongo
-    restart: always
-    environment:
-      MONGO_INITDB_DATABASE: mnemosyne
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: example
-    ports:
-      - "27017:27017"
-    volumes:
-      - ./mongo/data:/data/db
-      - ./mongo/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
