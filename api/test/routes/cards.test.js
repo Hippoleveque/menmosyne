@@ -33,6 +33,7 @@ describe("Test the cards endpoints of the API.", () => {
         },
       });
     sinon.mock(Card.prototype).expects("save").resolves({ message: "ok" });
+    sinon.mock(CardCollection).expects("updateOne").resolves({ message: "ok" });
     const body = {
       rectoContent: "exampleRecto",
       versoContent: "exampleVerso",
@@ -63,7 +64,15 @@ describe("Test the cards endpoints of the API.", () => {
     };
     sinon.mock(jwt).expects("verify").returns({ userId: userId });
     sinon.mock(Card).expects("getCard").resolves(mockedCard);
-    sinon.mock(Card).expects("deleteCard").resolves(mockedCard);
+    sinon
+      .mock(Card)
+      .expects("findByIdAndDelete")
+      .returns({
+        exec: () => {
+          return { message: "ok" };
+        },
+      });
+    sinon.mock(CardCollection).expects("updateOne").resolves({ message: "ok" });
     await request(app)
       .delete("/cards/" + cardId)
       .set("Accept", "application/json")
@@ -188,17 +197,17 @@ describe("Test the cards endpoints of the API.", () => {
       easinessFactor: 2.5,
       numberReviewed: 0,
     };
-    const mockedSessionSave = sinon.spy();
+    const mockedSessionUpdate = sinon.spy();
     const mockedSession = {
       _id: new ObjectId().toString(),
       numReviews: {
         newCards: 0,
         reviewCards: 0,
       },
-      save: mockedSessionSave,
     };
     sinon.mock(jwt).expects("verify").returns({ userId: userId });
     sinon.mock(Card).expects("getCard").resolves(mockedCard);
+    sinon.stub(DailySession, "updateOne").callsFake(mockedSessionUpdate);
     sinon
       .mock(DailySession)
       .expects("find")
@@ -225,7 +234,7 @@ describe("Test the cards endpoints of the API.", () => {
     expect(mockedCard).to.have.property("lastReviewed");
     expect(mockedCard.numberReviewed).equal(1);
     expect(mockedCardReviewSave).to.have.been.called;
-    expect(mockedSessionSave).to.have.been.called;
+    expect(mockedSessionUpdate).to.have.been.called;
   });
 
   it("Tests POST /cards/:cardId/edit", async () => {

@@ -5,7 +5,7 @@ services:
       context: ./api
     environment:
       - JWT_SECRET=example
-      - MONGO_URL=mongodb://testUser:testPwd@localhost:27017/mnemosyne
+      - MONGO_URL=mongodb://testUser:testPwd@mongo:27017/mnemosyne
     ports:
       - 8080:8080
     depends_on:

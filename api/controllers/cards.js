@@ -37,8 +37,13 @@ export const createCard = async (req, res, next) => {
       cardCollection: cardCollectionId,
     };
     card = new Card(card);
-    collection.numCards += 1;
-    await Promise.all([card.save(), collection.save()]);
+    await Promise.all([
+      card.save(),
+      CardCollection.updateOne(
+        { _id: collection._id },
+        { $inc: { numCards: 1 } }
+      ),
+    ]);
     return res.status(201).json({ card });
   } catch (err) {
     if (!err.statusCode) {
@@ -63,7 +68,13 @@ export const deleteCard = async (req, res, next) => {
       err.statusCode = statusCode;
       throw err;
     }
-    card = await Card.deleteCard(cardId);
+    await Promise.all([
+      Card.findByIdAndDelete(cardId).exec(),
+      CardCollection.updateOne(
+        { _id: card.cardCollection._id },
+        { $inc: { numCards: -1 } }
+      ),
+    ]);
     return res
       .status(200)
       .json({ message: "The card has been successfully deleted" });
@@ -144,11 +155,22 @@ export const reviewCard = async (req, res, next) => {
       }
       // It means that the card is new
       if (card.numberReviewed === 1) {
-        dailySession.numReviews.newCards += 1;
+        await Promise.all([
+          DailySession.updateOne(
+            { _id: dailySession._id },
+            { $inc: { "numReviews.newCards": 1 } }
+          ),
+          cardReview.save(),
+        ]);
       } else {
-        dailySession.numReviews.reviewCards += 1;
+        await Promise.all([
+          DailySession.updateOne(
+            { _id: dailySession._id },
+            { $inc: { "numReviews.reviewCards": 1 } }
+          ),
+          cardReview.save(),
+        ]);
       }
-      await Promise.all([cardReview.save(), dailySession.save()]);
     }
     // update easiness factor
     card.easinessFactor =
