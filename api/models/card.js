@@ -52,7 +52,6 @@ cardSchema.statics.deleteCard = async function (cardId) {
     .populate("cardCollection")
     .exec();
   const collection = card.cardCollection;
-  collection.numCards -= 1;
   await collection.save();
   return card;
 };
