@@ -14,7 +14,7 @@ function App() {
 
   return (
     <Routes>
-      {isLoggedIn && (
+      {/* {isLoggedIn && ( */}
         <Fragment>
           <Route
             path="/collections/:collectionId"
@@ -26,15 +26,15 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="*" element={<HomePage />} />
         </Fragment>
-      )}
-      {!isLoggedIn && (
+      {/* )} */}
+      {/* {!isLoggedIn && (
         <Fragment>
           <Route path="/signup" exact element={<SignupPage />} />
           <Route path="/login" exact element={<LoginPage />} />
           <Route path="/" element={<Navigate to="/login" />} />
           <Route path="*" element={<Navigate to="/login" />} />
         </Fragment>
-      )}
+      )} */}
     </Routes>
   );
 }
